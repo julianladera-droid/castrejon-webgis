@@ -93,8 +93,8 @@
           <div><label for="sigpacToggle">Recintos SIGPAC</label><small>FEGA / MAPA · WMS · campaña vigente</small></div>
           <span id="sigpacState" class="pill">cargando</span>
           <div class="opacity">
-            <input id="sigpacOpacity" type="range" min="0" max="1" step="0.05" value="0.88" aria-label="Opacidad de Recintos SIGPAC">
-            <output id="sigpacOpacityValue">88%</output>
+            <input id="sigpacOpacity" type="range" min="0" max="1" step="0.05" value="0.33" aria-label="Opacidad de Recintos SIGPAC">
+            <output id="sigpacOpacityValue">33%</output>
           </div>
         </div>
         <div class="layer">
@@ -226,7 +226,7 @@
   const sigpac = new ol.layer.Tile({
     source: sigpacSource,
     visible: true,
-    opacity: 0.88,
+    opacity: 0.33,
     preload: 1,
     useInterimTilesOnError: true,
     properties: { id: 'sigpac', title: 'Recintos SIGPAC' }
