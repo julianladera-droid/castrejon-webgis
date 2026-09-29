@@ -1,0 +1,412 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <title>Visor de control C.R. Canal de Castrejón Margen Derecha</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ol@10.6.1/ol.css">
+  <style>
+    :root{
+      --base:#fff;--contrast:#173B63;--green:#357C45;--aqua:#43B9D1;
+      --water:#1B68A5;--muted:#526979;--soft:#F4F8F8;--line:#DCE6E9;
+      --text:#18374D;--crop:#F5F8F1;--shadow:0 12px 34px rgba(23,59,99,.16);
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%;margin:0;font-family:Manrope,Inter,system-ui,-apple-system,Segoe UI,sans-serif;color:var(--text);background:#eaf0f2}
+    button,input{font:inherit}
+    .app{height:100%;display:grid;grid-template-rows:auto 1fr}
+    .topbar{display:flex;align-items:center;justify-content:space-between;gap:18px;padding:12px 16px;background:var(--base);border-bottom:1px solid var(--line);z-index:20}
+    .brand{display:flex;align-items:center;gap:12px;min-width:0}
+    .mark{width:38px;height:38px;border-radius:12px;background:var(--contrast);display:grid;place-items:center;color:white;font-weight:800}
+    .brand-copy{min-width:0}
+    .eyebrow{font-size:11px;letter-spacing:.12em;font-weight:800;color:var(--green)}
+    .title{font-size:18px;font-weight:800;color:var(--contrast);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .top-status{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--muted)}
+    .dot{width:8px;height:8px;border-radius:50%;background:#9aaab5}
+    .dot.ok{background:#2e8b57}.dot.busy{background:#d59a22}.dot.bad{background:#c44545}
+    .workspace{min-height:0;position:relative}
+    #map{position:absolute;inset:0;background:#dce7ea;outline:none}
+    .panel{position:absolute;top:14px;left:14px;width:min(340px,calc(100% - 28px));background:rgba(255,255,255,.96);backdrop-filter:blur(10px);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);z-index:10;overflow:hidden}
+    .panel-head{display:flex;align-items:center;justify-content:space-between;padding:13px 14px;border-bottom:1px solid var(--line)}
+    .panel-head strong{color:var(--contrast)}
+    .panel-body{padding:12px 14px 14px}
+    .layer{display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:center;padding:10px 0;border-bottom:1px solid var(--line)}
+    .layer:last-child{border-bottom:0}
+    .layer label{font-weight:700}
+    .layer small{display:block;color:var(--muted);font-size:11px;margin-top:2px}
+    .pill{font-size:10px;font-weight:800;padding:4px 7px;border-radius:999px;background:var(--soft);color:var(--muted)}
+    .opacity{grid-column:2/4;display:grid;grid-template-columns:1fr 42px;gap:8px;align-items:center}
+    .opacity input{width:100%}
+    .toolbar{position:absolute;right:14px;top:14px;display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end;max-width:330px;z-index:11}
+    .tool{width:42px;height:42px;border:1px solid var(--line);border-radius:12px;background:rgba(255,255,255,.96);box-shadow:0 6px 18px rgba(23,59,99,.12);color:var(--contrast);cursor:pointer;font-weight:800}
+    .tool:hover{background:var(--soft)} .tool:disabled{opacity:.38;cursor:not-allowed}
+    .readout{position:absolute;left:14px;bottom:14px;z-index:10;display:flex;gap:8px;flex-wrap:wrap;max-width:calc(100% - 28px)}
+    .chip{background:rgba(23,59,99,.92);color:white;border-radius:10px;padding:8px 10px;font-size:11px;box-shadow:0 5px 16px rgba(0,0,0,.15)}
+    .chip strong{font-weight:800}
+    .info{position:absolute;right:14px;bottom:14px;width:min(360px,calc(100% - 28px));background:rgba(255,255,255,.96);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);z-index:10;padding:12px 14px}
+    .info h3{margin:0 0 6px;color:var(--contrast);font-size:15px}
+    .info p{margin:4px 0;color:var(--muted);font-size:12px;line-height:1.45}
+    .legend-swatch{display:inline-block;width:18px;height:3px;background:#c52f4e;vertical-align:middle;margin-right:6px}
+    .ol-scale-line{left:auto!important;right:14px!important;bottom:106px!important;background:rgba(23,59,99,.78)!important;border-radius:8px!important;padding:4px 6px!important}
+    .ol-scale-line-inner{border-color:#fff!important;color:#fff!important}
+    .collapsed .panel-body{display:none}
+    .collapse-btn{border:0;background:transparent;color:var(--contrast);cursor:pointer;font-size:18px}
+    @media(max-width:760px){
+      .title{font-size:15px}.top-status{display:none}
+      .panel{top:10px;left:10px;width:calc(100% - 20px)}
+      .toolbar{top:auto;right:10px;bottom:94px;max-width:190px}
+      .readout{left:10px;bottom:10px;max-width:calc(100% - 20px)}
+      .info{display:none}
+      .ol-scale-line{right:10px!important;bottom:150px!important}
+    }
+  </style>
+</head>
+<body>
+<div class="app">
+  <header class="topbar">
+    <div class="brand">
+      <div class="mark">CR</div>
+      <div class="brand-copy">
+        <div class="eyebrow">CASTREJÓN · ÁREA DE RIEGO</div>
+        <div class="title">Visor de control C.R. Canal de Castrejón Margen Derecha</div>
+      </div>
+    </div>
+    <div class="top-status"><span id="globalDot" class="dot busy"></span><span id="globalStatus">Comprobando servicios cartográficos…</span></div>
+  </header>
+
+  <main class="workspace">
+    <div id="map" tabindex="0" aria-label="Visor cartográfico de la C.R. Canal de Castrejón Margen Derecha"></div>
+
+    <section id="layerPanel" class="panel" aria-label="Selector de capas">
+      <div class="panel-head">
+        <strong>Capas</strong>
+        <button class="collapse-btn" id="collapseBtn" aria-label="Plegar selector de capas">−</button>
+      </div>
+      <div class="panel-body">
+        <div class="layer">
+          <input id="pnoaToggle" type="checkbox" checked>
+          <div><label for="pnoaToggle">PNOA Máxima Actualidad</label><small>IGN · XYZ/TMS · teselas pregeneradas</small></div>
+          <span id="pnoaState" class="pill">cargando</span>
+        </div>
+        <div class="layer">
+          <input id="sigpacToggle" type="checkbox" checked>
+          <div><label for="sigpacToggle">Recintos SIGPAC</label><small>FEGA / MAPA · WMS · campaña vigente</small></div>
+          <span id="sigpacState" class="pill">cargando</span>
+          <div class="opacity">
+            <input id="sigpacOpacity" type="range" min="0" max="1" step="0.05" value="0.88" aria-label="Opacidad de Recintos SIGPAC">
+            <output id="sigpacOpacityValue">88%</output>
+          </div>
+        </div>
+        <div class="layer">
+          <input id="catToggle" type="checkbox">
+          <div><label for="catToggle">Catastro</label><small>D.G. Catastro · INSPIRE · límites de parcela</small></div>
+          <span id="catState" class="pill">oculto</span>
+          <div class="opacity">
+            <input id="catOpacity" type="range" min="0" max="1" step="0.05" value="0.62" aria-label="Opacidad de Catastro">
+            <output id="catOpacityValue">62%</output>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <nav class="toolbar" aria-label="Navegación del mapa">
+      <button class="tool" id="backBtn" title="Vista anterior" aria-label="Vista anterior">←</button>
+      <button class="tool" id="forwardBtn" title="Vista siguiente" aria-label="Vista siguiente">→</button>
+      <button class="tool" id="zoomInBtn" title="Acercar" aria-label="Acercar">+</button>
+      <button class="tool" id="zoomOutBtn" title="Alejar" aria-label="Alejar">−</button>
+      <button class="tool" id="homeBtn" title="Volver al inicio" aria-label="Volver al centro inicial">⌂</button>
+      <button class="tool" id="fullBtn" title="Pantalla completa" aria-label="Pantalla completa">⛶</button>
+    </nav>
+
+    <div class="readout">
+      <div class="chip"><strong>EPSG:4326</strong> <span id="coords">−4.371848, 39.834749</span></div>
+      <div class="chip"><strong>Zoom</strong> <span id="zoomValue">13.27</span></div>
+      <div class="chip"><strong>Escala ref.</strong> 1:43 526</div>
+    </div>
+
+    <aside class="info">
+      <h3>Marco M0.2 · PNOA + SIGPAC + Catastro</h3>
+      <p><span class="legend-swatch"></span>SIGPAC muestra los recintos de la campaña vigente sobre PNOA.</p>
+      <p>Inicio: −4.371848, 39.834749 · zoom 13.27. La escala gráfica se actualiza con la vista.</p>
+      <p>Catastro se ofrece como capa INSPIRE de límites. En esta fase no se cargan parcelas internas, hidrantes, red ni datos de comuneros.</p>
+    </aside>
+  </main>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/ol@10.6.1/dist/ol.js"></script>
+<script>
+(() => {
+  'use strict';
+
+  const CONFIG = Object.freeze({
+    center4326: [-4.371848, 39.834749],
+    initialZoom: 13.27,
+    referenceScale: 43526,
+    services: {
+      pnoa: {
+        url: 'https://tms-pnoa-ma.idee.es/1.0.0/pnoa-ma/{z}/{x}/{-y}.jpeg',
+        minZoom: 1,
+        maxZoom: 19
+      },
+      sigpac: {
+        url: 'https://sigpac-hubcloud.es/wms',
+        version: '1.3.0',
+        layers: 'AU.Sigpac:recinto'
+      },
+      catastro: {
+        url: 'https://ovc.catastro.meh.es/cartografia/INSPIRE/spadgcwms.aspx',
+        version: '1.1.1',
+        layers: 'CP.CadastralParcel',
+        styles: 'CP.CadastralParcel.BoundariesOnly'
+      }
+    }
+  });
+
+  // PNOA: teselas pregeneradas oficiales. Evita recalcular una imagen WMS completa en cada zoom.
+  // TMS usa eje Y invertido; OpenLayers resuelve {-y} directamente.
+  const pnoaSource = new ol.source.XYZ({
+    url: CONFIG.services.pnoa.url,
+    projection: 'EPSG:3857',
+    minZoom: CONFIG.services.pnoa.minZoom,
+    maxZoom: CONFIG.services.pnoa.maxZoom,
+    tileSize: 256,
+    crossOrigin: 'anonymous',
+    transition: 120,
+    interpolate: true,
+    wrapX: false,
+    attributions: 'PNOA Máxima Actualidad · IGN/CNIG'
+  });
+
+  // SIGPAC Recintos: capa oficial de la campaña vigente. El ejemplo oficial del servicio usa TileWMS.
+  const sigpacSource = new ol.source.TileWMS({
+    url: CONFIG.services.sigpac.url,
+    params: {
+      'SERVICE': 'WMS',
+      'LAYERS': CONFIG.services.sigpac.layers,
+      'VERSION': CONFIG.services.sigpac.version,
+      'FORMAT': 'image/png',
+      'TRANSPARENT': true,
+      'TILED': true
+    },
+    serverType: 'geoserver',
+    projection: 'EPSG:3857',
+    crossOrigin: 'anonymous',
+    transition: 120,
+    wrapX: false,
+    attributions: 'SIGPAC · FEGA/MAPA · CC BY 4.0'
+  });
+
+  // Catastro: petición WMS de imagen completa. La D.G. del Catastro desaconseja el uso
+  // teselado de su WMS clásico. Usamos el servicio INSPIRE y el estilo BoundariesOnly
+  // para una representación más limpia, manteniendo la atribución oficial.
+  const catastroSource = new ol.source.ImageWMS({
+    url: CONFIG.services.catastro.url,
+    params: {
+      'LAYERS': CONFIG.services.catastro.layers,
+      'STYLES': CONFIG.services.catastro.styles,
+      'VERSION': CONFIG.services.catastro.version,
+      'FORMAT': 'image/png',
+      'TRANSPARENT': true
+    },
+    projection: 'EPSG:3857',
+    crossOrigin: 'anonymous',
+    ratio: 1.15,
+    hidpi: false,
+    attributions: 'Dirección General del Catastro · INSPIRE'
+  });
+
+  const pnoa = new ol.layer.Tile({
+    source: pnoaSource,
+    visible: true,
+    preload: 2,
+    useInterimTilesOnError: true,
+    properties: { id: 'pnoa', title: 'PNOA Máxima Actualidad' }
+  });
+
+  const sigpac = new ol.layer.Tile({
+    source: sigpacSource,
+    visible: true,
+    opacity: 0.88,
+    preload: 1,
+    useInterimTilesOnError: true,
+    properties: { id: 'sigpac', title: 'Recintos SIGPAC' }
+  });
+
+  const catastro = new ol.layer.Image({
+    source: catastroSource,
+    visible: false,
+    opacity: 0.62,
+    properties: { id: 'catastro', title: 'Catastro INSPIRE' }
+  });
+
+  const view = new ol.View({
+    projection: 'EPSG:3857',
+    center: ol.proj.fromLonLat(CONFIG.center4326),
+    zoom: CONFIG.initialZoom,
+    minZoom: 5,
+    maxZoom: 20,
+    constrainResolution: false,
+    smoothResolutionConstraint: true
+  });
+
+  const map = new ol.Map({
+    target: 'map',
+    layers: [pnoa, sigpac, catastro],
+    view,
+    controls: ol.control.defaults.defaults({zoom:false, rotate:false, attribution:true}).extend([
+      new ol.control.ScaleLine({units:'metric', bar:true, steps:4, text:true, minWidth:130})
+    ]),
+    interactions: ol.interaction.defaults.defaults({altShiftDragRotate:false, pinchRotate:false}),
+    moveTolerance: 2,
+    pixelRatio: Math.min(window.devicePixelRatio || 1, 2)
+  });
+
+  // ---- Service status -------------------------------------------------------
+  const states = {pnoa:'loading', sigpac:'loading', catastro:'idle'};
+  const stateElement = key => ({pnoa:'pnoaState',sigpac:'sigpacState',catastro:'catState'})[key];
+  const setState = (key, state) => {
+    states[key] = state;
+    const el = document.getElementById(stateElement(key));
+    el.textContent = state === 'ok' ? 'activo' : state === 'error' ? 'error' : state === 'idle' ? 'oculto' : 'cargando';
+    el.style.color = state === 'ok' ? '#276c37' : state === 'error' ? '#a23232' : '#526979';
+    updateGlobalState();
+  };
+  const updateGlobalState = () => {
+    const vals = Object.values(states).filter(v=>v!=='idle');
+    const dot = document.getElementById('globalDot');
+    const txt = document.getElementById('globalStatus');
+    dot.className = 'dot ' + (vals.includes('error') ? 'bad' : vals.length && vals.every(v=>v==='ok') ? 'ok' : 'busy');
+    txt.textContent = vals.includes('error') ? 'Algún servicio no ha respondido' : vals.length && vals.every(v=>v==='ok') ? 'Servicios cartográficos activos' : 'Cargando cartografía…';
+  };
+  const tileHealth = {
+    pnoa: {active:0, ok:0, error:0},
+    sigpac: {active:0, ok:0, error:0}
+  };
+  const bindTileHealth = (key, src) => {
+    src.on('tileloadstart', () => {
+      tileHealth[key].active++;
+      if (tileHealth[key].ok === 0) setState(key,'loading');
+    });
+    src.on('tileloadend', () => {
+      tileHealth[key].active = Math.max(0, tileHealth[key].active-1);
+      tileHealth[key].ok++;
+      setState(key,'ok');
+    });
+    src.on('tileloaderror', () => {
+      tileHealth[key].active = Math.max(0, tileHealth[key].active-1);
+      tileHealth[key].error++;
+      if (tileHealth[key].ok === 0) setState(key,'error');
+    });
+  };
+  bindTileHealth('pnoa', pnoaSource);
+  bindTileHealth('sigpac', sigpacSource);
+  catastroSource.on('imageloadstart', () => setState('catastro','loading'));
+  catastroSource.on('imageloadend', () => setState('catastro','ok'));
+  catastroSource.on('imageloaderror', () => setState('catastro','error'));
+
+  // ---- Layers --------------------------------------------------------------
+  const pnoaToggle = document.getElementById('pnoaToggle');
+  const sigpacToggle = document.getElementById('sigpacToggle');
+  const catToggle = document.getElementById('catToggle');
+  const sigpacOpacity = document.getElementById('sigpacOpacity');
+  const sigpacOpacityValue = document.getElementById('sigpacOpacityValue');
+  const catOpacity = document.getElementById('catOpacity');
+  const catOpacityValue = document.getElementById('catOpacityValue');
+
+  pnoaToggle.addEventListener('change', e => pnoa.setVisible(e.target.checked));
+  sigpacToggle.addEventListener('change', e => {
+    sigpac.setVisible(e.target.checked);
+    setState('sigpac', e.target.checked ? 'loading' : 'idle');
+  });
+  catToggle.addEventListener('change', e => {
+    catastro.setVisible(e.target.checked);
+    setState('catastro', e.target.checked ? 'loading' : 'idle');
+  });
+  sigpacOpacity.addEventListener('input', e => {
+    const v = Number(e.target.value);
+    sigpac.setOpacity(v);
+    sigpacOpacityValue.value = Math.round(v*100) + '%';
+  });
+  catOpacity.addEventListener('input', e => {
+    const v = Number(e.target.value);
+    catastro.setOpacity(v);
+    catOpacityValue.value = Math.round(v*100) + '%';
+  });
+
+  // ---- Navigation history --------------------------------------------------
+  const history = [];
+  let historyIndex = -1;
+  let navigatingHistory = false;
+  const snapshot = () => ({center:view.getCenter().slice(), zoom:view.getZoom()});
+  const sameView = (a,b) => a && b &&
+    Math.abs(a.zoom-b.zoom)<0.0001 &&
+    Math.hypot(a.center[0]-b.center[0], a.center[1]-b.center[1])<0.01;
+
+  const updateHistoryButtons = () => {
+    document.getElementById('backBtn').disabled = historyIndex <= 0;
+    document.getElementById('forwardBtn').disabled = historyIndex >= history.length-1;
+  };
+  const pushHistory = () => {
+    if (navigatingHistory) return;
+    const s = snapshot();
+    if (sameView(history[historyIndex], s)) return;
+    history.splice(historyIndex+1);
+    history.push(s);
+    historyIndex = history.length-1;
+    if (history.length > 50) { history.shift(); historyIndex--; }
+    updateHistoryButtons();
+  };
+  const goHistory = idx => {
+    if (idx < 0 || idx >= history.length) return;
+    navigatingHistory = true;
+    historyIndex = idx;
+    const s = history[idx];
+    view.animate({center:s.center, zoom:s.zoom, duration:250}, () => {
+      navigatingHistory = false; updateHistoryButtons(); updateReadout();
+    });
+    updateHistoryButtons();
+  };
+  map.once('rendercomplete', pushHistory);
+  map.on('moveend', () => { pushHistory(); updateReadout(); });
+
+  document.getElementById('backBtn').addEventListener('click', () => goHistory(historyIndex-1));
+  document.getElementById('forwardBtn').addEventListener('click', () => goHistory(historyIndex+1));
+  document.getElementById('zoomInBtn').addEventListener('click', () => view.animate({zoom:view.getZoom()+1,duration:180}));
+  document.getElementById('zoomOutBtn').addEventListener('click', () => view.animate({zoom:view.getZoom()-1,duration:180}));
+  document.getElementById('homeBtn').addEventListener('click', () => view.animate({
+    center:ol.proj.fromLonLat(CONFIG.center4326), zoom:CONFIG.initialZoom, duration:350
+  }));
+  document.getElementById('fullBtn').addEventListener('click', async () => {
+    const root = document.querySelector('.workspace');
+    if (!document.fullscreenElement) await root.requestFullscreen?.();
+    else await document.exitFullscreen?.();
+    setTimeout(()=>map.updateSize(),120);
+  });
+
+  // ---- Readouts ------------------------------------------------------------
+  const updateReadout = () => {
+    document.getElementById('zoomValue').textContent = Number(view.getZoom()).toFixed(2);
+  };
+  map.on('pointermove', evt => {
+    const ll = ol.proj.toLonLat(evt.coordinate);
+    document.getElementById('coords').textContent = `${ll[0].toFixed(6)}, ${ll[1].toFixed(6)}`;
+  });
+  map.getViewport().addEventListener('mouseleave', () => {
+    const ll = ol.proj.toLonLat(view.getCenter());
+    document.getElementById('coords').textContent = `${ll[0].toFixed(6)}, ${ll[1].toFixed(6)}`;
+  });
+  updateReadout();
+
+  // ---- Panel ---------------------------------------------------------------
+  document.getElementById('collapseBtn').addEventListener('click', e => {
+    const panel = document.getElementById('layerPanel');
+    panel.classList.toggle('collapsed');
+    e.currentTarget.textContent = panel.classList.contains('collapsed') ? '+' : '−';
+  });
+
+  // Focus map for keyboard interactions after click.
+  map.on('click', () => document.getElementById('map').focus({preventScroll:true}));
+})();
+</script>
+</body>
+</html>
