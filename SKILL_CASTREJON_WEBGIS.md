@@ -1,5 +1,5 @@
 # SKILL · Castrejón WebGIS — Contrato de arquitectura y evolución
-Version: 0.1.4
+Version: 0.1.5
 Fecha base: 2026-09-29
 Estado: ACTIVO · se actualiza tras cada ciclo de pruebas
 
@@ -381,6 +381,14 @@ Historial de vista:
 - El piloto documental 0.1.1 no autoriza aún documentos reales.
 
 ## 10. Pruebas obligatorias por cambio
+La puerta CI local (`python3 scripts/check_webgis.py`, Python 3.12 + Node 24)
+automatiza sólo estructura básica HTML, sintaxis JavaScript, configuración efectiva
+de fuentes/centro/zoom/atribuciones y patrones de secretos evidentes. No consulta
+servicios remotos ni certifica renderizado o disponibilidad. Conservar las 20
+comprobaciones siguientes: las partes visuales, de interacción real y de servicios
+se registran manualmente con el checklist del README, sin darlas por superadas por CI.
+Pages sólo empaqueta y despliega desde `main` tras superar el job `gate`.
+
 Cada cambio debe comprobar:
 1. Arranque sin errores de JavaScript.
 2. Carga PNOA.
@@ -427,6 +435,16 @@ Formato de cada cambio:
 No borrar una regla por comodidad. Si una regla cambia, conservar el motivo en el historial.
 
 ## 12. Registro de cambios
+### 0.1.5 — 2026-09-29
+- Fallo observado: el workflow empaquetaba y desplegaba sin comprobar regresiones locales.
+- Reproducción: un push a main alcanzaba Upload/Deploy sin validación de index.html.
+- Causa: las 20 comprobaciones existían sólo como contrato manual.
+- Corrección: añadir gate sin dependencias npm/pip, ejecutado en PR, push y ejecución manual; deploy depende de gate y sólo acepta main. Publicar únicamente index.html y .nojekyll.
+- Regresión añadida: HTML/JS básico, PNOA XYZ/TMS, SIGPAC TileWMS, Catastro ImageWMS/INSPIRE, vista e Inicio bloqueados, atribuciones configuradas y secretos evidentes en archivos versionados.
+- Archivos afectados: SKILL_CASTREJON_WEBGIS.md, README.md, .github/workflows/pages.yml, scripts/check_webgis.py, scripts/check-map.cjs.
+- Compatibilidad hacia atrás: index.html y sus valores actuales permanecen intactos; Node/Python sólo se usan en CI/desarrollo. Revertir el commit restaura el workflow previo.
+- Pendiente manual: SIGPAC usa opacidad 0,33 en index.html frente a 0,88 en §7; este cambio CI no decide ni modifica esa preferencia.
+
 ### 0.1.3 — 2026-09-29
 - Prueba previa: M0.1 validado por el usuario sin fallos funcionales en navegación, PNOA, Catastro y controles.
 - Nueva función: se incorpora Recintos SIGPAC de campaña vigente mediante el WMS oficial `https://sigpac-hubcloud.es/wms`, capa `AU.Sigpac:recinto`, visible por defecto.
