@@ -1,5 +1,5 @@
 # SKILL · Castrejón WebGIS — Contrato de arquitectura y evolución
-Version: 0.1.5
+Version: 0.1.6
 Fecha base: 2026-09-29
 Estado: ACTIVO · se actualiza tras cada ciclo de pruebas
 
@@ -302,7 +302,9 @@ Modelo validado -> escenario -> ejecutar -> resultados SIMULADOS -> comparar con
 - Escala.
 - Ficha lateral reutilizable.
 - Mensajes de carga/error visibles y no bloqueantes.
-- Diseño responsive.
+- Diseño responsive: panel de capas plegado al entrar en móvil, controles táctiles de al menos 44 px y soporte vertical/horizontal.
+- Atribuciones y escala en una franja propia, fuera de las superposiciones del mapa; atribuciones siempre expandidas.
+- Altura dinámica y áreas seguras del dispositivo. Coordenadas del centro en móvil y del cursor en escritorio.
 - Navegación por teclado donde sea aplicable.
 - Los módulos futuros se añaden al marco; no crean visores independientes.
 
@@ -331,7 +333,7 @@ B) Recintos SIGPAC (FEGA/MAPA)
 - Versión WMS: 1.3.0.
 - Formato: image/png transparente.
 - Proyección de visualización: EPSG:3857.
-- Estado inicial: visible, opacidad 0,88.
+- Estado inicial: visible, opacidad 0,33 (decisión definitiva del usuario, 2026-09-29).
 - Licencia/atribución: CC BY 4.0; mantener atribución SIGPAC · FEGA/MAPA.
 - Regla: el WMS es una representación de los recintos, no la geometría maestra interna de la comunidad.
 - Regla: la campaña vigente puede cambiar; verificar GetCapabilities/nombre de capa en cada revisión mayor.
@@ -435,6 +437,15 @@ Formato de cada cambio:
 No borrar una regla por comodidad. Si una regla cambia, conservar el motivo en el historial.
 
 ## 12. Registro de cambios
+### 0.1.6 — 2026-09-29
+- Fallo observado: el panel ocupa el ancho móvil al inicio; controles pequeños y elementos inferiores pueden competir con escala/atribuciones. Los sliders usan pasos 0,05 incompatibles con los valores 0,33/0,62.
+- Reproducción: abrir el visor con ancho móvil o girar a horizontal; comparar panel, botones y pie.
+- Causa: adaptación móvil basada en posiciones absolutas y opacidad SIGPAC sin sincronizar en el contrato.
+- Corrección: fijar SIGPAC 0,33 por decisión expresa del usuario; panel plegable accesible, zonas táctiles, pie independiente para lecturas/escala/atribuciones, altura dinámica y áreas seguras. Sliders con paso 0,01.
+- Regresión añadida: gate comprueba opacidad SIGPAC 0,33 y coherencia inicial de ambos sliders; revisión visual/manual de tamaños móviles, giro, panel, foco y atribuciones.
+- Archivos afectados: index.html, SKILL_CASTREJON_WEBGIS.md, README.md, scripts/check-map.cjs.
+- Compatibilidad hacia atrás: servicios, fuentes, CRS, centro/zoom e historial conservados. Sin dependencias nuevas ni cambios de workflow. Reversible mediante revert.
+
 ### 0.1.5 — 2026-09-29
 - Fallo observado: el workflow empaquetaba y desplegaba sin comprobar regresiones locales.
 - Reproducción: un push a main alcanzaba Upload/Deploy sin validación de index.html.
@@ -443,7 +454,7 @@ No borrar una regla por comodidad. Si una regla cambia, conservar el motivo en e
 - Regresión añadida: HTML/JS básico, PNOA XYZ/TMS, SIGPAC TileWMS, Catastro ImageWMS/INSPIRE, vista e Inicio bloqueados, atribuciones configuradas y secretos evidentes en archivos versionados.
 - Archivos afectados: SKILL_CASTREJON_WEBGIS.md, README.md, .github/workflows/pages.yml, scripts/check_webgis.py, scripts/check-map.cjs.
 - Compatibilidad hacia atrás: index.html y sus valores actuales permanecen intactos; Node/Python sólo se usan en CI/desarrollo. Revertir el commit restaura el workflow previo.
-- Pendiente manual: SIGPAC usa opacidad 0,33 en index.html frente a 0,88 en §7; este cambio CI no decide ni modifica esa preferencia.
+- Observación en 0.1.5: SIGPAC usaba 0,33 en index.html frente a 0,88 en §7; resuelto en 0.1.6 por decisión del usuario a favor de 0,33.
 
 ### 0.1.3 — 2026-09-29
 - Prueba previa: M0.1 validado por el usuario sin fallos funcionales en navegación, PNOA, Catastro y controles.

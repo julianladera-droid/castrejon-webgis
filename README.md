@@ -111,6 +111,26 @@ Tras publicar: [ ] enlace WordPress → Pages; [ ] CORS/CSP desde origen remoto;
 [ ] pantalla completa. Las incidencias remotas se registran como tales y no se
 convierten en pruebas CI inestables.
 
-Pendiente de decisión fuera de esta puerta: `index.html` tiene opacidad SIGPAC
-0,33 y la skill §7 indica 0,88. Se conserva el código actual sin fijar ese valor
-como regresión automática.
+## Adaptación móvil (0.1.6)
+
+SIGPAC queda definitivamente en **0,33**, según decisión del usuario; Catastro
+mantiene **0,62**. Los sliders usan paso 0,01 y el gate comprueba su coherencia
+con la capa, además de la opacidad inicial SIGPAC.
+
+- Panel de capas plegado al entrar en un tamaño compacto; se abre pulsando
+  «Capas del mapa», se desplaza internamente si falta altura y se cierra con
+  el mismo botón o Escape. Comunica su estado mediante `aria-expanded`.
+- Navegación táctil inferior, botones de al menos 44 px y foco visible.
+- Altura dinámica del navegador y márgenes de áreas seguras. Se conserva el
+  encuadre cuando cambia el tamaño del mapa.
+- Pie propio para coordenadas, escala gráfica y atribuciones siempre
+  expandidas; los paneles no cubren esta franja.
+- En móvil, la cruz central señala las coordenadas del centro; en escritorio
+  se muestran las del cursor. Las lecturas siguen en EPSG:4326.
+- Pantalla completa sólo aparece si el navegador la admite; un rechazo muestra
+  un aviso y las animaciones respetan la preferencia de movimiento reducido.
+
+Verificación manual adicional: 320×568, 390×844, móvil horizontal, escritorio,
+abrir/cerrar/desplazar panel, cambiar orientación con el panel abierto, sliders
+33/62 %, atribuciones con Catastro activo y navegador con barras visibles.
+La simulación de tamaños no sustituye la prueba en un dispositivo físico.
