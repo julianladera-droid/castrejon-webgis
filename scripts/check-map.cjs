@@ -36,11 +36,17 @@ class MapView extends Events {
 }
 const elements = Object.fromEntries(Object.entries(input.ids).map(([id, attrs]) => {
   const element = new Events();
+  const classes = new Set();
   Object.assign(element, {style: {}, value: attrs.value, checked: 'checked' in attrs,
-    classList: {toggle() {}, contains() { return false; }}, focus() {}});
+    classList: {toggle(name, enabled) { enabled ? classes.add(name) : classes.delete(name); },
+      contains(name) { return classes.has(name); }},
+    setAttribute(name, value) { attrs[name] = value; },
+    contains() { return false; }, focus() {}});
   return [id, element];
 }));
 const document = {
+  addEventListener() {},
+  fullscreenEnabled: false,
   getElementById(id) { check(elements[id], 'DOM: id solicitado inexistente'); return elements[id]; },
   querySelector() { throw new Error('DOM: selector nuevo; adaptar el doble de prueba'); }
 };
@@ -48,7 +54,8 @@ const document = {
 const fromLonLat = (coords, target = 'EPSG:3857') => ({from: 'EPSG:4326', to: target, coords});
 const homeCenter = fromLonLat([-4.371848, 39.834749]);
 const context = vm.createContext({
-  document, window: {devicePixelRatio: 1},
+  document, window: {devicePixelRatio: 1,
+    matchMedia: () => Object.assign(new Events(), {matches: false})},
   ol: {
     source: {XYZ, TileWMS, ImageWMS}, layer: {Tile, Image}, View, Map: MapView,
     proj: {fromLonLat, toLonLat: point => point.coords},
@@ -77,6 +84,12 @@ try {
   check(map.target === 'map', 'Destino del mapa incorrecto');
   check(map.layers.length === 3, 'Esperadas tres capas M0.2');
   const [pnoa, sigpac, catastro] = map.layers;
+  check(sigpac.options.opacity === 0.33, 'SIGPAC: opacidad inicial definitiva 0,33');
+  for (const [layer, id] of [[sigpac, 'sigpacOpacity'], [catastro, 'catOpacity']]) {
+    const attrs = input.ids[id];
+    check(Number(attrs.value) === layer.options.opacity && attrs.step === '0.01',
+      'Opacidad: valor inicial del slider y paso deben representar la opacidad real');
+  }
   for (const [layer, id, LayerType, SourceType] of [
     [pnoa, 'pnoa', Tile, XYZ], [sigpac, 'sigpac', Tile, TileWMS],
     [catastro, 'catastro', Image, ImageWMS]
@@ -123,6 +136,9 @@ try {
       'Falta atribución contractual de una fuente');
   }
   check(map.controls?.options.attribution === true, 'Control de atribuciones desactivado');
+  check(map.controls.options.attributionOptions?.collapsible === false &&
+    map.controls.options.attributionOptions?.target === 'attributionTarget',
+    'Atribuciones: mantener expandidas en el pie dedicado');
   console.log('OK: atribuciones configuradas y control habilitado (visibilidad real: manual)');
 } catch (error) {
   // Sólo mensajes propios; nunca volcar código, valores ni stack que puedan incluir secretos.

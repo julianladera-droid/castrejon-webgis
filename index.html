@@ -12,57 +12,80 @@
       --text:#18374D;--crop:#F5F8F1;--shadow:0 12px 34px rgba(23,59,99,.16);
     }
     *{box-sizing:border-box}
-    html,body{height:100%;margin:0;font-family:Manrope,Inter,system-ui,-apple-system,Segoe UI,sans-serif;color:var(--text);background:#eaf0f2}
-    button,input{font:inherit}
-    .app{height:100%;display:grid;grid-template-rows:auto 1fr}
-    .topbar{display:flex;align-items:center;justify-content:space-between;gap:18px;padding:12px 16px;background:var(--base);border-bottom:1px solid var(--line);z-index:20}
-    .brand{display:flex;align-items:center;gap:12px;min-width:0}
-    .mark{width:38px;height:38px;border-radius:12px;background:var(--contrast);display:grid;place-items:center;color:white;font-weight:800}
+    [hidden]{display:none!important}
+    html,body{height:100%;margin:0;overflow:hidden;font-family:Manrope,Inter,system-ui,-apple-system,Segoe UI,sans-serif;color:var(--text);background:#eaf0f2}
+    button,input{font:inherit;touch-action:manipulation}
+    button:focus-visible,input:focus-visible,#map:focus-visible{outline:3px solid var(--water);outline-offset:3px}
+    .app{height:100%;height:100dvh;display:grid;grid-template-rows:auto minmax(0,1fr);background:var(--base)}
+    .topbar{display:flex;align-items:center;justify-content:space-between;gap:18px;padding:calc(10px + env(safe-area-inset-top,0px)) max(16px,env(safe-area-inset-right,0px)) 10px max(16px,env(safe-area-inset-left,0px));background:var(--base);border-bottom:1px solid var(--line);z-index:20}
+    .brand{display:flex;align-items:center;gap:10px;min-width:0}
+    .mark{width:38px;height:38px;flex:none;border-radius:12px;background:var(--contrast);display:grid;place-items:center;color:white;font-weight:800}
     .brand-copy{min-width:0}
-    .eyebrow{font-size:11px;letter-spacing:.12em;font-weight:800;color:var(--green)}
-    .title{font-size:18px;font-weight:800;color:var(--contrast);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-    .top-status{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--muted)}
-    .dot{width:8px;height:8px;border-radius:50%;background:#9aaab5}
+    .eyebrow{font-size:10px;letter-spacing:.1em;font-weight:800;color:var(--green)}
+    .title{font-size:18px;line-height:1.25;font-weight:800;color:var(--contrast)}
+    .top-status{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--muted);max-width:220px}
+    .dot{width:8px;height:8px;flex:none;border-radius:50%;background:#9aaab5}
     .dot.ok{background:#2e8b57}.dot.busy{background:#d59a22}.dot.bad{background:#c44545}
-    .workspace{min-height:0;position:relative}
-    #map{position:absolute;inset:0;background:#dce7ea;outline:none}
-    .panel{position:absolute;top:14px;left:14px;width:min(340px,calc(100% - 28px));background:rgba(255,255,255,.96);backdrop-filter:blur(10px);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);z-index:10;overflow:hidden}
-    .panel-head{display:flex;align-items:center;justify-content:space-between;padding:13px 14px;border-bottom:1px solid var(--line)}
-    .panel-head strong{color:var(--contrast)}
-    .panel-body{padding:12px 14px 14px}
-    .layer{display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:center;padding:10px 0;border-bottom:1px solid var(--line)}
+    .workspace{min-height:0;display:grid;grid-template-rows:minmax(0,1fr) auto}
+    .map-stage{min-height:0;position:relative;isolation:isolate}
+    #map{position:absolute;inset:0;background:#dce7ea}
+    .panel{position:absolute;top:12px;left:max(12px,env(safe-area-inset-left,0px));width:min(340px,calc(100% - 24px));max-height:calc(100% - 24px);display:flex;flex-direction:column;background:rgba(255,255,255,.97);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);z-index:10}
+    .panel-head{display:flex;align-items:center;justify-content:space-between;gap:16px;flex:none;width:100%;min-height:48px;padding:10px 14px;border:0;border-radius:14px;background:transparent;color:var(--contrast);cursor:pointer;text-align:left;font-weight:800}
+    .panel-head span{font-size:22px;line-height:1}
+    .panel-body{min-height:0;overflow-y:auto;overscroll-behavior:contain;touch-action:pan-y;padding:0 14px 10px;border-top:1px solid var(--line)}
+    .layer{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:2px 8px;align-items:center;padding:6px 0;border-bottom:1px solid var(--line)}
     .layer:last-child{border-bottom:0}
-    .layer label{font-weight:700}
-    .layer small{display:block;color:var(--muted);font-size:11px;margin-top:2px}
+    .layer-choice{display:flex;align-items:center;gap:10px;min-height:44px;font-weight:700;cursor:pointer}
+    .layer-choice input{width:24px;height:24px;flex:none;margin:0;accent-color:var(--green)}
+    .layer small{display:block;color:var(--muted);font-size:11px;font-weight:400;margin-top:3px}
     .pill{font-size:10px;font-weight:800;padding:4px 7px;border-radius:999px;background:var(--soft);color:var(--muted)}
-    .opacity{grid-column:2/4;display:grid;grid-template-columns:1fr 42px;gap:8px;align-items:center}
-    .opacity input{width:100%}
-    .toolbar{position:absolute;right:14px;top:14px;display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end;max-width:330px;z-index:11}
-    .tool{width:42px;height:42px;border:1px solid var(--line);border-radius:12px;background:rgba(255,255,255,.96);box-shadow:0 6px 18px rgba(23,59,99,.12);color:var(--contrast);cursor:pointer;font-weight:800}
-    .tool:hover{background:var(--soft)} .tool:disabled{opacity:.38;cursor:not-allowed}
-    .readout{position:absolute;left:14px;bottom:14px;z-index:10;display:flex;gap:8px;flex-wrap:wrap;max-width:calc(100% - 28px)}
-    .chip{background:rgba(23,59,99,.92);color:white;border-radius:10px;padding:8px 10px;font-size:11px;box-shadow:0 5px 16px rgba(0,0,0,.15)}
-    .chip strong{font-weight:800}
-    .info{position:absolute;right:14px;bottom:14px;width:min(360px,calc(100% - 28px));background:rgba(255,255,255,.96);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);z-index:10;padding:12px 14px}
+    .opacity{grid-column:1/3;display:grid;grid-template-columns:minmax(0,1fr) 42px;gap:8px;align-items:center}
+    .opacity input{width:100%;min-width:0;height:44px;margin:0;accent-color:var(--water)}
+    .opacity output{text-align:right;font-size:12px;font-variant-numeric:tabular-nums}
+    .toolbar{position:absolute;right:max(12px,env(safe-area-inset-right,0px));top:12px;display:flex;gap:8px;z-index:11}
+    .tool{width:44px;height:44px;flex:none;border:1px solid var(--line);border-radius:12px;background:rgba(255,255,255,.97);box-shadow:0 4px 14px rgba(23,59,99,.12);color:var(--contrast);cursor:pointer;font-size:20px;font-weight:800}
+    @media(hover:hover){.tool:hover,.panel-head:hover{background:var(--soft)}}
+    .tool:disabled{opacity:.38;cursor:not-allowed}
+    .map-footer{padding:6px max(12px,env(safe-area-inset-right,0px)) calc(6px + env(safe-area-inset-bottom,0px)) max(12px,env(safe-area-inset-left,0px));background:var(--base);border-top:1px solid var(--line);z-index:12}
+    .footer-row{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:4px 12px}
+    .readout{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+    .chip{font-size:11px;line-height:1.5;color:var(--muted);font-variant-numeric:tabular-nums}
+    .chip strong{font-weight:700;color:var(--contrast)}
+    #scaleTarget{min-height:24px}
+    #scaleTarget .ol-scale-line,#scaleTarget .ol-scale-bar{position:static;background:none;padding:0;margin:0;color:var(--contrast)}
+    #scaleTarget .ol-scale-line-inner{border-color:var(--contrast);color:var(--contrast);font-size:10px;margin:0}
+    #attributionTarget .ol-attribution{position:static;max-width:none;padding:2px 0 0;background:none;text-align:left;font-size:10px;line-height:1.4;color:var(--muted)}
+    #attributionTarget .ol-attribution ul{padding:0;margin:0;white-space:normal;text-shadow:none}
+    #attributionTarget .ol-attribution li{display:inline;line-height:1.4}
+    #attributionTarget .ol-attribution li:not(:last-child)::after{content:' · ';white-space:pre}
+    #attributionTarget a{color:var(--water)}
+    .info{position:absolute;right:12px;bottom:12px;width:min(360px,calc(100% - 24px));background:rgba(255,255,255,.96);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);z-index:10;padding:12px 14px}
     .info h3{margin:0 0 6px;color:var(--contrast);font-size:15px}
     .info p{margin:4px 0;color:var(--muted);font-size:12px;line-height:1.45}
     .legend-swatch{display:inline-block;width:18px;height:3px;background:#c52f4e;vertical-align:middle;margin-right:6px}
-    .ol-scale-line{left:auto!important;right:14px!important;bottom:106px!important;background:rgba(23,59,99,.78)!important;border-radius:8px!important;padding:4px 6px!important}
-    .ol-scale-line-inner{border-color:#fff!important;color:#fff!important}
-    .collapsed .panel-body{display:none}
-    .collapse-btn{border:0;background:transparent;color:var(--contrast);cursor:pointer;font-size:18px}
-    @media(max-width:760px){
-      .title{font-size:15px}.top-status{display:none}
-      .panel{top:10px;left:10px;width:calc(100% - 20px)}
-      .toolbar{top:auto;right:10px;bottom:94px;max-width:190px}
-      .readout{left:10px;bottom:10px;max-width:calc(100% - 20px)}
-      .info{display:none}
-      .ol-scale-line{right:10px!important;bottom:150px!important}
+    .crosshair{display:none;position:absolute;left:50%;top:50%;width:18px;height:18px;transform:translate(-50%,-50%);pointer-events:none;z-index:2}
+    .crosshair::before,.crosshair::after{content:'';position:absolute;background:var(--contrast);box-shadow:0 0 0 1px white}
+    .crosshair::before{width:18px;height:2px;top:8px}.crosshair::after{height:18px;width:2px;left:8px}
+    .notice{position:absolute;top:68px;right:12px;left:12px;z-index:12;padding:10px 12px;border-radius:10px;background:var(--contrast);color:white;font-size:13px}
+    @media(max-width:760px),(max-height:500px) and (pointer:coarse){
+      .topbar{padding-top:calc(8px + env(safe-area-inset-top,0px));padding-bottom:8px;gap:4px;flex-wrap:wrap}
+      .brand{gap:8px}.mark{width:32px;height:32px;border-radius:10px;font-size:12px}
+      .eyebrow{font-size:9px}.title{font-size:13px}.top-status{max-width:none;flex-basis:100%;font-size:10px;line-height:1.2}
+      .panel{top:10px;max-height:calc(100% - 82px);width:min(340px,calc(100% - 24px))}
+      .panel.collapsed{width:auto;min-width:156px}
+      .toolbar{top:auto;bottom:12px;left:max(12px,env(safe-area-inset-left,0px));right:max(12px,env(safe-area-inset-right,0px));margin-inline:auto;max-width:360px;display:grid;grid-auto-flow:column;grid-auto-columns:minmax(44px,1fr);gap:6px}
+      .tool{width:100%;height:48px;background:var(--base)}
+      .readout{gap:10px}.reference-scale,.info{display:none}
+      .map-footer{padding-top:5px;padding-bottom:calc(5px + env(safe-area-inset-bottom,0px))}
+      .chip{font-size:10px}.crosshair{display:block}
+      #scaleTarget{min-height:18px}#attributionTarget .ol-attribution{font-size:9px}
     }
+    @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto}}
+
   </style>
 </head>
 <body>
-<div class="app">
+<div class="app" id="appShell">
   <header class="topbar">
     <div class="brand">
       <div class="mark">CR</div>
@@ -71,38 +94,47 @@
         <div class="title">Visor de control C.R. Canal de Castrejón Margen Derecha</div>
       </div>
     </div>
-    <div class="top-status"><span id="globalDot" class="dot busy"></span><span id="globalStatus">Comprobando servicios cartográficos…</span></div>
+    <div class="top-status" role="status" aria-live="polite" aria-atomic="true"><span id="globalDot" class="dot busy"></span><span id="globalStatus">Comprobando servicios cartográficos…</span></div>
   </header>
 
   <main class="workspace">
+  <div class="map-stage">
     <div id="map" tabindex="0" aria-label="Visor cartográfico de la C.R. Canal de Castrejón Margen Derecha"></div>
 
+    <div class="crosshair" aria-hidden="true"></div>
+    <div id="uiNotice" class="notice" role="status" hidden></div>
+
     <section id="layerPanel" class="panel" aria-label="Selector de capas">
-      <div class="panel-head">
-        <strong>Capas</strong>
-        <button class="collapse-btn" id="collapseBtn" aria-label="Plegar selector de capas">−</button>
-      </div>
-      <div class="panel-body">
+      <button class="panel-head" id="collapseBtn" type="button" aria-expanded="true" aria-controls="layerPanelBody">
+        Capas del mapa <span id="panelGlyph" aria-hidden="true">−</span>
+      </button>
+      <div class="panel-body" id="layerPanelBody">
         <div class="layer">
-          <input id="pnoaToggle" type="checkbox" checked>
-          <div><label for="pnoaToggle">PNOA Máxima Actualidad</label><small>IGN · XYZ/TMS · teselas pregeneradas</small></div>
+          <label class="layer-choice" for="pnoaToggle">
+            <input id="pnoaToggle" type="checkbox" checked>
+            <span>PNOA Máxima Actualidad<small>IGN · XYZ/TMS · teselas pregeneradas</small></span>
+          </label>
           <span id="pnoaState" class="pill">cargando</span>
         </div>
         <div class="layer">
-          <input id="sigpacToggle" type="checkbox" checked>
-          <div><label for="sigpacToggle">Recintos SIGPAC</label><small>FEGA / MAPA · WMS · campaña vigente</small></div>
+          <label class="layer-choice" for="sigpacToggle">
+            <input id="sigpacToggle" type="checkbox" checked>
+            <span>Recintos SIGPAC<small>FEGA / MAPA · WMS · campaña vigente</small></span>
+          </label>
           <span id="sigpacState" class="pill">cargando</span>
           <div class="opacity">
-            <input id="sigpacOpacity" type="range" min="0" max="1" step="0.05" value="0.33" aria-label="Opacidad de Recintos SIGPAC">
+            <input id="sigpacOpacity" type="range" min="0" max="1" step="0.01" value="0.33" aria-label="Opacidad de Recintos SIGPAC">
             <output id="sigpacOpacityValue">33%</output>
           </div>
         </div>
         <div class="layer">
-          <input id="catToggle" type="checkbox">
-          <div><label for="catToggle">Catastro</label><small>D.G. Catastro · INSPIRE · límites de parcela</small></div>
+          <label class="layer-choice" for="catToggle">
+            <input id="catToggle" type="checkbox">
+            <span>Catastro<small>D.G. Catastro · INSPIRE · límites de parcela</small></span>
+          </label>
           <span id="catState" class="pill">oculto</span>
           <div class="opacity">
-            <input id="catOpacity" type="range" min="0" max="1" step="0.05" value="0.62" aria-label="Opacidad de Catastro">
+            <input id="catOpacity" type="range" min="0" max="1" step="0.01" value="0.62" aria-label="Opacidad de Catastro">
             <output id="catOpacityValue">62%</output>
           </div>
         </div>
@@ -118,18 +150,25 @@
       <button class="tool" id="fullBtn" title="Pantalla completa" aria-label="Pantalla completa">⛶</button>
     </nav>
 
-    <div class="readout">
-      <div class="chip"><strong>EPSG:4326</strong> <span id="coords">−4.371848, 39.834749</span></div>
-      <div class="chip"><strong>Zoom</strong> <span id="zoomValue">13.27</span></div>
-      <div class="chip"><strong>Escala ref.</strong> 1:43 526</div>
-    </div>
-
     <aside class="info">
       <h3>Marco M0.2 · PNOA + SIGPAC + Catastro</h3>
       <p><span class="legend-swatch"></span>SIGPAC muestra los recintos de la campaña vigente sobre PNOA.</p>
       <p>Inicio: −4.371848, 39.834749 · zoom 13.27. La escala gráfica se actualiza con la vista.</p>
       <p>Catastro se ofrece como capa INSPIRE de límites. En esta fase no se cargan parcelas internas, hidrantes, red ni datos de comuneros.</p>
     </aside>
+  </div>
+  <footer class="map-footer" aria-label="Coordenadas, escala y atribuciones">
+    <div class="footer-row">
+    <div class="readout">
+      <div class="chip"><strong id="coordsLabel" title="Coordenadas EPSG:4326">EPSG:4326</strong> <span id="coords">−4.371848, 39.834749</span></div>
+      <div class="chip"><strong>Zoom</strong> <span id="zoomValue">13.27</span></div>
+      <div class="chip reference-scale"><strong>Escala ref.</strong> 1:43 526</div>
+    </div>
+
+      <div id="scaleTarget" aria-label="Escala gráfica"></div>
+    </div>
+    <div id="attributionTarget" aria-label="Atribuciones cartográficas"></div>
+  </footer>
   </main>
 </div>
 
@@ -137,6 +176,10 @@
 <script>
 (() => {
   'use strict';
+
+  const compact = window.matchMedia('(max-width:760px), (max-height:500px) and (pointer:coarse)');
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion:reduce)');
+  const duration = ms => reducedMotion.matches ? 0 : ms;
 
   const CONFIG = Object.freeze({
     center4326: [-4.371848, 39.834749],
@@ -253,8 +296,9 @@
     target: 'map',
     layers: [pnoa, sigpac, catastro],
     view,
-    controls: ol.control.defaults.defaults({zoom:false, rotate:false, attribution:true}).extend([
-      new ol.control.ScaleLine({units:'metric', bar:true, steps:4, text:true, minWidth:130})
+    controls: ol.control.defaults.defaults({zoom:false, rotate:false, attribution:true,
+      attributionOptions:{target:'attributionTarget', collapsible:false}}).extend([
+      new ol.control.ScaleLine({target:'scaleTarget', units:'metric', minWidth:90})
     ]),
     interactions: ol.interaction.defaults.defaults({altShiftDragRotate:false, pinchRotate:false}),
     moveTolerance: 2,
@@ -361,7 +405,7 @@
     navigatingHistory = true;
     historyIndex = idx;
     const s = history[idx];
-    view.animate({center:s.center, zoom:s.zoom, duration:250}, () => {
+    view.animate({center:s.center, zoom:s.zoom, duration:duration(250)}, () => {
       navigatingHistory = false; updateHistoryButtons(); updateReadout();
     });
     updateHistoryButtons();
@@ -371,38 +415,72 @@
 
   document.getElementById('backBtn').addEventListener('click', () => goHistory(historyIndex-1));
   document.getElementById('forwardBtn').addEventListener('click', () => goHistory(historyIndex+1));
-  document.getElementById('zoomInBtn').addEventListener('click', () => view.animate({zoom:view.getZoom()+1,duration:180}));
-  document.getElementById('zoomOutBtn').addEventListener('click', () => view.animate({zoom:view.getZoom()-1,duration:180}));
+  document.getElementById('zoomInBtn').addEventListener('click', () => view.animate({zoom:view.getZoom()+1,duration:duration(180)}));
+  document.getElementById('zoomOutBtn').addEventListener('click', () => view.animate({zoom:view.getZoom()-1,duration:duration(180)}));
   document.getElementById('homeBtn').addEventListener('click', () => view.animate({
-    center:ol.proj.fromLonLat(CONFIG.center4326), zoom:CONFIG.initialZoom, duration:350
+    center:ol.proj.fromLonLat(CONFIG.center4326), zoom:CONFIG.initialZoom, duration:duration(350)
   }));
-  document.getElementById('fullBtn').addEventListener('click', async () => {
-    const root = document.querySelector('.workspace');
-    if (!document.fullscreenElement) await root.requestFullscreen?.();
-    else await document.exitFullscreen?.();
-    setTimeout(()=>map.updateSize(),120);
+  const appShell = document.getElementById('appShell');
+  const fullBtn = document.getElementById('fullBtn');
+  fullBtn.hidden = !document.fullscreenEnabled || !appShell.requestFullscreen;
+  fullBtn.addEventListener('click', async () => {
+    try {
+      if (!document.fullscreenElement) await appShell.requestFullscreen();
+      else await document.exitFullscreen();
+    } catch {
+      const notice = document.getElementById('uiNotice');
+      notice.textContent = 'Este navegador no permite activar la pantalla completa.';
+      notice.hidden = false;
+      setTimeout(() => { notice.hidden = true; }, 5000);
+    }
+  });
+  document.addEventListener('fullscreenchange', () => {
+    const active = Boolean(document.fullscreenElement);
+    fullBtn.setAttribute('aria-label', active ? 'Salir de pantalla completa' : 'Pantalla completa');
+    fullBtn.title = active ? 'Salir de pantalla completa' : 'Pantalla completa';
+    map.updateSize();
   });
 
   // ---- Readouts ------------------------------------------------------------
+  const showCoordinates = coordinate => {
+    const ll = ol.proj.toLonLat(coordinate);
+    document.getElementById('coords').textContent = `${ll[0].toFixed(6)}, ${ll[1].toFixed(6)}`;
+  };
   const updateReadout = () => {
     document.getElementById('zoomValue').textContent = Number(view.getZoom()).toFixed(2);
+    if (compact.matches) showCoordinates(view.getCenter());
   };
   map.on('pointermove', evt => {
-    const ll = ol.proj.toLonLat(evt.coordinate);
-    document.getElementById('coords').textContent = `${ll[0].toFixed(6)}, ${ll[1].toFixed(6)}`;
+    if (!compact.matches && !evt.dragging) showCoordinates(evt.coordinate);
   });
   map.getViewport().addEventListener('mouseleave', () => {
-    const ll = ol.proj.toLonLat(view.getCenter());
-    document.getElementById('coords').textContent = `${ll[0].toFixed(6)}, ${ll[1].toFixed(6)}`;
+    showCoordinates(view.getCenter());
   });
   updateReadout();
 
   // ---- Panel ---------------------------------------------------------------
-  document.getElementById('collapseBtn').addEventListener('click', e => {
-    const panel = document.getElementById('layerPanel');
-    panel.classList.toggle('collapsed');
-    e.currentTarget.textContent = panel.classList.contains('collapsed') ? '+' : '−';
+  const panel = document.getElementById('layerPanel');
+  const panelBody = document.getElementById('layerPanelBody');
+  const panelButton = document.getElementById('collapseBtn');
+  const setPanelOpen = open => {
+    if (!open && panelBody.contains(document.activeElement)) panelButton.focus();
+    panel.classList.toggle('collapsed', !open);
+    panelBody.hidden = !open;
+    panelButton.setAttribute('aria-expanded', String(open));
+    document.getElementById('panelGlyph').textContent = open ? '−' : '+';
+  };
+  panelButton.addEventListener('click', () => setPanelOpen(panelBody.hidden));
+  panel.addEventListener('keydown', event => {
+    if (event.key === 'Escape') { setPanelOpen(false); panelButton.focus(); }
   });
+  const adaptLayout = () => {
+    setPanelOpen(!compact.matches);
+    document.getElementById('coordsLabel').textContent = compact.matches ? 'Centro' : 'EPSG:4326';
+    showCoordinates(view.getCenter());
+    map.updateSize();
+  };
+  compact.addEventListener('change', adaptLayout);
+  adaptLayout();
 
   // Focus map for keyboard interactions after click.
   map.on('click', () => document.getElementById('map').focus({preventScroll:true}));
