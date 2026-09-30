@@ -55,6 +55,7 @@ const fromLonLat = (coords, target = 'EPSG:3857') => ({from: 'EPSG:4326', to: ta
 const homeCenter = fromLonLat([-4.371848, 39.834749]);
 const context = vm.createContext({
   document, window: {devicePixelRatio: 1,
+    addEventListener() {},
     matchMedia: () => Object.assign(new Events(), {matches: false})},
   ol: {
     source: {XYZ, TileWMS, ImageWMS}, layer: {Tile, Image}, View, Map: MapView,
