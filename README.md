@@ -134,3 +134,25 @@ Verificación manual adicional: 320×568, 390×844, móvil horizontal, escritori
 abrir/cerrar/desplazar panel, cambiar orientación con el panel abierto, sliders
 33/62 %, atribuciones con Catastro activo y navegador con barras visibles.
 La simulación de tamaños no sustituye la prueba en un dispositivo físico.
+
+
+## Seguridad de red y diagnóstico (0.1.7)
+
+El visor no necesita acceso a la red local del usuario. El código y el gate prohíben
+`localhost`, IP privadas/loopback/link-local, dominios `.local`,
+`targetAddressSpace` y HTTP no seguro. La CSP limita las conexiones del M0.2 a
+OpenLayers/jsDelivr y a los servicios HTTPS oficiales de PNOA, SIGPAC y Catastro.
+
+Los WMS no fuerzan `crossOrigin: anonymous`: M0.2 no exporta el canvas ni lee
+píxeles, y exigir CORS sin necesidad puede provocar errores de carga en servicios
+cartográficos que no publiquen cabeceras CORS compatibles.
+
+Prueba manual de seguridad:
+1. Abrir Pages en una ventana privada de Chrome.
+2. Si Chrome pregunta por acceso a dispositivos/red local, elegir **No permitir**.
+3. El visor debe seguir funcionando sin ese permiso.
+4. En DevTools > Network, los únicos hosts remotos esperados son
+   `cdn.jsdelivr.net`, `tms-pnoa-ma.idee.es`, `sigpac-hubcloud.es` y
+   `ovc.catastro.meh.es`.
+5. Si vuelve a aparecer el aviso, guardar captura del permiso y de la petición que
+   coincide en ese instante; no conceder el permiso para diagnosticarla.
