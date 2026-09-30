@@ -1,6 +1,6 @@
 # SKILL · Castrejón WebGIS — Contrato de arquitectura y evolución
-Version: 0.1.6
-Fecha base: 2026-09-29
+Version: 0.1.7
+Fecha base: 2026-09-30
 Estado: ACTIVO · se actualiza tras cada ciclo de pruebas
 
 ## 0. Propósito
@@ -372,6 +372,11 @@ Historial de vista:
 - Evitar bucles cuando se navega atrás/adelante.
 
 ## 9. Seguridad y privacidad
+- El visor público no solicita ni necesita acceso a dispositivos de la red local.
+- Quedan prohibidos en frontend: `localhost`, IP privadas/loopback/link-local, dominios `.local` y `targetAddressSpace: local/private`.
+- Todo destino remoto del M0.2 debe ser HTTPS y pertenecer a la lista explícita: jsDelivr/OpenLayers, PNOA IGN, SIGPAC FEGA/MAPA y Catastro.
+- Mantener CSP restrictiva en `index.html`; cualquier nuevo origen debe justificarse, añadirse a la skill y al gate antes de desplegar.
+- No forzar `crossOrigin: anonymous` en WMS mientras no exista una función que necesite lectura de píxeles/exportación de canvas; revisarlo si se añade esa función.
 - WordPress y WebGIS son capas separadas.
 - No subir datos reservados a la biblioteca multimedia ordinaria como mecanismo de protección.
 - Toda API privada valida autorización en cada petición.
@@ -437,6 +442,15 @@ Formato de cada cambio:
 No borrar una regla por comodidad. Si una regla cambia, conservar el motivo en el historial.
 
 ## 12. Registro de cambios
+### 0.1.7 — 2026-09-30
+- Fallo observado: el usuario informa de errores esporádicos y Chrome muestra una solicitud para buscar/conectarse a dispositivos de la red local al abrir el visor.
+- Reproducción: revisión de `main`, servicios y último despliegue; no se encuentran `localhost`, IP privadas, dominios `.local`, WebSocket/WebRTC ni `targetAddressSpace`. El visor sólo declara cuatro orígenes HTTPS públicos.
+- Causa confirmada en código: ninguna solicitud local intencionada. Riesgo corregible detectado: los WMS forzaban CORS anónimo sin necesitar lectura de píxeles, lo que puede convertir servidores WMS sin CORS suficiente en errores de carga.
+- Corrección: retirar `crossOrigin: anonymous` de las fuentes cartográficas; CSP cerrada a los orígenes previstos; aviso de error de runtime no bloqueante.
+- Regresión añadida: CI rechaza localhost, IP privadas/link-local, dominios `.local`, `targetAddressSpace`, HTTP no seguro, orígenes remotos no autorizados, ausencia de CSP o reintroducción de CORS anónimo.
+- Archivos afectados: index.html, scripts/check_webgis.py, scripts/check-map.cjs, README.md y SKILL_CASTREJON_WEBGIS.md.
+- Compatibilidad hacia atrás: capas, CRS, centro/zoom, opacidades e interfaz se conservan. Si Chrome vuelve a pedir acceso local tras este cambio, capturar la petición que lo dispara: no debe concederse el permiso para usar el visor.
+
 ### 0.1.6 — 2026-09-29
 - Fallo observado: el panel ocupa el ancho móvil al inicio; controles pequeños y elementos inferiores pueden competir con escala/atribuciones. Los sliders usan pasos 0,05 incompatibles con los valores 0,33/0,62.
 - Reproducción: abrir el visor con ancho móvil o girar a horizontal; comparar panel, botones y pie.

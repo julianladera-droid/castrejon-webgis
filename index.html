@@ -3,6 +3,8 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <meta name="referrer" content="no-referrer" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; img-src 'self' data: blob: https://tms-pnoa-ma.idee.es https://sigpac-hubcloud.es https://ovc.catastro.meh.es; connect-src 'self' https://tms-pnoa-ma.idee.es https://sigpac-hubcloud.es https://ovc.catastro.meh.es; font-src 'self' data:; object-src 'none'; frame-src 'none'; worker-src 'none'; base-uri 'none'; form-action 'none'; upgrade-insecure-requests" />
   <title>Visor de control C.R. Canal de Castrejón Margen Derecha</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ol@10.6.1/ol.css">
   <style>
@@ -181,6 +183,15 @@
   const reducedMotion = window.matchMedia('(prefers-reduced-motion:reduce)');
   const duration = ms => reducedMotion.matches ? 0 : ms;
 
+  const showRuntimeNotice = message => {
+    const notice = document.getElementById('uiNotice');
+    if (!notice) return;
+    notice.textContent = message;
+    notice.hidden = false;
+  };
+  window.addEventListener('error', () => showRuntimeNotice('Se ha producido un error interno del visor. Recarga la página; si persiste, comunica qué capa estaba activa.'));
+  window.addEventListener('unhandledrejection', () => showRuntimeNotice('Una operación del visor no ha podido completarse. Recarga la página; si persiste, comunica qué capa estaba activa.'));
+
   const CONFIG = Object.freeze({
     center4326: [-4.371848, 39.834749],
     initialZoom: 13.27,
@@ -213,7 +224,6 @@
     minZoom: CONFIG.services.pnoa.minZoom,
     maxZoom: CONFIG.services.pnoa.maxZoom,
     tileSize: 256,
-    crossOrigin: 'anonymous',
     transition: 120,
     interpolate: true,
     wrapX: false,
@@ -233,7 +243,6 @@
     },
     serverType: 'geoserver',
     projection: 'EPSG:3857',
-    crossOrigin: 'anonymous',
     transition: 120,
     wrapX: false,
     attributions: 'SIGPAC · FEGA/MAPA · CC BY 4.0'
@@ -252,7 +261,6 @@
       'TRANSPARENT': true
     },
     projection: 'EPSG:3857',
-    crossOrigin: 'anonymous',
     ratio: 1.15,
     hidpi: false,
     attributions: 'Dirección General del Catastro · INSPIRE'

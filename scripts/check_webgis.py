@@ -6,11 +6,13 @@ from pathlib import Path
 import re
 import subprocess
 import sys
+from urllib.parse import urlparse
 
 ROOT = Path(__file__).resolve().parents[1]
 VOID = set('area base br col embed hr img input link meta param source track wbr'.split())
 OL_JS = 'https://cdn.jsdelivr.net/npm/ol@10.6.1/dist/ol.js'
 OL_CSS = 'https://cdn.jsdelivr.net/npm/ol@10.6.1/ol.css'
+ALLOWED_REMOTE_HOSTS = {'cdn.jsdelivr.net','tms-pnoa-ma.idee.es','sigpac-hubcloud.es','ovc.catastro.meh.es'}
 
 
 def require(condition, message):
@@ -23,7 +25,7 @@ class Page(HTMLParser):
     def __init__(self):
         super().__init__(convert_charrefs=True)
         self.stack, self.ids, self.scripts, self.handlers = [], {}, [], []
-        self.tags, self.styles, self.links, self.labels = [], [], [], []
+        self.tags, self.styles, self.links, self.labels, self.metas = [], [], [], [], []
         self.doctype = False
 
     def handle_decl(self, decl):
@@ -45,6 +47,8 @@ class Page(HTMLParser):
             self.labels.append(attrs['for'])
         if tag == 'link':
             self.links.append(attrs.get('href'))
+        if tag == 'meta':
+            self.metas.append(attrs)
         if tag == 'script':
             require(attrs.get('type', '') in ('', 'text/javascript', 'application/javascript'),
                     'HTML: nuevo tipo de script; adaptar el gate antes de publicarlo')
@@ -90,10 +94,44 @@ def check_secrets():
     print('OK: patrones de secretos evidentes en archivos versionados', flush=True)
 
 
+def check_network_policy(raw_html, page):
+    """El visor público no debe solicitar acceso a red local ni destinos imprevistos."""
+    forbidden = {
+        'localhost': r'(?i)\\blocalhost\\b',
+        'loopback IPv4': r'(?<!\\d)127(?:\\.\\d{1,3}){3}(?!\\d)',
+        'red privada 10/8': r'(?<!\\d)10(?:\\.\\d{1,3}){3}(?!\\d)',
+        'red privada 172.16/12': r'(?<!\\d)172\\.(?:1[6-9]|2\\d|3[01])(?:\\.\\d{1,3}){2}(?!\\d)',
+        'red privada 192.168/16': r'(?<!\\d)192\\.168(?:\\.\\d{1,3}){2}(?!\\d)',
+        'link-local IPv4': r'(?<!\\d)169\\.254(?:\\.\\d{1,3}){2}(?!\\d)',
+        'dominio .local': r'(?i)\\b[a-z0-9.-]+\\.local\\b',
+        'targetAddressSpace': r'(?i)targetAddressSpace\\s*:',
+        'URL HTTP no segura': r'(?i)http://',
+    }
+    for label, pattern in forbidden.items():
+        require(not re.search(pattern, raw_html), f'Red: destino/intent local no permitido ({label})')
+
+    urls = re.findall(r"https?://[^\\s\\\"'<>]+", raw_html)
+    for url in urls:
+        parsed = urlparse(url)
+        require(parsed.scheme == 'https', 'Red: sólo se permiten URLs HTTPS')
+        require(parsed.hostname in ALLOWED_REMOTE_HOSTS, f'Red: origen remoto no autorizado: {parsed.hostname}')
+
+    csp = [m.get('content', '') for m in page.metas if m.get('http-equiv', '').lower() == 'content-security-policy']
+    require(len(csp) == 1, 'Seguridad: debe existir una única CSP en el documento')
+    policy = csp[0]
+    for token in ["default-src 'self'", "object-src 'none'", "frame-src 'none'", "base-uri 'none'", "form-action 'none'"]:
+        require(token in policy, f'Seguridad: CSP incompleta ({token})')
+    for host in ALLOWED_REMOTE_HOSTS:
+        require(f'https://{host}' in policy, f'Seguridad: CSP no declara el origen previsto {host}')
+    require("crossOrigin: 'anonymous'" not in raw_html and 'crossorigin="anonymous"' not in raw_html.lower(), 'WMS: no forzar CORS anónimo mientras no exista exportación/lectura de píxeles')
+    print('OK: política de red pública; sin destinos locales y con CSP cerrada', flush=True)
+
+
 def main():
     check_secrets()
+    raw_html = (ROOT / 'index.html').read_text(encoding='utf-8')
     page = Page()
-    page.feed((ROOT / 'index.html').read_text(encoding='utf-8'))
+    page.feed(raw_html)
     page.close()
     require(page.doctype and not page.stack, 'HTML: doctype ausente o elementos sin cerrar')
     for tag in ('html', 'head', 'body', 'title'):
