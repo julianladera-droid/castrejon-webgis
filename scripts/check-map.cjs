@@ -105,6 +105,10 @@ try {
   check(p.url === 'https://tms-pnoa-ma.idee.es/1.0.0/pnoa-ma/{z}/{x}/{-y}.jpeg',
     'PNOA: mantener XYZ/TMS oficial con Y invertida');
   check(p.tileSize === 256 && p.maxZoom === 19, 'PNOA: pirámide 256px hasta nivel 19');
+  for (const [source, id] of [[p, 'PNOA'], [s, 'SIGPAC'], [c, 'Catastro']]) {
+    check(!Object.prototype.hasOwnProperty.call(source, 'crossOrigin'),
+      `${id}: no forzar crossOrigin/CORS en M0.2`);
+  }
   check(s.url === 'https://sigpac-hubcloud.es/wms' &&
     s.params.LAYERS === 'AU.Sigpac:recinto' && s.params.VERSION === '1.3.0',
     'SIGPAC: endpoint/capa/versión incorrectos');
