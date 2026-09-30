@@ -110,7 +110,7 @@ def check_network_policy(raw_html, page):
     for label, pattern in forbidden.items():
         require(not re.search(pattern, raw_html), f'Red: destino/intent local no permitido ({label})')
 
-    urls = re.findall(r'https?://[^\\s"\\'<>]+', raw_html)
+    urls = re.findall(r"https?://[^\\s\\\"'<>]+", raw_html)
     for url in urls:
         parsed = urlparse(url)
         require(parsed.scheme == 'https', 'Red: sólo se permiten URLs HTTPS')
