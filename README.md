@@ -18,7 +18,7 @@ Incluye el perímetro de referencia; no contiene parcelas internas, datos person
 
 ## Perímetro y área Sentinel (M4)
 
-El contorno azul de «Zona regable» está visible inicialmente y se puede ocultar.
+El contorno amarillo–rojo–amarillo de «Zona regable» está visible inicialmente y se puede ocultar. Su copia web se simplifica a 15 m y suaviza las esquinas, conservando el GML original. La geometría cargada pasa de 956 a 487 puntos y ocupa unos 10,9 kB; sustituye a la anterior.
 Se incorpora al HTML sin nuevas peticiones. Se conserva el encuadre de Inicio.
 La geometría original permanece en EPSG:25830; su copia de visualización pasa
 a EPSG:4326 y OpenLayers la representa en EPSG:3857.

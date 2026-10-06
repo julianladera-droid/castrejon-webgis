@@ -1,5 +1,5 @@
 # SKILL · Castrejón WebGIS — Contrato de arquitectura y evolución
-Version: 0.1.16
+Version: 0.1.17
 Fecha base: 2026-09-30
 Estado: ACTIVO · se actualiza tras cada ciclo de pruebas
 
@@ -442,6 +442,12 @@ Formato de cada cambio:
 No borrar una regla por comodidad. Si una regla cambia, conservar el motivo en el historial.
 
 ## 12. Registro de cambios
+### 0.1.17 — 2026-10-06
+- Petición: aligerar y suavizar el perímetro, sustituir el anterior y usar amarillo–rojo–amarillo.
+- Sólo representación: simplificación topológica a 15 m en EPSG:25830 y redondeo local de esquinas con recorte máximo de 40 m. Validar geometría, desviación del contorno <=30 m y variación de área <1%; coordenadas web a seis decimales.
+- Sustituir la única geometría incorporada, sin cargar la antigua ni añadir otra capa. GML original y AOI Sentinel se conservan. Tres trazos concéntricos con uniones redondas, sin relleno; leyenda coherente.
+- Regresión: geometría válida y ligera, CRS, contorno único, colores y comprobación visual. El contorno continúa siendo provisional y no sirve como límite técnico de cálculo.
+
 ### 0.1.16 — 2026-10-06
 - Petición: situar el cuadro de capas a la derecha, debajo de los botones de navegación.
 - Corrección: panel alineado al margen derecho con espacio para la barra superior; también en móvil, donde los botones pasan arriba y el panel sigue plegado inicialmente.
