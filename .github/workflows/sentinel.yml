@@ -1,0 +1,70 @@
+name: Sentinel L2A automatic download
+
+on:
+  schedule:
+    # Daily calendar check in season; only due dates contact Copernicus.
+    - cron: '30 5 * 2-9 *'
+    - cron: '30 5 15 1,10-12 *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: sentinel-download
+  cancel-in-progress: false
+
+jobs:
+  calendar:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 2
+    outputs:
+      run: ${{ steps.calendar.outputs.run }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Validate calendar
+        run: python3 scripts/test_sentinel_schedule.py
+      - name: Check whether update is due
+        id: calendar
+        run: python3 scripts/sentinel_schedule.py
+
+  sentinel:
+    needs: calendar
+    if: needs.calendar.outputs.run == 'true'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Install geospatial runtime
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y python3-gdal python3-numpy
+      - name: Validate geospatial calculations
+        run: /usr/bin/python3 scripts/test_sentinel.py
+      - name: Select existing L2A product
+        id: selection
+        run: /usr/bin/python3 scripts/sentinel_pipeline.py --catalogue-only
+      - name: Reuse already processed acquisition
+        id: product-cache
+        uses: actions/cache@v4
+        with:
+          path: sentinel-output/
+          key: sentinel-v1-${{ hashFiles('scripts/sentinel_pipeline.py', 'data/sentinel-aoi.json') }}-${{ steps.selection.outputs.item }}
+      - name: Download and calculate rectangular AOI
+        if: steps.product-cache.outputs.cache-hit != 'true'
+        env:
+          CDSE_S3_ACCESS_KEY: ${{ secrets.CDSE_S3_ACCESS_KEY }}
+          CDSE_S3_SECRET_KEY: ${{ secrets.CDSE_S3_SECRET_KEY }}
+        run: /usr/bin/python3 scripts/sentinel_pipeline.py --catalogue-file sentinel-output/selection.json
+      - name: Save products and provenance
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: sentinel-${{ github.run_id }}
+          path: sentinel-output/
+          if-no-files-found: warn
+          retention-days: 30

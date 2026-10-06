@@ -1,0 +1,53 @@
+{
+  "source_file": "ZR.gml",
+  "source_sha256": "986a472fb53d8bd05b732c650c5a18906cde07c0ba4dec526876e3788e0d608c",
+  "source_id": "ZR.0",
+  "status": "reference_pending_adjustment",
+  "reference_area_ha_epsg25830": 2416.9316843042875,
+  "processing_aoi": {
+    "type": "enclosing_rectangle",
+    "crs": "EPSG:25830",
+    "bounds_order": [
+      "min_x",
+      "min_y",
+      "max_x",
+      "max_y"
+    ],
+    "bounds": [
+      373395.542,
+      4406452.368,
+      388258.243536932,
+      4412858.8251707
+    ],
+    "area_ha": 9521.726083726167
+  },
+  "catalog_bbox": {
+    "crs": "EPSG:4326",
+    "bounds": [
+      -4.48007,
+      39.79862,
+      -4.30526,
+      39.85842
+    ],
+    "method": "UTM rectangle edges sampled every <=100 m; rounded outward to 0.00001 degrees"
+  },
+  "stac_search_draft": {
+    "collections": [
+      "sentinel-2-l2a"
+    ],
+    "bbox": [
+      -4.48007,
+      39.79862,
+      -4.30526,
+      39.85842
+    ],
+    "limit": 20
+  },
+  "imagery_status": "not_requested_or_downloaded",
+  "notes": [
+    "Choose datetime and scene quality before submitting the STAC request.",
+    "Process on the rectangular AOI; keep reference polygon separate for later adjustment.",
+    "The rectangle area is not the irrigable area. Align output grid outward to pixel resolution.",
+    "This bbox filters the catalogue; scene asset downloads may still cover full tiles."
+  ]
+}
