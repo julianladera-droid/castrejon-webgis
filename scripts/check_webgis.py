@@ -97,20 +97,20 @@ def check_secrets():
 def check_network_policy(raw_html, page):
     """El visor público no debe solicitar acceso a red local ni destinos imprevistos."""
     forbidden = {
-        'localhost': r'(?i)\\blocalhost\\b',
-        'loopback IPv4': r'(?<!\\d)127(?:\\.\\d{1,3}){3}(?!\\d)',
-        'red privada 10/8': r'(?<!\\d)10(?:\\.\\d{1,3}){3}(?!\\d)',
-        'red privada 172.16/12': r'(?<!\\d)172\\.(?:1[6-9]|2\\d|3[01])(?:\\.\\d{1,3}){2}(?!\\d)',
-        'red privada 192.168/16': r'(?<!\\d)192\\.168(?:\\.\\d{1,3}){2}(?!\\d)',
-        'link-local IPv4': r'(?<!\\d)169\\.254(?:\\.\\d{1,3}){2}(?!\\d)',
-        'dominio .local': r'(?i)\\b[a-z0-9.-]+\\.local\\b',
-        'targetAddressSpace': r'(?i)targetAddressSpace\\s*:',
+        'localhost': r'(?i)\blocalhost\b',
+        'loopback IPv4': r'(?<!\d)127(?:\.\d{1,3}){3}(?!\d)',
+        'red privada 10/8': r'(?<!\d)10(?:\.\d{1,3}){3}(?!\d)',
+        'red privada 172.16/12': r'(?<!\d)172\.(?:1[6-9]|2\d|3[01])(?:\.\d{1,3}){2}(?!\d)',
+        'red privada 192.168/16': r'(?<!\d)192\.168(?:\.\d{1,3}){2}(?!\d)',
+        'link-local IPv4': r'(?<!\d)169\.254(?:\.\d{1,3}){2}(?!\d)',
+        'dominio .local': r'(?i)\b[a-z0-9.-]+\.local\b',
+        'targetAddressSpace': r'''(?i)\btargetAddressSpace\b["']?\s*:''',
         'URL HTTP no segura': r'(?i)http://',
     }
     for label, pattern in forbidden.items():
         require(not re.search(pattern, raw_html), f'Red: destino/intent local no permitido ({label})')
 
-    urls = re.findall(r"https?://[^\\s\\\"'<>]+", raw_html)
+    urls = re.findall(r'''https?://[^\s"'<>;]+''', raw_html, re.I)
     for url in urls:
         parsed = urlparse(url)
         require(parsed.scheme == 'https', 'Red: sólo se permiten URLs HTTPS')
@@ -118,12 +118,28 @@ def check_network_policy(raw_html, page):
 
     csp = [m.get('content', '') for m in page.metas if m.get('http-equiv', '').lower() == 'content-security-policy']
     require(len(csp) == 1, 'Seguridad: debe existir una única CSP en el documento')
-    policy = csp[0]
-    for token in ["default-src 'self'", "object-src 'none'", "frame-src 'none'", "base-uri 'none'", "form-action 'none'"]:
-        require(token in policy, f'Seguridad: CSP incompleta ({token})')
-    for host in ALLOWED_REMOTE_HOSTS:
-        require(f'https://{host}' in policy, f'Seguridad: CSP no declara el origen previsto {host}')
-    require("crossOrigin: 'anonymous'" not in raw_html and 'crossorigin="anonymous"' not in raw_html.lower(), 'WMS: no forzar CORS anónimo mientras no exista exportación/lectura de píxeles')
+    map_origins = {f'https://{host}' for host in ALLOWED_REMOTE_HOSTS if host != 'cdn.jsdelivr.net'}
+    expected = {
+        'default-src': {"'self'"},
+        'script-src': {"'self'", "'unsafe-inline'", 'https://cdn.jsdelivr.net'},
+        'style-src': {"'self'", "'unsafe-inline'", 'https://cdn.jsdelivr.net'},
+        'img-src': {"'self'", 'data:', 'blob:'} | map_origins,
+        'connect-src': {"'self'"} | map_origins,
+        'font-src': {"'self'", 'data:'},
+        'upgrade-insecure-requests': set(),
+        **{name: {"'none'"} for name in ('object-src', 'frame-src', 'worker-src', 'base-uri', 'form-action')},
+    }
+    directives = {}
+    for directive in csp[0].split(';'):
+        parts = directive.split()
+        if not parts:
+            continue
+        name = parts[0].lower()
+        require(name not in directives, f'Seguridad: directiva CSP duplicada ({name})')
+        directives[name] = set(parts[1:])
+    require(directives == expected, 'Seguridad: CSP distinta del contrato M0.2; revisar directivas y fuentes')
+    require(not re.search(r'''(?i)\bcrossorigin\b["']?\s*[:=]\s*["']anonymous["']''', raw_html),
+            'WMS: no forzar CORS anónimo mientras no exista exportación/lectura de píxeles')
     print('OK: política de red pública; sin destinos locales y con CSP cerrada', flush=True)
 
 
@@ -133,6 +149,7 @@ def main():
     page = Page()
     page.feed(raw_html)
     page.close()
+    check_network_policy(raw_html, page)
     require(page.doctype and not page.stack, 'HTML: doctype ausente o elementos sin cerrar')
     for tag in ('html', 'head', 'body', 'title'):
         require(page.tags.count(tag) == 1, f'HTML: debe existir un único {tag}')

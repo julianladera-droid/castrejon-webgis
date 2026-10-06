@@ -18,12 +18,23 @@ class Source extends Events {}
 class XYZ extends Source {}
 class TileWMS extends Source {}
 class ImageWMS extends Source {}
+class VectorSource extends Source {}
+const geoJSONReads = [];
+class GeoJSON {
+  readFeatures(data, options) {
+    geoJSONReads.push({data, options});
+    return data.features;
+  }
+}
 class Layer extends Events {
-  setVisible(value) { this.options.visible = value; }
-  setOpacity(value) { this.options.opacity = value; }
+  getVisible() { return this.options.visible ?? true; }
+  getOpacity() { return this.options.opacity ?? 1; }
+  setVisible(value) { this.options.visible = value; this.events['change:visible']?.forEach(fn => fn()); }
+  setOpacity(value) { this.options.opacity = value; this.events['change:opacity']?.forEach(fn => fn()); }
 }
 class Tile extends Layer {}
 class Image extends Layer {}
+class VectorLayer extends Layer {}
 class View extends Events {
   getCenter() { return this.options.center; }
   getZoom() { return this.options.zoom; }
@@ -54,11 +65,14 @@ const document = {
 const fromLonLat = (coords, target = 'EPSG:3857') => ({from: 'EPSG:4326', to: target, coords});
 const homeCenter = fromLonLat([-4.371848, 39.834749]);
 const context = vm.createContext({
+  fetch: () => new Promise(() => {}),
   document, window: {devicePixelRatio: 1,
     addEventListener() {},
     matchMedia: () => Object.assign(new Events(), {matches: false})},
   ol: {
-    source: {XYZ, TileWMS, ImageWMS}, layer: {Tile, Image}, View, Map: MapView,
+    source: {XYZ, TileWMS, ImageWMS, Vector: VectorSource},
+    layer: {Tile, Image, Vector: VectorLayer}, View, Map: MapView,
+    format: {GeoJSON}, style: {Style: Events, Stroke: Events},
     proj: {fromLonLat, toLonLat: point => point.coords},
     control: {
       defaults: {defaults: options => ({extend: controls => ({options, controls})})},
@@ -83,8 +97,32 @@ try {
   check(maps.length === 1, 'Debe crearse un único mapa');
   const map = maps[0].options;
   check(map.target === 'map', 'Destino del mapa incorrecto');
-  check(map.layers.length === 3, 'Esperadas tres capas M0.2');
-  const [pnoa, sigpac, catastro] = map.layers;
+  check(map.layers.length === 5, 'Esperadas capas base, Sentinel y Zona regable');
+  const [pnoa, sentinel, sigpac, catastro, zonaRegable] = map.layers;
+  check(sentinel instanceof Image && !sentinel.getVisible() && sentinel.options.properties.id === 'sentinel',
+    'Sentinel: oculto hasta elegir un producto disponible');
+  check(zonaRegable instanceof VectorLayer && zonaRegable.options.source instanceof VectorSource &&
+    zonaRegable.options.properties.id === 'zonaRegable', 'Zona regable: tipo/identidad incorrectos');
+  check(geoJSONReads.length === 1 && equal(geoJSONReads[0].options,
+    {dataProjection:'EPSG:4326', featureProjection:'EPSG:3857'}), 'Zona regable: declarar reproyección 4326 a 3857');
+  const reference = geoJSONReads[0].data;
+  check(reference.type === 'FeatureCollection' && reference.features.length === 1 &&
+    reference.features[0].id === 'ZR.0' && reference.features[0].geometry.type === 'Polygon' &&
+    reference.features[0].properties.status === 'pending_adjustment', 'Zona regable: referencia incompleta');
+  const ring = reference.features[0].geometry.coordinates[0];
+  check(ring.length >= 4 && equal(ring[0], ring.at(-1)) &&
+    ring.every(([lon, lat]) => lon > -4.49 && lon < -4.30 && lat > 39.79 && lat < 39.87),
+    'Zona regable: anillo cerrado y coordenadas lon/lat de Castrejón');
+  check(zonaRegable.options.style.every(style => style.options.stroke && !style.options.fill),
+    'Zona regable: contorno sin relleno');
+  const toggle = elements.zonaRegableToggle;
+  check(toggle.checked && zonaRegable.options.visible && toggle.events.change.length === 1,
+    'Zona regable: visible inicialmente y con interruptor');
+  for (const checked of [false, true]) {
+    toggle.events.change[0]({target:{checked}});
+    check(zonaRegable.options.visible === checked, 'Zona regable: interruptor no cambia visibilidad');
+  }
+  console.log('OK: Zona regable, geometría incorporada, reproyección declarada y visibilidad');
   check(sigpac.options.opacity === 0.33, 'SIGPAC: opacidad inicial definitiva 0,33');
   for (const [layer, id] of [[sigpac, 'sigpacOpacity'], [catastro, 'catOpacity']]) {
     const attrs = input.ids[id];
@@ -145,6 +183,29 @@ try {
     map.controls.options.attributionOptions?.target === 'attributionTarget',
     'Atribuciones: mantener expandidas en el pie dedicado');
   console.log('OK: atribuciones configuradas y control habilitado (visibilidad real: manual)');
+  check(!elements.legendZona.hidden && !elements.legendSigpac.hidden &&
+    elements.legendCatastro.hidden && !elements.legendPnoa.hidden && elements.legendEmpty.hidden,
+    'Leyenda: estado inicial incorrecto');
+  for (const [layer, toggleId, legendId] of [
+    [zonaRegable, 'zonaRegableToggle', 'legendZona'], [pnoa, 'pnoaToggle', 'legendPnoa'],
+    [sigpac, 'sigpacToggle', 'legendSigpac'], [catastro, 'catToggle', 'legendCatastro']
+  ]) {
+    for (const checked of [true, false]) {
+      elements[toggleId].events.change[0]({target:{checked}});
+      check(elements[legendId].hidden === !checked, 'Leyenda: no sigue el interruptor');
+    }
+  }
+  check(!elements.legendEmpty.hidden, 'Leyenda: falta estado sin capas');
+  for (const [layer, sliderId, legendId] of [[sigpac, 'sigpacOpacity', 'legendSigpac'],
+    [catastro, 'catOpacity', 'legendCatastro']]) {
+    layer.setVisible(true);
+    for (const value of [0, 0.5]) {
+      elements[sliderId].events.input[0]({target:{value:String(value)}});
+      check(elements[legendId].hidden === (value === 0), 'Leyenda: no sigue opacidad cero/restauración');
+    }
+    layer.setVisible(false);
+  }
+  console.log('OK: leyenda dinámica, interruptores, opacidad cero y estado vacío');
 } catch (error) {
   // Sólo mensajes propios; nunca volcar código, valores ni stack que puedan incluir secretos.
   console.error(`FAIL: ${error.message}`);

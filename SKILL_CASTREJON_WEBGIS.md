@@ -1,5 +1,5 @@
 # SKILL · Castrejón WebGIS — Contrato de arquitectura y evolución
-Version: 0.1.7
+Version: 0.1.15
 Fecha base: 2026-09-30
 Estado: ACTIVO · se actualiza tras cada ciclo de pruebas
 
@@ -442,6 +442,62 @@ Formato de cada cambio:
 No borrar una regla por comodidad. Si una regla cambia, conservar el motivo en el historial.
 
 ## 12. Registro de cambios
+### 0.1.15 — 2026-10-06
+- Petición: publicar el visor actualizado e incorporar NDVI, EVI2 y NDMI. Incorporar también el perímetro y la leyenda dinámica preparados localmente.
+- Publicación: Pages consume exclusivamente artefactos de ejecuciones satisfactorias de sentinel.yml en main de este repositorio. Validar manifiesto, hashes, CRS, rejillas y calidad antes de publicar. Sin candidato válido no reemplazar el sitio existente.
+- Representación: GeoTIFF maestro EPSG:25830 descargable; PNG RGBA ligero reproyectado directamente a EPSG:3857 para ImageStatic. Transparencia en nodata; escala de color fija y explícita, sin normalización por escena. NDVI/NDMI de -1 a 1; EVI2 visualizado de 0 a 1 (saturación fuera del rango sólo en color).
+- Interfaz: un índice visible cada vez, selector de adquisición disponible, opacidad, fecha real y antigüedad, calidad del rectángulo y descarga técnica. NDMI no se presenta como medida de humedad del suelo. No ofrecer fechas sin productos ni ocultar la antigüedad.
+- Red: productos públicos en el mismo origen Pages; sin nuevos destinos CSP ni claves en cliente. El flujo Pages se activa también al terminar Sentinel y conserva el calendario autorizado de consultas Copernicus.
+- Regresión: nodata/colores/reproyección, rechazo de artefactos incoherentes, selección de índice/fecha, errores de carga y respuestas tardías, opacidad/leyenda; escritorio y móvil más regresiones cartográficas existentes.
+
+### 0.1.14 — 2026-10-06
+- Activado Sentinel en main, commit e5304d80677fa031a5e4e96c4a3eed93f3466822. Primera ejecución real 37518084581 completada correctamente con secretos S3 configurados por el usuario.
+- Producto del 24/09/2026; NDVI/EVI2 10 m y NDMI/SCL 20 m en EPSG:25830. Artefacto descargado y abierto con GDAL; rejillas y SHA-256 verificados. Calidad válida del rectángulo: 99,0663% NDVI/EVI2 y 99,0684% NDMI.
+- Próxima fecha programada: 15/10/2026 a las 05:30 UTC. Artefactos retenidos 30 días; integración de índices en el visor pendiente. Frontend local no publicado en esta activación.
+
+### 0.1.13 — 2026-10-06
+- Calendario solicitado: cada tres días de febrero a septiembre inclusive, contando desde el 1 de febrero sin reiniciar al cambiar de mes; enero, octubre, noviembre y diciembre sólo el día 15.
+- GitHub comprueba el calendario antes de consultar Copernicus. Los días intermedios no ejecutan el trabajo de descarga. Hora conservada: 05:30 UTC. Ejecución manual disponible.
+- Evitar cargas innecesarias: conservar caché por adquisición/AOI/código, concurrencia única y bandas secuenciales; reutilizar SCL ya recortada para la rejilla de 10 m en vez de leerla otra vez por S3. Reintentos limitados con espera de 30 segundos.
+- Regresión: intervalo exacto de tres días en años normales/bisiestos y exclusividad del día 15 fuera de temporada.
+
+### 0.1.12 — 2026-10-06
+- Petición: utilizar productos existentes y automatizar desde GitHub Actions.
+- Fuente: productos oficiales Sentinel-2 L2A ya corregidos atmosféricamente; recorte de bandas por S3 y GDAL, sin exportación manual de Browser ni credenciales en el visor.
+- Ejecución diaria y manual, permisos de repositorio de lectura; secretos CDSE_S3_ACCESS_KEY y CDSE_S3_SECRET_KEY. Salidas como artefactos de Actions, sin publicación automática en Pages.
+- Selección: producto reciente con cobertura completa del AOI y nubosidad de tesela <=20%; validar después calidad SCL local (clases 4,5,6), sin excluir usos del suelo. Fallar claramente si no hay candidato o calidad suficiente.
+- Rejillas EPSG:25830 de 10/20 m alineadas hacia fuera; remuestreo nearest para conservar categorías y coherencia; reflectancia por escala/offset STAC. NDVI/EVI2 10 m; NDMI 20 m.
+- Descarga programada depende de configurar secretos y llevar el workflow a la rama predeterminada; no se considera activa por crear archivos locales.
+
+### 0.1.11 — 2026-10-06
+- M4: consulta real del catálogo STAC público de Copernicus para el rectángulo envolvente. Periodo inicial de exploración: 2026-09-06 a 2026-10-06 (UTC, inicio del día).
+- Preparar manifiesto reproducible de escena candidata y bandas; nubosidad de tesela sólo para preselección, nunca como porcentaje válido de la zona regable.
+- NDVI/EVI2: B04/B08 a 10 m; NDMI: B8A/B11 a 20 m. NDMI no mide directamente humedad del suelo. SCL para calidad, sin máscara de usos ni Catastro.
+- Convertir DN a reflectancia con escala/offset publicados en cada asset; excluir nodata antes de índices. No mezclar adquisiciones silenciosamente.
+- Descarga autenticada pendiente de acceso del usuario. Credenciales fuera del repositorio y del frontend; no añadir servicios Sentinel a la CSP hasta integrar productos procesados.
+
+### 0.1.10 — 2026-10-06
+- Petición: simplificar la leyenda y hacerla dinámica.
+- Cambio: sustituir el bloque explicativo por una leyenda compacta en el pie, disponible también en móvil. Mostrar sólo capas activas con opacidad mayor que cero; sincronizar con eventos de visibilidad/opacidad de OpenLayers. Nombres breves en el selector, conservando atribuciones.
+- Regresión: estado inicial, conmutadores, opacidad cero y restauración, y ausencia de capas visibles. Pruebas offline; revisión visual independiente.
+
+### 0.1.9 — 2026-10-06
+- Decisión del usuario: ZR.gml es el perímetro de referencia de la zona regable, pendiente de ajustes; no representa parcelas ni limita por sí solo la superficie efectivamente regada.
+- M4: consultas, descarga y procesamiento Sentinel usarán el rectángulo envolvente, separado del perímetro de referencia. El área rectangular no se presentará como superficie regable.
+- Fuente: ZR.gml, SHA-256 986a472fb53d8bd05b732c650c5a18906cde07c0ba4dec526876e3788e0d608c. Polígono válido GEOS, 2.416,931684 ha en EPSG:25830; la estimación anterior de 1.800 ha no sustituye esta geometría.
+- Cambio: capa vectorial visible y desactivable «Zona regable · referencia», sin relleno, derivada a EPSG:4326 y renderizada en EPSG:3857. Centro e Inicio conservados.
+- Rectángulo técnico: minX=373395.542, minY=4406452.368, maxX=388258.243536932, maxY=4412858.8251707 en EPSG:25830. Consulta STAC con bbox conservadora en EPSG:4326.
+- Regresión: cuarta capa, identidad, reproyección declarada, visibilidad y conmutador; gate cartográfico existente conservado. Sin descarga Sentinel ni publicación automática.
+
+### 0.1.8 — 2026-10-06
+- Fallo observado: el PASS offline no ejecutaba la política de red/CSP.
+- Reproducción: introducir un destino prohibido no era rechazado por esa comprobación.
+- Causa: falta la llamada desde main(), patrones regex sobreescapados y CSP comprobada mediante subcadenas.
+- Corrección: ejecutar la comprobación en el gate, corregir patrones y validar las directivas y fuentes CSP del M0.2 por separado.
+- Regresión añadida: pruebas offline del HTML vigente y mutaciones de destinos, CSP y CORS; comprobar que main rechaza una infracción antes de ejecutar Node. Ejecutarlas también en CI.
+- Archivos afectados: scripts/check_webgis.py, scripts/test_network_policy.py, .github/workflows/pages.yml, README.md y SKILL_CASTREJON_WEBGIS.md.
+- Compatibilidad hacia atrás: sin cambios en index.html, capas, navegación ni servicios. Validación estática de literales; no demuestra ausencia de destinos construidos dinámicamente ni sustituye pruebas de navegador.
+
 ### 0.1.7 — 2026-09-30
 - Fallo observado: el usuario informa de errores esporádicos y Chrome muestra una solicitud para buscar/conectarse a dispositivos de la red local al abrir el visor.
 - Reproducción: revisión de `main`, servicios y último despliegue; no se encuentran `localhost`, IP privadas, dominios `.local`, WebSocket/WebRTC ni `targetAddressSpace`. El visor sólo declara cuatro orígenes HTTPS públicos.

@@ -3,17 +3,75 @@
 Visor de control de la **C.R. Canal de Castrejón Margen Derecha**.
 
 ## Estado
-M0.2 — visor cartográfico estático para pruebas.
+M0.2 + M4 — visor cartográfico con índices Sentinel y publicación automática.
 
 Capas actuales:
 - PNOA Máxima Actualidad (IGN/CNIG), XYZ/TMS.
 - Recintos SIGPAC (FEGA/MAPA), WMS.
 - Catastro INSPIRE, límites de parcela.
+- Zona regable: perímetro de referencia aportado en `ZR.gml`, pendiente de ajuste.
 
 ## Arquitectura de esta fase
 GitHub Pages sirve únicamente el frontend estático. WordPress actúa como portal y enlaza al visor. Los servicios cartográficos se consumen directamente desde sus proveedores oficiales.
 
-No contiene todavía cartografía interna, datos personales, telemetría ni simulaciones.
+Incluye el perímetro de referencia; no contiene parcelas internas, datos personales, telemetría ni simulaciones.
+
+## Perímetro y área Sentinel (M4)
+
+El contorno azul de «Zona regable» está visible inicialmente y se puede ocultar.
+Se incorpora al HTML sin nuevas peticiones. Se conserva el encuadre de Inicio.
+La geometría original permanece en EPSG:25830; su copia de visualización pasa
+a EPSG:4326 y OpenLayers la representa en EPSG:3857.
+
+`ZR.gml` contiene un polígono válido de **2.416,93 ha**, pendiente de ajuste.
+`data/sentinel-aoi.json` separa ese perímetro del rectángulo envolvente para
+procesamiento: **9.521,73 ha** en EPSG:25830. Esta última cifra no es superficie
+regable. El archivo incluye una bbox conservadora en EPSG:4326 para buscar
+Sentinel-2 L2A y un borrador de consulta STAC, aún sin periodo seleccionado.
+La bbox filtra el catálogo; descargar un asset completo puede incluir toda
+la tesela. El futuro recorte/procesamiento usará el rectángulo, ajustando la
+rejilla hacia fuera según la resolución, y mantendrá el perímetro separado.
+Primera descarga Sentinel completada y verificada el 6 de octubre de 2026.
+
+Regeneración reproducible, con Python de QGIS y GDAL/OGR instalados:
+
+```sh
+python scripts/prepare_reference.py /ruta/ZR.gml
+```
+
+El script valida CRS y geometría, registra el SHA-256 del original y actualiza
+el contorno incorporado y los metadatos del área. No repara ni modifica el GML.
+Los archivos técnicos no forman parte del paquete Pages; la capa sí va dentro
+de `index.html`. El flujo Pages publica estos cambios junto con los índices Sentinel.
+
+## Índices en el visor (M4)
+
+En «Capas del mapa → Sentinel», elegir NDVI, EVI2 o NDMI. «Sin índice» permite
+volver a la cartografía habitual. Se ofrece la última adquisición válida, su fecha
+real, antigüedad y porcentaje válido del rectángulo; no se presenta como imagen
+en tiempo real. El selector admite sólo fechas publicadas (actualmente una).
+La opacidad controla la superposición y la leyenda se oculta al llegar a cero.
+Las zonas sin calidad suficiente son transparentes.
+
+Las escalas de color son fijas: NDVI y NDMI de -1 a 1, EVI2 de 0 a 1. EVI2 fuera
+de ese rango satura el color, pero conserva sus valores en el GeoTIFF técnico.
+NDMI representa una estimación relacionada con humedad de la vegetación, no
+una medida directa de humedad del suelo. No son estadísticas por parcela.
+
+Pages genera PNG RGBA EPSG:3857 a partir de los GeoTIFF EPSG:25830 validados.
+El navegador sólo solicita la imagen del índice elegido y el catálogo al mismo
+origen; los GeoTIFF originales se descargan bajo demanda. No se consulta a
+Copernicus desde el navegador. Los artefactos no se ejecutan como código.
+
+El despliegue se activa con cambios de main o al terminar Sentinel correctamente.
+Selecciona un artefacto no caducado de sentinel.yml/main del mismo repositorio,
+comprueba SHA-256, CRS, rejilla y calidad antes de reemplazar la publicación.
+Si falla, el sitio anterior se conserva. Se publica la última adquisición válida;
+esta fase no mantiene un archivo histórico permanente. La imagen ya publicada
+sigue disponible aunque caduque el artefacto, hasta el siguiente despliegue.
+
+Pruebas de publicación: `python scripts/test_sentinel_web.py` (GDAL/NumPy) y
+`node scripts/test-sentinel-ui.cjs`, además del gate cartográfico existente.
 
 ## CRS
 - EPSG:25830: CRS maestro técnico de datos internos futuros.
@@ -21,6 +79,61 @@ No contiene todavía cartografía interna, datos personales, telemetría ni simu
 - EPSG:4326: coordenadas e intercambio.
 
 ## Desarrollo
+### Descarga automática Sentinel desde GitHub
+
+`.github/workflows/sentinel.yml` busca productos **Sentinel-2 L2A ya disponibles**
+en Copernicus **cada tres días de febrero a septiembre**, ambos inclusive,
+contando desde el 1 de febrero sin reiniciar la cuenta al cambiar de mes.
+En **enero, octubre, noviembre y diciembre se ejecuta el día 15**.
+Hora: 05:30 UTC (07:30 en Madrid en verano, 06:30 en invierno).
+GitHub comprueba el calendario diariamente durante la temporada, pero los días
+intermedios no consulta ni descarga nada de Copernicus. También permite ejecución
+manual en Actions. No depende de una sesión de navegador.
+Busca en los últimos 30 días una adquisición con cobertura completa del rectángulo
+y nubosidad de tesela <=20%. Después exige al menos 80% de píxeles válidos dentro
+del rectángulo para cada índice. Son umbrales iniciales revisables, no garantías
+de ausencia de nubes; SCL puede contener errores.
+
+Se leen por S3 las bandas necesarias del producto L2A y se recortan con GDAL.
+Los JP2 originales pueden requerir transferir más datos que el recorte final.
+La reflectancia usa escala y offset de cada asset STAC, excluyendo nodata.
+La máscara conservadora admite SCL 4, 5 y 6; excluye sombras, nubes, nieve,
+datos inválidos y clases ambiguas. No aplica una máscara de usos del suelo.
+
+Salidas GeoTIFF EPSG:25830: NDVI/EVI2 a 10 m, NDMI y SCL a 20 m, más manifiesto
+con procedencia, consulta, porcentaje válido y hashes. NDMI no es humedad del
+suelo medida. Las estadísticas corresponden al rectángulo, no al perímetro.
+Cada ejecución conserva artefactos 30 días; no constituye un archivo histórico
+permanente. Una caché por adquisición, código y AOI evita reprocesar mientras
+esté disponible. Tras una ejecución correcta, Pages valida y publica el último producto automáticamente.
+Las bandas se leen secuencialmente, sin ejecuciones simultáneas. La clasificación
+SCL se reutiliza localmente para ambas resoluciones; los reintentos de transferencia
+son limitados y esperan 30 segundos para no insistir continuamente ante errores.
+
+Activado en `main` el 6 de octubre de 2026; ambos secretos S3 están configurados.
+[Primera ejecución verificada](https://github.com/julianladera-droid/castrejon-webgis/actions/runs/37518084581):
+producto del 24/09/2026, NDVI/EVI2 a 10 m y NDMI/SCL a 20 m, EPSG:25830.
+Los cuatro GeoTIFF se abrieron con GDAL y se verificaron rejillas y hashes.
+El 99,07% del rectángulo supera el filtro SCL. Próxima fecha programada:
+15/10/2026, 05:30 UTC. Los índices se pueden seleccionar en el panel Sentinel del visor.
+
+No pegar claves en el chat ni guardarlas en archivos del repositorio.
+Guía oficial: https://documentation.dataspace.copernicus.eu/APIs/S3.html
+
+Prueba local sin autenticación (Python de QGIS con GDAL y NumPy):
+
+```sh
+python scripts/test_sentinel.py
+python scripts/sentinel_pipeline.py --catalogue-only --catalogue-file data/sentinel-catalogue.json
+```
+
+Se ha validado la selección con el catálogo real del 6 de octubre de 2026.
+La descarga S3 y los GeoTIFF finales también se verificaron en la ejecución indicada.
+
+La leyenda del pie muestra sólo las capas activas con opacidad mayor que cero.
+Se actualiza al cambiar visibilidad u opacidad, también en móvil, y muestra
+«Sin capas visibles» cuando todas están ocultas. Sustituye el bloque explicativo.
+
 En esta fase `index.html` es autocontenido salvo OpenLayers y los servicios cartográficos externos. La evolución futura prevista es React + TypeScript + OpenLayers con API FastAPI y PostgreSQL/PostGIS.
 
 ## Despliegue con GitHub Pages
@@ -37,6 +150,7 @@ Desde la raíz del repositorio:
 
 ```sh
 python3 scripts/check_webgis.py
+python3 -m unittest discover -s scripts -p 'test_*.py'
 ```
 
 El gate comprueba el contenido actual de los archivos versionados (añadir los
@@ -94,7 +208,7 @@ push y repetir sobre Pages tras la publicación; CI no impone aprobación humana
 | 6 | [ ] Zoom +/− funciona. | — |
 | 7 | [ ] Inicio restaura el encuadre con animación correcta. | Manejador restaura centro/zoom con dobles. |
 | 8 | [ ] Atrás/adelante sin bucles ni entradas falsas al cambiar capas. | — |
-| 9 | [ ] Activación/desactivación de las tres capas. | — |
+| 9 | [ ] Activación/desactivación de las cuatro capas. | Interruptor Zona regable probado con dobles. |
 | 10 | [ ] Opacidades SIGPAC/Catastro y sus indicadores coherentes. | — |
 | 11 | [ ] Coordenadas del cursor en EPSG:4326. | — |
 | 12 | [ ] Escala gráfica dinámica coherente. | — |
@@ -137,6 +251,13 @@ La simulación de tamaños no sustituye la prueba en un dispositivo físico.
 
 
 ## Seguridad de red y diagnóstico (0.1.7)
+
+Corrección 0.1.8: el gate ejecuta ahora `check_network_policy`; se corrigen los
+patrones sobreescapados y se comparan las directivas y fuentes de la CSP con el
+contrato M0.2. CI también ejecuta pruebas de mutación para destinos prohibidos,
+CSP ausente/duplicada/permisiva y CORS anónimo, incluida la llamada desde `main`.
+Son comprobaciones estáticas de literales: no analizan todos los posibles
+destinos construidos dinámicamente ni sustituyen la inspección de red real.
 
 El visor no necesita acceso a la red local del usuario. El código y el gate prohíben
 `localhost`, IP privadas/loopback/link-local, dominios `.local`,
