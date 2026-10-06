@@ -234,7 +234,7 @@ con la capa, además de la opacidad inicial SIGPAC.
 - Panel de capas plegado al entrar en un tamaño compacto; se abre pulsando
   «Capas del mapa», se desplaza internamente si falta altura y se cierra con
   el mismo botón o Escape. Comunica su estado mediante `aria-expanded`.
-- Navegación táctil inferior, botones de al menos 44 px y foco visible.
+- Navegación táctil superior derecha, botones de al menos 44 px y foco visible. El panel de capas queda alineado a la derecha, debajo de los botones, también en escritorio.
 - Altura dinámica del navegador y márgenes de áreas seguras. Se conserva el
   encuadre cuando cambia el tamaño del mapa.
 - Pie propio para coordenadas, escala gráfica y atribuciones siempre
