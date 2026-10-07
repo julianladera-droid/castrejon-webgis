@@ -13,6 +13,7 @@ class Events {
   on(name, callback) { (this.events[name] ??= []).push(callback); }
   once(name, callback) { this.on(name, callback); }
   addEventListener(name, callback) { this.on(name, callback); }
+  setGeometry(geometry) { this.options.geometry = geometry; }
 }
 class Source extends Events {}
 class XYZ extends Source {}
@@ -38,11 +39,14 @@ class VectorLayer extends Layer {}
 class View extends Events {
   getCenter() { return this.options.center; }
   getZoom() { return this.options.zoom; }
+  calculateExtent() { return [0, 0, 1280, 720]; }
   animate(options, callback) { Object.assign(this.options, options); callback?.(); }
 }
 class MapView extends Events {
   constructor(options) { super(options); maps.push(this); }
   getViewport() { return new Events(); }
+  getSize() { return [1280, 720]; }
+  getView() { return this.options.view; }
   updateSize() {}
 }
 const elements = Object.fromEntries(Object.entries(input.ids).map(([id, attrs]) => {
@@ -72,7 +76,8 @@ const context = vm.createContext({
   ol: {
     source: {XYZ, TileWMS, ImageWMS, Vector: VectorSource},
     layer: {Tile, Image, Vector: VectorLayer}, View, Map: MapView,
-    format: {GeoJSON}, style: {Style: Events, Stroke: Events},
+    format: {GeoJSON}, style: {Style: Events, Stroke: Events, Fill: Events, RegularShape: Events},
+    geom: {MultiPoint: class {constructor(coordinates) {this.coordinates=coordinates;}}},
     proj: {fromLonLat, toLonLat: point => point.coords},
     control: {
       defaults: {defaults: options => ({extend: controls => ({options, controls})})},
@@ -113,8 +118,18 @@ try {
   check(ring.length >= 4 && equal(ring[0], ring.at(-1)) &&
     ring.every(([lon, lat]) => lon > -4.49 && lon < -4.30 && lat > 39.79 && lat < 39.87),
     'Zona regable: anillo cerrado y coordenadas lon/lat de Castrejón');
-  check(zonaRegable.options.style.every(style => style.options.stroke && !style.options.fill),
-    'Zona regable: contorno sin relleno');
+  check(typeof zonaRegable.options.style === 'function', 'Zona regable: estilo adaptativo obligatorio');
+  const testFeature = {getGeometry:()=>({getExtent:()=>[0,0,1000,500],
+    getCoordinates:()=>[[[0,0],[1000,0],[1000,500],[0,500],[0,0]]]})};
+  const overview = zonaRegable.options.style(testFeature, 2);
+  const detail = zonaRegable.options.style(testFeature, .01);
+  check(overview[1].options.fill && !detail[1].options.fill,
+    'Perímetro: superficie general y sin relleno en detalle');
+  check(overview[1].options.stroke.options.color.startsWith('rgba(255,230,0,') &&
+    detail[1].options.stroke.options.color.startsWith('rgba(255,230,0,'), 'Perímetro: conservar tono amarillo');
+  check(detail[1].options.stroke.options.width <= 1.2 && detail[1].options.stroke.options.lineDash &&
+    detail[2].options.image.options.points === 4 && detail[2].options.geometry.coordinates.length <= 500,
+    'Perímetro: línea discreta, cruces y densidad acotada');
   const toggle = elements.zonaRegableToggle;
   check(toggle.checked && zonaRegable.options.visible && toggle.events.change.length === 1,
     'Zona regable: visible inicialmente y con interruptor');

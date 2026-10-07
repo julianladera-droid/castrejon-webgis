@@ -1,5 +1,5 @@
 # SKILL · Castrejón WebGIS — Contrato de arquitectura y evolución
-Version: 0.1.17
+Version: 0.1.18
 Fecha base: 2026-09-30
 Estado: ACTIVO · se actualiza tras cada ciclo de pruebas
 
@@ -442,6 +442,12 @@ Formato de cada cambio:
 No borrar una regla por comodidad. Si una regla cambia, conservar el motivo en el historial.
 
 ## 12. Registro de cambios
+### 0.1.18 — 2026-10-07
+- Petición: representación dependiente de escala, manteniendo el color y cediendo protagonismo al detalle.
+- Sustituir el triple trazo por amarillo constante (255,230,0): superficie pastel cuando cabe el conjunto, transición de opacidad a contorno fino discontinuo con pequeñas cruces al ampliar. Sin relleno en detalle.
+- La transición depende del tamaño del perímetro respecto a la ventana cartográfica, también en móvil. Cruces espaciadas en píxeles, limitadas a la ventana visible; caché de estilos y geometría de símbolos para evitar densidad y coste crecientes con el zoom.
+- Conservar geometría simplificada, GML, AOI, centro, navegación, conmutador y leyenda dinámica. Pruebas de escala, color constante, ausencia de relleno en detalle y densidad acotada de símbolos.
+
 ### 0.1.17 — 2026-10-06
 - Petición: aligerar y suavizar el perímetro, sustituir el anterior y usar amarillo–rojo–amarillo.
 - Sólo representación: simplificación topológica a 15 m en EPSG:25830 y redondeo local de esquinas con recorte máximo de 40 m. Validar geometría, desviación del contorno <=30 m y variación de área <1%; coordenadas web a seis decimales.
