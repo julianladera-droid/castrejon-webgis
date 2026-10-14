@@ -1,5 +1,5 @@
 # SKILL · Castrejón WebGIS — Contrato de arquitectura y evolución
-Version: 0.1.18
+Version: 0.1.19
 Fecha base: 2026-09-30
 Estado: ACTIVO · se actualiza tras cada ciclo de pruebas
 
@@ -442,6 +442,12 @@ Formato de cada cambio:
 No borrar una regla por comodidad. Si una regla cambia, conservar el motivo en el historial.
 
 ## 12. Registro de cambios
+### 0.1.19 — 2026-10-14
+- Incorporar entrega parcelas_zona_regable_sin_caminos_20261014.zip: 919 parcelas recortadas, geometrías válidas EPSG:25830 y REFCAT único. Conservar original local sin cambios; no publicar ZIP, documentos auxiliares ni rutas locales.
+- Exportar GeoJSON de visualización EPSG:4326 con identificador REFCAT y superficie recortada calculada en 25830. No confundirla con superficie regada acreditada. Sin datos personales; clave conservada para futuras estadísticas zonales con la geometría maestra, nunca con el contorno suavizado.
+- Capa parcelaria independiente, sin relleno, amarillo constante: oculta hasta zoom 14, aparición gradual hasta 16. Carga única al acercarse, interruptor, estado/error y reintento explícito; leyenda sólo cuando se representa. Sin alterar SIGPAC, Catastro o Sentinel.
+- Publicar sólo GeoJSON y metadatos públicos mediante Pages. Validar identificadores, CRS, geometrías, recuento, ausencia de atributos ajenos, umbral/leyenda y convivencia visual con NDVI en escritorio y móvil.
+
 ### 0.1.18 — 2026-10-07
 - Petición: representación dependiente de escala, manteniendo el color y cediendo protagonismo al detalle.
 - Sustituir el triple trazo por amarillo constante (255,230,0): superficie pastel cuando cabe el conjunto, transición de opacidad a contorno fino discontinuo con pequeñas cruces al ampliar. Sin relleno en detalle.

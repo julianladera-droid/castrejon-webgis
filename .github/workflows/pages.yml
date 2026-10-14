@@ -42,6 +42,7 @@ jobs:
           python3 -m unittest discover -s scripts -p 'test_*.py'
           python3 scripts/check_webgis.py
           node scripts/test-sentinel-ui.cjs
+          node scripts/test-parcels.cjs
 
   deploy:
     needs: gate
@@ -94,6 +95,8 @@ jobs:
         run: |
           mkdir _site
           cp index.html .nojekyll _site/
+          mkdir -p _site/data
+          cp -r data/parcels _site/data/
           /usr/bin/python3 scripts/test_sentinel_web.py
           /usr/bin/python3 scripts/build_sentinel_web.py sentinel-product _site/sentinel
       - name: Upload static site

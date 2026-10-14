@@ -151,6 +151,13 @@
           </label>
         </div>
         <div class="layer">
+          <label class="layer-choice" for="parcelsToggle">
+            <input id="parcelsToggle" type="checkbox" checked>
+            <span>Parcelas de la zona regable<small id="parcelsStatus" role="status">Acércate para ver las parcelas</small></span>
+          </label>
+          <button id="parcelsRetry" type="button" hidden>Reintentar parcelas</button>
+        </div>
+        <div class="layer">
           <label class="layer-choice" for="pnoaToggle">
             <input id="pnoaToggle" type="checkbox" checked>
             <span>Ortofoto PNOA</span>
@@ -197,6 +204,7 @@
       <strong>Leyenda</strong>
       <span class="legend-item" id="legendZona"><span class="legend-swatch" id="legendZonaSymbol" aria-hidden="true"></span>Zona regable · provisional</span>
       <span class="legend-item" id="legendSigpac">Recintos SIGPAC</span>
+      <span class="legend-item" id="legendParcels" hidden><span aria-hidden="true" style="width:18px;border-top:1px dashed #ffe600"></span>Parcelas · ZR</span>
       <span class="legend-item" id="legendCatastro" hidden>Catastro</span>
       <span class="legend-item" id="legendPnoa">Ortofoto PNOA</span>
       <span id="legendEmpty" hidden>Sin capas visibles</span>
@@ -437,9 +445,19 @@
 
   const sentinel = new ol.layer.Image({visible:false, opacity:0.8,
     properties:{id:'sentinel', title:'Sentinel-2 · índices'}});
+  const parcelSource = new ol.source.Vector({
+    attributions:'Parcelas · Catastro INSPIRE · recorte aportado 14/10/2026'
+  });
+  const parcels = new ol.layer.Vector({source:parcelSource, visible:false, opacity:0,
+    style:[
+      new ol.style.Style({stroke:new ol.style.Stroke({color:'rgba(45,48,28,.45)',width:2.4,lineDash:[5,3]})}),
+      new ol.style.Style({stroke:new ol.style.Stroke({color:'#ffe600',width:1,lineDash:[5,3]})})
+    ],
+    properties:{id:'parcels',title:'Parcelas de la zona regable'}
+  });
   const map = new ol.Map({
     target: 'map',
-    layers: [pnoa, sentinel, sigpac, catastro, zonaRegable],
+    layers: [pnoa, sentinel, sigpac, catastro, zonaRegable, parcels],
     view,
     controls: ol.control.defaults.defaults({zoom:false, rotate:false, attribution:true,
       attributionOptions:{target:'attributionTarget', collapsible:false}}).extend([
@@ -454,7 +472,7 @@
 
   // La leyenda sigue el estado de las capas, también si cambia desde código.
   const legendLayers = [[zonaRegable, 'legendZona'], [sigpac, 'legendSigpac'],
-    [catastro, 'legendCatastro'], [pnoa, 'legendPnoa'], [sentinel, 'legendSentinel']];
+    [catastro, 'legendCatastro'], [pnoa, 'legendPnoa'], [sentinel, 'legendSentinel'], [parcels, 'legendParcels']];
   const updateLegend = () => {
     let anyVisible = false;
     for (const [layer, id] of legendLayers) {
@@ -469,6 +487,44 @@
     layer.on('change:opacity', updateLegend);
   }
   updateLegend();
+
+  // BEGIN PARCEL UI — load once on approach; original metric SHP remains the master.
+  const parcelToggle = document.getElementById('parcelsToggle');
+  const parcelStatus = document.getElementById('parcelsStatus');
+  const parcelRetry = document.getElementById('parcelsRetry');
+  let parcelState = 'idle';
+  const updateParcels = () => {
+    const detail = Math.max(0, Math.min(1, (view.getZoom()-14)/2));
+    const enabled = parcelToggle.checked;
+    parcels.setOpacity(detail * .85);
+    parcels.setVisible(enabled && detail > 0 && parcelState === 'ready');
+    parcelRetry.hidden = !enabled || parcelState !== 'error';
+    parcelStatus.textContent = !enabled ? 'Ocultas' : parcelState === 'error'
+      ? 'No se pudieron cargar las parcelas' : detail === 0 ? 'Acércate para ver las parcelas'
+      : parcelState === 'ready' ? '919 parcelas · límites de referencia' : 'Cargando parcelas…';
+    if (!enabled || detail === 0 || parcelState !== 'idle') return;
+    parcelState = 'loading';
+    fetch('data/parcels/parcelas.geojson').then(response => {
+      if (!response.ok) throw new Error('Parcelas no disponibles');
+      return response.json();
+    }).then(data => {
+      if (data.type !== 'FeatureCollection' || data.features?.length !== 919 ||
+          new Set(data.features.map(f=>f.id)).size !== data.features.length ||
+          !data.features.every(f=>typeof f.id === 'string' && f.id === f.properties?.refcat &&
+            Number.isFinite(f.properties.area_m2) && f.properties.area_m2 > 0 &&
+            ['Polygon','MultiPolygon'].includes(f.geometry?.type))) throw new Error('Parcelario inválido');
+      const features = new ol.format.GeoJSON().readFeatures(data,
+        {dataProjection:'EPSG:4326',featureProjection:'EPSG:3857'});
+      parcelSource.addFeatures(features);
+      parcelState = 'ready';
+      updateParcels();
+    }).catch(() => { parcelState = 'error'; updateParcels(); });
+  };
+  view.on('change:resolution', updateParcels);
+  parcelToggle.addEventListener('change', updateParcels);
+  parcelRetry.addEventListener('click', () => { parcelState = 'idle'; updateParcels(); });
+  updateParcels();
+  // END PARCEL UI
 
   // BEGIN SENTINEL UI — same-origin processed products, never provider credentials.
   const indexSelect = document.getElementById('sentinelIndex');

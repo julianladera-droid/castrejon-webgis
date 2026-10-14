@@ -1,0 +1,14 @@
+{
+  "version": 1,
+  "delivery_date": "2026-10-14",
+  "count": 919,
+  "source_sha256": "5f849fbef4e6ab5256bf4d202cb8c9b5268a45bb6b249db049b2296fd4214461",
+  "web_sha256": "5321dcc6c63cf09881e1f86048ecc524387d7d0b0bf63f102176405aed9fa7d4",
+  "master_crs": "EPSG:25830",
+  "web_crs": "EPSG:4326",
+  "join_key": "refcat",
+  "area_m2": 20719052.58698839,
+  "area_meaning": "Geometric area clipped to ZR, not accredited irrigated area",
+  "source": "Catastro INSPIRE; supplied clipped parcel delivery",
+  "excluded": "Rustic parcel codes 09000 through 09999; not a complete road-use classification"
+}

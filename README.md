@@ -18,6 +18,20 @@ Incluye el perímetro de referencia; no contiene parcelas internas, datos person
 
 ## Perímetro y área Sentinel (M4)
 
+Parcelario incorporado: 919 parcelas de la entrega del 14/10/2026, recortadas a
+ZR y con la exclusión de códigos 09000–09999 aplicada en origen. La capa aparece
+gradualmente entre zoom 14 y 16, con líneas amarillas finas sin relleno. Se carga
+una vez al acercarse y dispone de interruptor y reintento ante errores.
+`data/parcels/parcelas.geojson` contiene sólo geometría, `refcat` e identificador
+idénticos y superficie recortada en m²; no contiene titulares. La superficie no
+acredita riego. Se mantienen las coordenadas sin suavizar para respetar límites
+compartidos y fragmentos pequeños. El original EPSG:25830 se conserva localmente
+en `sentinel-output/parcel-master/`; regenerar con QGIS/GDAL Python y
+`scripts/prepare_parcels.py ruta/al/zip`. Esa geometría original y REFCAT serán
+la base de estadísticas zonales; este cambio no calcula estadísticas por parcela.
+La copia web EPSG:4326 se representa en EPSG:3857 y no es el maestro de cálculo.
+Validación: `node scripts/test-parcels.cjs` y comprobación visual con Sentinel.
+
 «Zona regable» mantiene un único tono amarillo: superficie pastel cuando cabe el conjunto y línea fina discontinua +--+ al acercarse, sin relleno en detalle. Cambian progresivamente la opacidad y la representación según el tamaño de la ventana; las cruces mantienen separación de 80 píxeles. La leyenda acompaña al cambio. Está visible inicialmente y se puede ocultar. Su copia web se simplifica a 15 m y suaviza las esquinas, conservando el GML original. La geometría cargada pasa de 956 a 487 puntos y ocupa unos 10,9 kB; sustituye a la anterior.
 Se incorpora al HTML sin nuevas peticiones. Se conserva el encuadre de Inicio.
 La geometría original permanece en EPSG:25830; su copia de visualización pasa
