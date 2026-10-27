@@ -17,7 +17,7 @@ function setup(response) {
     constructor(options){this.options=options;this.events={};sources.push(this);}
     on(n, f){this.events[n]=f;}
   }
-  const context = {syncComparison:()=>false, acceptComparisons:()=>{}, sentinel, refreshParcelNdvi:()=>{}, fetch: async () => response,
+  const context = {syncWater:()=>{}, acceptWater:()=>{}, syncComparison:()=>false, acceptComparisons:()=>{}, sentinel, refreshParcelNdvi:()=>{}, fetch: async () => response,
     document: {getElementById: id => elements[id] ??= element(), createElement: element},
     ol:{source:{ImageStatic}}};
   vm.runInNewContext(code, context);

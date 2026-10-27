@@ -92,6 +92,9 @@
     .legend-swatch{display:inline-block;width:24px;height:10px;background:rgba(255,230,0,.18);border:1px solid rgba(255,230,0,.75);box-shadow:0 0 0 .5px rgba(45,48,28,.18)}
     .legend-swatch.detail{height:12px;border:0;box-shadow:none;background:none;color:#ffe600;text-shadow:0 0 1px #666;font-size:12px;line-height:12px}
     .legend-swatch.detail::after{content:'+--+'}
+    .water-swatch{display:inline-block;width:14px;height:10px;background:#00b7eb;border:1px solid #006786}
+    .parcel-water{padding:9px 12px;margin:8px 0;background:#edf9fc;border-left:3px solid #00a1cf;border-radius:4px}
+    .parcel-water p{margin:4px 0;font-size:11px;line-height:1.45}
     .sentinel-controls{padding:12px 0;border-bottom:1px solid var(--line)}
     .sentinel-controls h2{font-size:14px;margin:0 0 8px;color:var(--contrast)}
     .sentinel-controls label{display:block;font-size:12px;font-weight:700;margin-top:6px}
@@ -217,6 +220,11 @@
           </div>
           <p id="sentinelStatus" role="status">Consultando productos disponibles…</p>
         </section>
+        <section class="sentinel-controls" aria-label="Agua superficial estimada">
+          <label class="layer-choice" for="waterToggle"><input id="waterToggle" type="checkbox" checked disabled><span>Posible encharcamiento</span></label>
+          <p id="waterStatus" role="status">Consultando agua superficial estimada…</p>
+          <button id="waterRetry" type="button" hidden>Reintentar agua estimada</button>
+        </section>
         <div class="layer">
           <label class="layer-choice" for="zonaRegableToggle">
             <input id="zonaRegableToggle" type="checkbox" checked>
@@ -289,6 +297,7 @@
       <button id="parcelClose" type="button" aria-label="Cerrar ficha de parcela">Cerrar</button>
     </div>
     <div aria-live="polite" aria-atomic="true">
+      <div class="parcel-water"><strong>Posible encharcamiento: <span id="parcelWaterValue">—</span></strong><p id="parcelWaterDates"></p><p id="parcelWaterNote">Selecciona una imagen con referencia anterior.</p></div>
       <div id="parcelComparison" class="parcel-comparison" hidden>
         <table><caption id="parcelComparisonDates"></caption><thead><tr><th scope="col">Índice</th><th scope="col">A</th><th scope="col">B</th><th scope="col">Δ B−A</th><th scope="col">Válido</th></tr></thead><tbody><tr><th scope="row">NDVI</th><td id="compareNDVIA">—</td><td id="compareNDVIB">—</td><td id="compareNDVIDelta">—</td><td id="compareNDVICoverage">—</td></tr><tr><th scope="row">EVI2</th><td id="compareEVI2A">—</td><td id="compareEVI2B">—</td><td id="compareEVI2Delta">—</td><td id="compareEVI2Coverage">—</td></tr><tr><th scope="row">NDMI</th><td id="compareNDMIA">—</td><td id="compareNDMIB">—</td><td id="compareNDMIDelta">—</td><td id="compareNDMICoverage">—</td></tr></tbody></table>
         <p id="parcelComparisonNote"></p>
@@ -306,6 +315,8 @@
     </div>
     <details class="parcel-help">
       <summary>Qué indican estos valores</summary>
+      <p><strong>Posible encharcamiento:</strong> agua superficial nueva estimada por Sentinel-2 a 20 m, donde la imagen anterior mostraba terreno o vegetación. El porcentaje usa toda la superficie de la parcela recortada; el agua presente en ambas fechas y la superficie sin evaluar se indican aparte.</p>
+      <p>Estimación sin validar en campo. También puede incluir variaciones de cauces o balsas. Puede omitir agua bajo vegetación o zonas pequeñas. Un 0% significa que no se detecta agua nueva en la parte evaluable; no confirma ausencia de encharcamiento. «No concluyente» indica menos del 80% de superficie evaluable.</p>
       <p><strong>NDVI:</strong> indica la cobertura y el vigor de la vegetación. Valores más altos suelen señalar más vegetación verde.</p>
       <p><strong>EVI2:</strong> complementa al NDVI y distingue mejor los cambios con vegetación densa. Valores más altos suelen indicar mayor desarrollo vegetal.</p>
       <p><strong>NDMI:</strong> refleja el contenido de agua de la vegetación. Valores más altos suelen indicar más agua en las hojas, no en el suelo.</p>
@@ -323,6 +334,7 @@
       <span class="legend-item" id="legendCatastro" hidden>Catastro</span>
       <span class="legend-item" id="legendPnoa">Ortofoto PNOA</span>
       <span class="index-legend" id="legendComparison" hidden><strong id="comparisonLegendTitle"></strong><span id="comparisonLegendMin"></span><span class="index-gradient" id="comparisonLegendGradient" aria-hidden="true"></span><span id="comparisonLegendMax"></span></span>
+      <span class="legend-item" id="legendWater" hidden><span class="water-swatch" aria-hidden="true"></span><span id="waterLegendCaption">Agua nueva estimada</span></span>
       <span id="legendEmpty" hidden>Sin capas visibles</span>
       <span class="index-legend" id="legendSentinel" hidden>
         <strong id="sentinelLegendTitle"></strong>
@@ -561,6 +573,9 @@
 
   const sentinel = new ol.layer.Image({visible:false, opacity:0.8,
     properties:{id:'sentinel', title:'Sentinel-2 · índices'}});
+  const waterLayer = new ol.layer.Vector({visible:false, properties:{id:'water'},
+    style:new ol.style.Style({fill:new ol.style.Fill({color:'rgba(0,183,235,.65)'}),
+      stroke:new ol.style.Stroke({color:'#006786',width:1})})});
   const compareLayerA = new ol.layer.Image({visible:false, opacity:1});
   const compareLayerB = new ol.layer.Image({visible:false, opacity:1});
   const parcelSource = new ol.source.Vector({
@@ -575,7 +590,7 @@
   });
   const map = new ol.Map({
     target: 'map',
-    layers: [pnoa, sentinel, compareLayerA, compareLayerB, sigpac, catastro, zonaRegable, parcels],
+    layers: [pnoa, sentinel, compareLayerA, compareLayerB, sigpac, catastro, zonaRegable, waterLayer, parcels],
     view,
     controls: ol.control.defaults.defaults({zoom:false, rotate:false, attribution:true,
       attributionOptions:{target:'attributionTarget', collapsible:false}}).extend([
@@ -590,7 +605,7 @@
 
   // La leyenda sigue el estado de las capas, también si cambia desde código.
   const legendLayers = [[zonaRegable, 'legendZona'], [sigpac, 'legendSigpac'],
-    [catastro, 'legendCatastro'], [pnoa, 'legendPnoa'], [sentinel, 'legendSentinel'], [compareLayerA, 'legendComparison'], [parcels, 'legendParcels']];
+    [catastro, 'legendCatastro'], [pnoa, 'legendPnoa'], [sentinel, 'legendSentinel'], [compareLayerA, 'legendComparison'], [waterLayer, 'legendWater'], [parcels, 'legendParcels']];
   const updateLegend = () => {
     let anyVisible = false;
     for (const [layer, id] of legendLayers) {
@@ -659,6 +674,7 @@
   ];
   const areaFormat = new Intl.NumberFormat('es-ES', {maximumFractionDigits:2});
   const hectareFormat = new Intl.NumberFormat('es-ES', {maximumFractionDigits:4});
+  let refreshParcelWater = () => {};
   let refreshParcelComparison = () => {};
   let selectedParcel = null;
   let refreshParcelNdvi = () => {};
@@ -675,7 +691,7 @@
     // VectorSource uses its spatial index; interiors and holes work without a rendered fill.
     const feature = parcelSource.getFeaturesAtCoordinate(coordinate)[0];
     if (!feature) { closeParcelCard(); return; }
-    if (selectedParcel === feature) { refreshParcelNdvi(); refreshParcelComparison(); return; }
+    if (selectedParcel === feature) { refreshParcelNdvi(); refreshParcelComparison(); refreshParcelWater(); return; }
     if (selectedParcel) selectedParcel.setStyle(undefined);
     selectedParcel = feature;
     feature.setStyle(parcelHighlight);
@@ -687,6 +703,7 @@
     parcelCard.scrollTop = 0;
     refreshParcelNdvi();
     refreshParcelComparison();
+    refreshParcelWater();
     if (compact.matches) { setPanelOpen(false); document.getElementById('navMore').open = false; }
     if (opening) map.updateSize();
   };
@@ -703,6 +720,8 @@
   mapElement.setAttribute('aria-label', 'Mapa. Usa las flechas para desplazarte y Enter para consultar la parcela del centro. Escape cierra la ficha.');
   // END PARCEL CARD
 
+  let syncWater = () => {};
+  let acceptWater = () => {};
   let syncComparison = () => false;
   let acceptComparisons = () => {};
   // BEGIN SENTINEL UI — same-origin processed products, never provider credentials.
@@ -719,6 +738,7 @@
     return path;
   };
   const updateSatellite = () => {
+    syncWater();
     refreshParcelNdvi();
     const version = ++selectionVersion;
     sentinel.setVisible(false);
@@ -799,6 +819,7 @@
       dateSelect.disabled = false;
       indexSelect.disabled = false;
       acceptComparisons(catalog);
+      acceptWater(catalog);
       updateSatellite();
     }).catch(() => {
       satelliteStatus.textContent = 'Sentinel no disponible. Puedes seguir usando las demás capas.';
@@ -1075,6 +1096,118 @@
     }
   };
 // END COMPARISON UI
+
+  // BEGIN WATER UI
+  const waterToggle=document.getElementById('waterToggle');
+  const waterStatus=document.getElementById('waterStatus');
+  const waterRetry=document.getElementById('waterRetry');
+  const waterCache=new Map(), waterSources=new Map();
+  let waterPairs=[], waterContext=null, waterGeneration=0, waterParcelRequest=0;
+  const waterMethod='scl_new_surface_water_v1';
+  const waterPercent=value=>value>0 && value<.1 ? '<0,1%' : new Intl.NumberFormat('es-ES',{maximumFractionDigits:1}).format(value)+'%';
+  const waterJson=async(spec,pair,name,extension)=>{
+    if(!spec || !/^[0-9a-f]{64}$/.test(spec.sha256)) throw new Error('Missing water integrity');
+    const path=productPath(spec.path,pair.id,name,extension),key=path+':'+spec.sha256;
+    if(!waterCache.has(key)) {
+      const promise=(async()=>{
+        const response=await fetch(path); if(!response.ok) throw new Error('Water unavailable');
+        const bytes=await response.arrayBuffer();
+        const hash=Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',bytes)),b=>b.toString(16).padStart(2,'0')).join('');
+        if(hash!==spec.sha256) throw new Error('Water integrity mismatch');
+        return JSON.parse(new TextDecoder().decode(bytes));
+      })().catch(error=>{waterCache.delete(key);throw error;});
+      waterCache.set(key,promise);
+    }
+    return waterCache.get(key);
+  };
+  const waterTable=async context=>{
+    const {pair,a,b}=context;
+    const data=await waterJson(pair.water.table,pair,'parcel-water','json');
+    if(data.version!==1 || data.method!==waterMethod || data.status!=='exploratory' || data.resolution_m!==20 ||
+       data.min_valid_percent!==80 || data.area_method!=='fractional_cell_intersection_25830' ||
+       data.a?.id!==a.id || data.b?.id!==b.id || data.a?.datetime!==a.datetime || data.b?.datetime!==b.datetime ||
+       data.parcel_web_sha256!==pair.water.parcel_web_sha256 || !/^[0-9a-f]{64}$/.test(data.master_sha256) ||
+       JSON.stringify(data.scl_sha256)!==JSON.stringify([a.quality_mask?.sha256,b.quality_mask?.sha256]) ||
+       JSON.stringify(data.columns)!==JSON.stringify(['new_water_m2','water_both_dates_m2','evaluated_m2','parcel_m2']) ||
+       Object.keys(data.parcels||{}).length!==919 || !Object.values(data.parcels).every(r=>Array.isArray(r) && r.length===4 &&
+         r.every(x=>Number.isFinite(x)&&x>=0) && r[3]>0 && r[0]+r[1]<=r[2]+.003 && r[2]<=r[3]+.003))
+      throw new Error('Invalid water results');
+    return data;
+  };
+  const waterSource=async context=>{
+    const {pair,b}=context,key=pair.id+':'+pair.water.zones.sha256;
+    if(!waterSources.has(key)) {
+      const pending=(async()=>{
+        const [data,zones]=await Promise.all([waterTable(context),waterJson(pair.water.zones,pair,'water-zones','geojson')]);
+        if(zones.type!=='FeatureCollection' || !Array.isArray(zones.features) || zones.features.length>10000 ||
+           !zones.features.every(f=>f.type==='Feature' && data.parcels[f.properties?.refcat]?.[0]>0 &&
+             ['Polygon','MultiPolygon'].includes(f.geometry?.type))) throw new Error('Invalid water zones');
+        return new ol.source.Vector({features:new ol.format.GeoJSON().readFeatures(zones,
+          {dataProjection:'EPSG:4326',featureProjection:'EPSG:3857'}),
+          attributions:'Agua superficial estimada · Copernicus Sentinel-2 · '+formatDate(b.datetime)});
+      })().catch(error=>{waterSources.delete(key);throw error;});
+      waterSources.set(key,pending);
+    }
+    return waterSources.get(key);
+  };
+  acceptWater=catalog=>{
+    waterPairs=(catalog.comparisons||[]).filter(p=>/^comparison-[0-9a-f]{24}$/.test(p.id) && p.water?.method===waterMethod &&
+      /^[0-9a-f]{64}$/.test(p.water.parcel_web_sha256) && p.water.parcel_web_sha256===p.parcel_web_sha256 &&
+      acquisitions.some(a=>a.id===p.a) && acquisitions.some(b=>b.id===p.b));
+  };
+  syncWater=()=>{
+    const generation=++waterGeneration;
+    waterLayer.setVisible(false);waterRetry.hidden=true;
+    const comparing=document.getElementById('compareToggle').checked;
+    const pair=waterPairs.find(p=>p.b===dateSelect.value && (!comparing || p.a===document.getElementById('compareDateA').value));
+    const a=acquisitions.find(x=>x.id===pair?.a),b=acquisitions.find(x=>x.id===pair?.b);
+    waterContext=pair && Date.parse(a.datetime)<Date.parse(b.datetime)?{pair,a,b}:null;
+    waterToggle.disabled=!waterContext;
+    refreshParcelWater();
+    if(!waterContext) {waterStatus.textContent='Sin referencia anterior compatible para estimar agua nueva en esta fecha.';return;}
+    const context=waterContext;
+    const caption=`Agua nueva · ${formatDate(b.datetime)} respecto a ${formatDate(a.datetime)} · estimación de 20 m.`;
+    document.getElementById('waterLegendCaption').textContent='Agua nueva estimada · '+formatDate(b.datetime);
+    if(!waterToggle.checked) {waterStatus.textContent='Capa oculta. '+caption;return;}
+    waterStatus.textContent='Cargando zonas de agua nueva…';
+    waterSource(context).then(source=>{
+      if(generation!==waterGeneration || !waterToggle.checked) return;
+      waterLayer.setSource(source);waterLayer.setVisible(true);
+      waterStatus.textContent=caption+(comparing?' Capa de B sobre todo el mapa.':'');
+    }).catch(()=>{
+      if(generation!==waterGeneration) return;
+      waterLayer.setVisible(false);waterRetry.hidden=false;
+      waterStatus.textContent='No se pudieron cargar las zonas. Reintenta; el resto del mapa sigue disponible.';
+    });
+  };
+  refreshParcelWater=async()=>{
+    const request=++waterParcelRequest,context=waterContext,feature=selectedParcel;
+    const value=document.getElementById('parcelWaterValue'),dates=document.getElementById('parcelWaterDates'),note=document.getElementById('parcelWaterNote');
+    value.textContent='—';dates.textContent='';
+    if(!context) {note.textContent='Sin referencia anterior compatible para esta fecha.';return;}
+    dates.textContent=`Agua nueva: ${formatDate(context.b.datetime)} · referencia ${formatDate(context.a.datetime)} · estimación a 20 m`;
+    if(!feature) {note.textContent='Pulsa una parcela para consultar el agua nueva estimada.';return;}
+    const ref=feature.get('refcat');note.textContent='Cargando superficie estimada…';
+    try {
+      const data=await waterTable(context);
+      if(request!==waterParcelRequest || selectedParcel!==feature || context!==waterContext) return;
+      const row=data.parcels[ref];
+      if(data.parcel_web_sha256!==parcelWebHash || !row || Math.abs(row[3]-feature.get('area_m2'))>.02)
+        throw new Error('Water parcel mismatch');
+      const [fresh,both,known,total]=row,coverage=known/total*100;
+      value.textContent=coverage>=80?waterPercent(fresh/total*100)+' · '+areaFormat.format(fresh)+' m²':'No concluyente';
+      note.textContent=(coverage<80?'Agua nueva observada: '+waterPercent(fresh/total*100)+'. ':'')+
+        'Agua en ambas fechas: '+waterPercent(both/total*100)+'. Sin evaluar: '+waterPercent(Math.max(0,total-known)/total*100)+'. Pendiente de contraste en campo.';
+    } catch {
+      if(request===waterParcelRequest && selectedParcel===feature) {
+        value.textContent='No disponible';note.textContent='No se pudo verificar el resultado. Vuelve a pulsar la parcela para reintentar.';
+      }
+    }
+  };
+  waterToggle.addEventListener('change',syncWater);
+  waterRetry.addEventListener('click',syncWater);
+  // END WATER UI
+
 
   // ---- Service status -------------------------------------------------------
   const states = {pnoa:'loading', sigpac:'loading', catastro:'idle'};

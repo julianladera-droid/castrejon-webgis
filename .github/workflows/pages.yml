@@ -44,6 +44,7 @@ jobs:
           node scripts/test-sentinel-ui.cjs
           node scripts/test-parcels.cjs
           node scripts/test-parcel-ndvi.cjs
+          node scripts/test-water.cjs
           node scripts/test-comparison.cjs
 
   deploy:
@@ -82,6 +83,7 @@ jobs:
           cp -r data/parcels _site/data/
           /usr/bin/python3 scripts/test_sentinel_web.py
           /usr/bin/python3 scripts/test_parcel_ndvi.py
+          /usr/bin/python3 scripts/test_parcel_water.py
           /usr/bin/python3 scripts/test_parcel_comparison.py
           /usr/bin/python3 scripts/build_sentinel_web.py sentinel-products _site/sentinel --collection
       - name: Upload static site

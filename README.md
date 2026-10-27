@@ -51,11 +51,49 @@ pero ninguno confirma por sí solo encharcamiento. La siguiente implementación 
 validar una regla con bandas/índices de agua y observación de campo, distinguir agua
 persistente y nubes/sombras, informar superficie desconocida y tratar fraccionalmente
 los píxeles de borde al calcular porcentaje por superficie métrica de parcela.
-Los centros de píxel actuales no equivalen al área catastral exacta. Esta fase no
-publica porcentajes de encharcamiento.
+Los centros de píxel actuales no equivalen al área catastral exacta. La primera estimación exploratoria de agua nueva se describe a continuación.
 
 Pruebas: `node scripts/test-comparison.cjs`, `python scripts/test_collect_sentinel_products.py`
 y, con GDAL/NumPy, `python scripts/test_parcel_comparison.py`.
+
+## Agua superficial nueva: posible encharcamiento
+
+La capa **Posible encharcamiento**, activada inicialmente, dibuja en azul el agua
+superficial nueva dentro de las parcelas. Usa la fecha seleccionada como B y la
+anterior disponible como A. Con comparación activa, corresponde a B sobre todo el
+mapa; no sigue el separador. La ficha muestra porcentaje sobre la parcela completa,
+superficie en m², fechas, agua en ambas imágenes y superficie sin evaluar.
+Ocultar la capa mantiene los datos de la ficha; seleccionar una fecha sin referencia
+anterior retira los resultados anteriores.
+
+Método exploratorio `scl_new_surface_water_v1`, sin validación de campo para estas
+fechas: SCL B=6 y A=4/5. A=B=6 es agua en ambas imágenes y se contabiliza aparte,
+sin llamarla permanente. Sólo SCL 4,5,6 en ambas fechas permite evaluar el cambio;
+las demás clases, nodata y exterior del raster son desconocidos. No se infiere
+agua por NDMI. Puede incluir variaciones de cauces/balsas y omitir agua oculta por
+vegetación o zonas pequeñas. No detecta toda saturación del suelo ni confirma daños.
+El usuario conoce casos de otras fechas, pendientes de incorporar para contrastar
+este criterio y decidir si añadir bandas de agua, radar o una máscara agrícola.
+
+`scripts/parcel_water.py` poligoniza las celdas originales a 20 m EPSG:25830 y las
+interseca con cada geometría maestra, conservando bordes, huecos y fragmentos.
+El denominador es el área total del recorte parcelario, nunca sólo la parte válida.
+Este tratamiento geométrico no proporciona resolución física subpíxel. Con menos
+del 80% de área evaluable, el resultado es «No concluyente» y se distingue el agua
+observada de lo desconocido. Cero no implica ausencia confirmada de encharcamiento.
+
+Pages genera `parcel-water.json` y `water-zones.geojson` por pareja, con hashes,
+fechas, método, procedencia SCL y vínculo al parcelario. Los resultados actuales
+ocupan 42,6 kB y 16,3 kB: 51 fragmentos de agua nueva en 18 parcelas, de 919; seis
+parcelas no alcanzan la cobertura mínima. El navegador descarga sólo esos resultados,
+los verifica y reutiliza durante la sesión; sin TIFF ni GIS en el dispositivo.
+Errores de red/integridad no se representan como cero y permiten reintentar.
+
+Pruebas: `python scripts/test_parcel_water.py` con GDAL/NumPy y
+`node scripts/test-water.cjs`, junto con las regresiones del comparador y las fichas.
+La definición oficial de SCL está en [Copernicus SentiWiki](https://sentiwiki.copernicus.eu/web/s2-processing);
+la regla temporal y sus porcentajes son estimaciones de este proyecto, no un
+producto de inundación validado por Copernicus.
 
 ## Perímetro y área Sentinel (M4)
 

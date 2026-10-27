@@ -12,6 +12,7 @@ from osgeo import gdal
 from parcel_ndvi import build_parcel_indices
 from parcel_comparison import build_comparison
 from parcel_grid import require_same_grid
+from parcel_water import build_water
 
 PALETTES = {
     'NDVI': {'label': 'NDVI · vigor vegetal', 'range': [-1, 1],
@@ -148,6 +149,8 @@ def build_collection(folders, output, master_path, web_folder):
         'id': pair_id, 'a': table['a']['id'], 'b': table['b']['id'],
         'path': f'sentinel/{pair_id}/parcel-comparison.json',
         'sha256': hashlib.sha256(payload).hexdigest(), 'parcel_web_sha256': web_hash}]}
+    catalog['comparisons'][0]['water'] = build_water(selected[0][0], selected[1][0], entries,
+        master_path, destination, pair_id)
     (output/'catalog.json').write_text(json.dumps(catalog, indent=2)+'\n', encoding='utf-8')
     print(f'Paired comparison: {len(table["parcels"])} parcels, {len(payload)} bytes')
     return catalog

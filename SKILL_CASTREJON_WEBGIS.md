@@ -1,5 +1,5 @@
 # SKILL · Castrejón WebGIS — Contrato de arquitectura y evolución
-Version: 0.1.28
+Version: 0.1.29
 Fecha base: 2026-09-30
 Estado: ACTIVO · se actualiza tras cada ciclo de pruebas
 
@@ -442,6 +442,20 @@ Formato de cada cambio:
 No borrar una regla por comodidad. Si una regla cambia, conservar el motivo en el historial.
 
 ## 12. Registro de cambios
+### 0.1.29 — 2026-10-27
+- Validación: 36 pruebas Python con GDAL sin omisiones y suites Node/gate aprobadas. Superficies de tres parcelas cotejadas celda a celda. Chromium: 45137A04000082 muestra 2,9%/1803,46 m²; cambio a 45137A04000046 muestra 0%; interruptor, comparación y fecha sin referencia verificados. Capa 16,3 kB + tabla 42,6 kB; 51 fragmentos en 18 parcelas, seis parcelas con cobertura insuficiente.
+- Revisión visual: especificar agua nueva junto al resultado y advertir en la ayuda que el cambio puede incluir variaciones de cauces o balsas; no se dispone aún de una máscara validada de usos agrícolas.
+- Solicitud: representar posibles zonas encharcadas y porcentaje por parcela reutilizando la comparación. Para estas fechas el usuario no dispone de observaciones de campo; sí conoce casos de otras fechas.
+- Primera detección exploratoria, ESTIMADA y pendiente de validación de campo: SCL B=6 y A=4/5 identifica agua superficial nueva; A=B=6 se contabiliza aparte, sin llamarla agua permanente. No se deduce agua a partir de NDMI ni se confirma encharcamiento del suelo.
+- Ajuste consciente de la fase prevista en 0.1.28: usar inicialmente la clasificación multibanda SCL disponible, sin fingir disponer de MNDWI ni calibración local. Posteriormente contrastar otras fechas conocidas y, si es necesario, bandas adicionales/radar. Agua bajo vegetación y pequeñas láminas pueden pasar inadvertidas.
+- Rejilla nativa SCL de 20m EPSG:25830 idéntica entre A/B; sólo 4,5,6 evaluables. Nubes, sombras, ambiguos, nodata y exterior del raster son superficie desconocida.
+- Superficies por intersección exacta de polígonos de celdas con maestro parcelario, incluidos huecos y fragmentos; denominador área completa de la parcela recortada, sin dividir por área válida. Geometría fraccional de borde no implica resolución física subpíxel.
+- Porcentaje principal sólo con >=80% de área evaluable; con menor cobertura informar no concluyente y el agua observada aparte. Cero significa sin agua nueva detectada en la parte evaluable, no ausencia confirmada de encharcamiento.
+- Capa vectorial ligera de agua nueva recortada a parcelas, JSON de superficies/hashes/método; sólo resultados preprocesados en navegador. Fecha B y referencia A explícitas. En comparación A/B, la capa temática describe B y se dibuja completa sobre el visor; no se confunde con dos detecciones diferentes.
+- Desactivar capa sólo oculta el mapa; la ficha conserva estadísticas. Fechas sin pareja compatible no reutilizan datos anteriores. Caché, cancelación lógica, integridad y reintentos requeridos.
+- Regresiones: transiciones y clases desconocidas, agua en ambas fechas, bordes fraccionales/huecos/exterior, denominador completo y umbral de calidad, capas/índices/comparador, selección rápida y fallos de carga.
+- Fuente de las clases: https://sentiwiki.copernicus.eu/web/s2-processing ; este criterio de cambio es una estimación del proyecto, no un producto de inundación validado por Copernicus.
+
 ### 0.1.28 — 2026-10-27
 - Validación local: 29 pruebas Python con GDAL/NumPy sin omisiones; suites Node de Sentinel, parcelas, índices y comparación, y gate aprobados. Chromium: separador 50/75%, tres índices, cambio entre parcelas 45137A01200102/45137A01200078, opacidad cero, fechas iguales rechazadas y retorno a vista única; resultados cotejados con la tabla real de 919 parcelas.
 - Revisión visual: mantener escala A/B también en la leyenda inferior al plegar Capas; nombrar B explícitamente. Comprobar leyenda con opacidad cero y salida de comparación.
