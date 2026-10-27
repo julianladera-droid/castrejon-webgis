@@ -102,11 +102,12 @@ try {
   check(maps.length === 1, 'Debe crearse un único mapa');
   const map = maps[0].options;
   check(map.target === 'map', 'Destino del mapa incorrecto');
-  check(map.layers.length === 6, 'Esperadas capas base, Sentinel, Zona regable y parcelas');
-  const [pnoa, sentinel, sigpac, catastro, zonaRegable, parcels] = map.layers;
+  check(map.layers.length === 8, 'Esperadas capas base, Sentinel, Zona regable y parcelas');
+  const [pnoa, sentinel, compareA, compareB, sigpac, catastro, zonaRegable, parcels] = map.layers;
   check(parcels.options.properties.id === 'parcels' && !parcels.getVisible() && parcels.getOpacity() === 0,
     'Parcelas: ocultas en encuadre general');
   check(parcels.options.style.every(style => !style.options.fill), 'Parcelas: límites sin relleno sobre los índices');
+  check(compareA instanceof Image && compareB instanceof Image && !compareA.getVisible() && !compareB.getVisible(), 'Comparison hidden initially');
   check(sentinel instanceof Image && !sentinel.getVisible() && sentinel.options.properties.id === 'sentinel',
     'Sentinel: oculto hasta elegir un producto disponible');
   check(zonaRegable instanceof VectorLayer && zonaRegable.options.source instanceof VectorSource &&

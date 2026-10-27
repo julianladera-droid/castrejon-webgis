@@ -14,7 +14,48 @@ Capas actuales:
 ## Arquitectura de esta fase
 GitHub Pages sirve únicamente el frontend estático. WordPress actúa como portal y enlaza al visor. Los servicios cartográficos se consumen directamente desde sus proveedores oficiales.
 
-Incluye el perímetro de referencia; no contiene parcelas internas, datos personales, telemetría ni simulaciones.
+Incluye el perímetro de referencia y parcelas catastrales públicas recortadas; no contiene datos personales, telemetría ni simulaciones.
+
+## Comparación entre imágenes
+
+En **Capas del mapa → Comparar dos imágenes**, seleccionar el índice y las fechas
+A (anterior) y B (posterior). El separador muestra A a la izquierda y B a la derecha,
+con la misma paleta y opacidad. La primera pareja disponible es 24/09/2026 → 14/10/2026.
+Al pulsar una parcela, la ficha muestra medias A/B, diferencia B−A y cobertura común
+para NDVI, EVI2 y NDMI. Desactivar la comparación recupera la ficha individual.
+
+Las medias comparadas usan exactamente los mismos centros de píxel válidos en ambas
+fechas; pueden diferir de las medias individuales. Se exige 80% de cobertura común.
+La diferencia está en unidades del índice, no en porcentaje, y se calcula antes de
+redondear. Nodata y cobertura insuficiente se muestran como ausencia de datos, nunca cero.
+Se conservan las rejillas originales EPSG:25830 (10 m NDVI/EVI2, 20 m NDMI); una pareja
+desalineada impide publicar. No se remuestrean los datos para calcular cambios.
+
+`scripts/parcel_grid.py` centraliza muestreo, máscaras parcelarias y validez;
+`scripts/parcel_comparison.py` genera una tabla compacta con procedencia y hashes.
+El navegador reutiliza dos PNG y una tabla JSON por pareja (unos 121 kB para las
+919 parcelas actuales), sin descargar TIFF ni ejecutar cálculos geográficos.
+Las peticiones antiguas no sobrescriben la selección actual. Si falla una imagen,
+se oculta la pareja; desactivar/reactivar reintenta. Si falla la tabla, volver a
+pulsar la parcela reintenta sin mostrar valores anteriores.
+
+Pages recupera productos propios validados, verifica el SHA-256 del ZIP y evita
+fechas duplicadas. Requiere dos adquisiciones no caducadas; si faltan, conserva el
+sitio publicado. No es todavía un archivo histórico permanente: la retención de
+90 días se aplica sólo a los nuevos artefactos.
+
+Base para la siguiente fase: SCL de 20 m conservado junto a índices, fechas y hashes.
+[NDMI indica contenido de agua en la vegetación](https://www.usgs.gov/landsat-missions/normalized-difference-moisture-index);
+[SCL clasifica la escena](https://sentiwiki.copernicus.eu/web/s2-processing), incluida agua,
+pero ninguno confirma por sí solo encharcamiento. La siguiente implementación deberá
+validar una regla con bandas/índices de agua y observación de campo, distinguir agua
+persistente y nubes/sombras, informar superficie desconocida y tratar fraccionalmente
+los píxeles de borde al calcular porcentaje por superficie métrica de parcela.
+Los centros de píxel actuales no equivalen al área catastral exacta. Esta fase no
+publica porcentajes de encharcamiento.
+
+Pruebas: `node scripts/test-comparison.cjs`, `python scripts/test_collect_sentinel_products.py`
+y, con GDAL/NumPy, `python scripts/test_parcel_comparison.py`.
 
 ## Perímetro y área Sentinel (M4)
 
@@ -153,9 +194,9 @@ datos inválidos y clases ambiguas. No aplica una máscara de usos del suelo.
 Salidas GeoTIFF EPSG:25830: NDVI/EVI2 a 10 m, NDMI y SCL a 20 m, más manifiesto
 con procedencia, consulta, porcentaje válido y hashes. NDMI no es humedad del
 suelo medida. Las estadísticas corresponden al rectángulo, no al perímetro.
-Cada ejecución conserva artefactos 30 días; no constituye un archivo histórico
+Las nuevas ejecuciones conservan artefactos 90 días; no constituye un archivo histórico
 permanente. Una caché por adquisición, código y AOI evita reprocesar mientras
-esté disponible. Tras una ejecución correcta, Pages valida y publica el último producto automáticamente.
+esté disponible. Tras una ejecución correcta, Pages valida y publica las dos adquisiciones distintas más recientes disponibles automáticamente.
 Las bandas se leen secuencialmente, sin ejecuciones simultáneas. La clasificación
 SCL se reutiliza localmente para ambas resoluciones; los reintentos de transferencia
 son limitados y esperan 30 segundos para no insistir continuamente ante errores.

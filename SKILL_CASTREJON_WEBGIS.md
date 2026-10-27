@@ -1,5 +1,5 @@
 # SKILL · Castrejón WebGIS — Contrato de arquitectura y evolución
-Version: 0.1.27
+Version: 0.1.28
 Fecha base: 2026-09-30
 Estado: ACTIVO · se actualiza tras cada ciclo de pruebas
 
@@ -442,6 +442,18 @@ Formato de cada cambio:
 No borrar una regla por comodidad. Si una regla cambia, conservar el motivo en el historial.
 
 ## 12. Registro de cambios
+### 0.1.28 — 2026-10-27
+- Validación local: 29 pruebas Python con GDAL/NumPy sin omisiones; suites Node de Sentinel, parcelas, índices y comparación, y gate aprobados. Chromium: separador 50/75%, tres índices, cambio entre parcelas 45137A01200102/45137A01200078, opacidad cero, fechas iguales rechazadas y retorno a vista única; resultados cotejados con la tabla real de 919 parcelas.
+- Revisión visual: mantener escala A/B también en la leyenda inferior al plegar Capas; nombrar B explícitamente. Comprobar leyenda con opacidad cero y salida de comparación.
+- Comparación A/B de las dos adquisiciones distintas más recientes: mismo índice, paleta y opacidad, separador deslizante; diferencia B−A por parcela sobre píxeles comunes válidos, nunca resta de medias con coberturas distintas.
+- Rejillas originales EPSG:25830 idénticas obligatorias, NDVI/EVI2 10m y NDMI 20m; mínimo 80% de centros de píxel parcelarios válidos en ambas fechas. Nodata no es cero. Media A, media B y delta con signo y cobertura común.
+- Catálogo multifecha y tabla compacta de comparación preprocesada con hashes y método. El cliente sólo carga PNG y JSON; selección/caché/cancelación lógica reutilizadas, sin GIS en navegador.
+- Preparación para encharcamiento: muestreo/máscara parcelaria compartidos, intersección de validez y superficies de celdas documentadas; conservar SCL a 20m con hash. No clasificar NDMI como agua ni publicar todavía porcentajes de encharcamiento.
+- Próxima fase: regla de agua validada (SCL + bandas/índices de agua, observación de campo), separar agua persistente, excluir nubes/sombras y cuantificar superficie desconocida. Porcentaje por área métrica de parcela con tratamiento fraccional de bordes; los centros de píxel de esta comparación no equivalen al área exacta de la parcela.
+- Publicación obtiene productos de ejecuciones propias correctas, verifica ZIP/hashes y selecciona fechas distintas; falla sin reemplazar la web si no hay dos. Retención de nuevos productos 90 días.
+- Regresiones: rejillas/desfase, coberturas distintas y comunes, signos, cero, EVI2 sin recorte, nodata, duplicados de adquisición; comparación visual, cambio de índice/selección, errores y retorno a vista única.
+- Referencias de alcance: https://www.usgs.gov/landsat-missions/normalized-difference-moisture-index ; https://sentiwiki.copernicus.eu/web/s2-processing
+
 ### 0.1.27 — 2026-10-27
 - Horizontal entre 560 y 1000px de ancho y hasta 500px de alto: ficha lateral de 240–280px, mapa en columna independiente y atribuciones compartidas debajo. Sin cubrir parcelas con la ficha.
 - Capas abierto se limita a 320px en el lado derecho para mantener visible la parte izquierda del mapa.

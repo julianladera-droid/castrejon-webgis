@@ -67,4 +67,4 @@ jobs:
           name: sentinel-${{ github.run_id }}
           path: sentinel-output/
           if-no-files-found: warn
-          retention-days: 30
+          retention-days: 90

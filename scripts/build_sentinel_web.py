@@ -10,6 +10,8 @@ from datetime import datetime, timezone
 import numpy as np
 from osgeo import gdal
 from parcel_ndvi import build_parcel_indices
+from parcel_comparison import build_comparison
+from parcel_grid import require_same_grid
 
 PALETTES = {
     'NDVI': {'label': 'NDVI · vigor vegetal', 'range': [-1, 1],
@@ -78,6 +80,16 @@ def build(folder, output, master_path=None, web_folder=None):
                    'quality_scope': 'rectángulo envolvente', 'kind': 'ESTIMADO'}
     destination = output/item['id']
     destination.mkdir(parents=True, exist_ok=True)
+    if (folder/'SCL.tif').exists():
+        scl = gdal.Open(str(folder/'SCL.tif'))
+        require_same_grid(rasters['NDMI'], scl)
+        classes = scl.ReadAsArray()
+        if not np.all(np.isin(classes, [-9999, *range(12)])):
+            raise ValueError('Invalid scene classification')
+        shutil.copyfile(folder/'SCL.tif', destination/'SCL.tif')
+        acquisition['quality_mask'] = {'path': f"sentinel/{item['id']}/SCL.tif", 'resolution_m': 20,
+            'sha256': hashlib.sha256((folder/'SCL.tif').read_bytes()).hexdigest(),
+            'kind': 'SCL classification, not a validated waterlogging map'}
     for name, ds in rasters.items():
         warped = gdal.Warp('', ds, format='MEM', dstSRS='EPSG:3857',
                            resampleAlg='near', srcNodata=-9999, dstNodata=-9999)
@@ -111,10 +123,45 @@ def build(folder, output, master_path=None, web_folder=None):
     return catalog
 
 
+def build_collection(folders, output, master_path, web_folder):
+    products = [validate_product(folder) for folder in folders]
+    unique = {}
+    for folder, product in zip(folders, products):
+        day = product[0]['source_item']['properties']['datetime'][:10]
+        unique[day] = (folder, product)
+    if len(unique) < 2:
+        raise ValueError('Two distinct acquisition dates required')
+    selected = [unique[day] for day in sorted(unique)[-2:]]
+    entries = []
+    for folder, _ in selected:
+        if not (folder/'SCL.tif').exists():
+            raise ValueError('Preserve original SCL for subsequent analyses')
+        entries.extend(build(folder, output, master_path, web_folder)['acquisitions'])
+    web_hash = entries[0]['parcel_indices']['parcel_web_sha256']
+    table = build_comparison(selected[0][1], selected[1][1], master_path, web_hash)
+    pair_id = 'comparison-' + hashlib.sha256((table['a']['id']+'|'+table['b']['id']).encode()).hexdigest()[:24]
+    destination = output/pair_id
+    destination.mkdir(parents=True, exist_ok=True)
+    payload = (json.dumps(table, separators=(',', ':'), allow_nan=False)+'\n').encode()
+    (destination/'parcel-comparison.json').write_bytes(payload)
+    catalog = {'version': 1, 'acquisitions': entries[::-1], 'comparisons': [{
+        'id': pair_id, 'a': table['a']['id'], 'b': table['b']['id'],
+        'path': f'sentinel/{pair_id}/parcel-comparison.json',
+        'sha256': hashlib.sha256(payload).hexdigest(), 'parcel_web_sha256': web_hash}]}
+    (output/'catalog.json').write_text(json.dumps(catalog, indent=2)+'\n', encoding='utf-8')
+    print(f'Paired comparison: {len(table["parcels"])} parcels, {len(payload)} bytes')
+    return catalog
+
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('input', type=Path)
     parser.add_argument('output', type=Path)
+    parser.add_argument('--collection', action='store_true')
     args = parser.parse_args()
     root = Path(__file__).resolve().parents[1]
-    build(args.input, args.output, root/'data/parcel-master.json', root/'data/parcels')
+    if args.collection:
+        build_collection(sorted(p.parent for p in args.input.glob('*/manifest.json')), args.output,
+                         root/'data/parcel-master.json', root/'data/parcels')
+    else:
+        build(args.input, args.output, root/'data/parcel-master.json', root/'data/parcels')

@@ -95,6 +95,7 @@
     .sentinel-controls{padding:12px 0;border-bottom:1px solid var(--line)}
     .sentinel-controls h2{font-size:14px;margin:0 0 8px;color:var(--contrast)}
     .sentinel-controls label{display:block;font-size:12px;font-weight:700;margin-top:6px}
+    .sentinel-controls .layer-choice{display:flex;gap:8px;align-items:center}
     .sentinel-controls select{width:100%;min-height:44px;border:1px solid var(--line);border-radius:8px;background:white;color:var(--text);padding:6px}
     .sentinel-controls p{font-size:11px;line-height:1.5;margin:6px 0;color:var(--muted)}
     .sentinel-controls a{display:inline-flex;align-items:center;min-height:44px;color:var(--water);font-size:12px}
@@ -144,6 +145,15 @@
       .parcel-card button{min-width:60px}
       .parcel-card .parcel-indices{gap:6px}
     }
+    .compare-bar{position:absolute;bottom:8px;left:12px;width:520px;max-width:calc(100% - 24px);display:grid;grid-template-columns:auto minmax(60px,1fr) auto;align-items:center;gap:10px;padding:2px 10px;background:rgba(255,255,255,.96);border:1px solid var(--line);border-radius:10px;z-index:4;font-size:11px}
+    .compare-bar input{width:100%;min-width:0;height:44px;margin:0;accent-color:var(--water)}
+    .compare-divider{position:absolute;top:0;bottom:0;left:50%;width:2px;background:white;box-shadow:0 0 0 1px #173b6380;pointer-events:none;z-index:3}
+    .parcel-comparison{overflow-x:auto;margin:4px 0 8px}
+    .parcel-comparison table{border-collapse:collapse;width:100%;max-width:560px;font-size:12px;font-variant-numeric:tabular-nums}
+    .parcel-comparison th,.parcel-comparison td{padding:5px 4px;border-bottom:1px solid var(--line);text-align:right}
+    .parcel-comparison th:first-child{text-align:left}
+    .parcel-comparison caption{text-align:left;font-size:11px;margin-bottom:4px;color:var(--muted)}
+    .compare-config{border:0;margin:0;padding:4px 0}
     @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto}}
 
   </style>
@@ -182,8 +192,19 @@
             <option value="EVI2">EVI2 · vegetación</option>
             <option value="NDMI">NDMI · humedad de la vegetación</option>
           </select>
-          <label for="sentinelDate">Adquisición disponible</label>
+          <label id="sentinelDateLabel" for="sentinelDate">Adquisición disponible</label>
           <select id="sentinelDate" disabled><option value="">Cargando fechas…</option></select>
+          <label class="layer-choice" for="compareToggle"><input id="compareToggle" type="checkbox" disabled><span>Comparar dos imágenes</span></label>
+          <fieldset class="compare-config" id="compareControls" hidden>
+            <legend>Comparación A → B</legend>
+            <label for="compareDateA">A · imagen anterior</label>
+            <select id="compareDateA"></select>
+            <p>La adquisición seleccionada arriba es B. Desliza el separador sobre el mapa.</p>
+            <label for="compareOpacity">Opacidad de ambas imágenes</label>
+            <input id="compareOpacity" type="range" min="0" max="1" step="0.05" value="1" style="width:100%;height:44px">
+            <div class="index-legend"><span id="compareMin"></span><span id="compareGradient" class="index-gradient"></span><span id="compareMax"></span></div>
+            <p id="compareStatus" role="status"></p>
+          </fieldset>
           <div id="sentinelDetails" hidden>
             <label for="sentinelOpacity">Opacidad del índice</label>
             <div class="opacity">
@@ -241,6 +262,12 @@
       </div>
     </section>
 
+    <div id="compareDivider" class="compare-divider" hidden></div>
+    <div id="compareBar" class="compare-bar" hidden>
+      <span id="compareCaptionA"></span>
+      <input id="compareSwipe" type="range" min="0" max="100" step="1" value="50" aria-label="Separador A/B: A a la izquierda y B a la derecha">
+      <span id="compareCaptionB"></span>
+    </div>
     <nav id="mapToolbar" class="toolbar" aria-label="Navegación del mapa">
       <button class="tool" id="zoomInBtn" title="Acercar" aria-label="Acercar">+</button>
       <button class="tool" id="zoomOutBtn" title="Alejar" aria-label="Alejar">−</button>
@@ -262,7 +289,11 @@
       <button id="parcelClose" type="button" aria-label="Cerrar ficha de parcela">Cerrar</button>
     </div>
     <div aria-live="polite" aria-atomic="true">
-      <dl class="parcel-indices" aria-label="Índices medios estimados">
+      <div id="parcelComparison" class="parcel-comparison" hidden>
+        <table><caption id="parcelComparisonDates"></caption><thead><tr><th scope="col">Índice</th><th scope="col">A</th><th scope="col">B</th><th scope="col">Δ B−A</th><th scope="col">Válido</th></tr></thead><tbody><tr><th scope="row">NDVI</th><td id="compareNDVIA">—</td><td id="compareNDVIB">—</td><td id="compareNDVIDelta">—</td><td id="compareNDVICoverage">—</td></tr><tr><th scope="row">EVI2</th><td id="compareEVI2A">—</td><td id="compareEVI2B">—</td><td id="compareEVI2Delta">—</td><td id="compareEVI2Coverage">—</td></tr><tr><th scope="row">NDMI</th><td id="compareNDMIA">—</td><td id="compareNDMIB">—</td><td id="compareNDMIDelta">—</td><td id="compareNDMICoverage">—</td></tr></tbody></table>
+        <p id="parcelComparisonNote"></p>
+      </div>
+      <dl id="parcelSingleIndices" class="parcel-indices" aria-label="Índices medios estimados">
         <div><dt>NDVI · 10 m</dt><dd><span id="parcelNdvi">No disponible</span><span id="parcelNdviScale" class="parcel-scale" aria-hidden="true" hidden><span class="parcel-scale-track"><span id="parcelNdviMarker" class="parcel-scale-marker"></span></span><span class="parcel-scale-labels"><span>−1</span><span>1</span></span></span><small id="parcelNdviCoverage"></small></dd></div>
         <div><dt>EVI2 · 10 m</dt><dd><span id="parcelEvi2">No disponible</span><span id="parcelEvi2Scale" class="parcel-scale" aria-hidden="true" hidden><span class="parcel-scale-track"><span id="parcelEvi2Marker" class="parcel-scale-marker"></span></span><span class="parcel-scale-labels"><span>0</span><span>1</span></span></span><small id="parcelEvi2Coverage"></small></dd></div>
         <div><dt>NDMI · 20 m</dt><dd><span id="parcelNdmi">No disponible</span><span id="parcelNdmiScale" class="parcel-scale parcel-scale-moisture" aria-hidden="true" hidden><span class="parcel-scale-track"><span id="parcelNdmiMarker" class="parcel-scale-marker"></span></span><span class="parcel-scale-labels"><span>−1</span><span>1</span></span></span><small id="parcelNdmiCoverage"></small></dd></div>
@@ -291,6 +322,7 @@
       <span class="legend-item" id="legendParcels" hidden><span aria-hidden="true" style="width:18px;border-top:1px dashed #ffe600"></span>Parcelas · ZR</span>
       <span class="legend-item" id="legendCatastro" hidden>Catastro</span>
       <span class="legend-item" id="legendPnoa">Ortofoto PNOA</span>
+      <span class="index-legend" id="legendComparison" hidden><strong id="comparisonLegendTitle"></strong><span id="comparisonLegendMin"></span><span class="index-gradient" id="comparisonLegendGradient" aria-hidden="true"></span><span id="comparisonLegendMax"></span></span>
       <span id="legendEmpty" hidden>Sin capas visibles</span>
       <span class="index-legend" id="legendSentinel" hidden>
         <strong id="sentinelLegendTitle"></strong>
@@ -529,6 +561,8 @@
 
   const sentinel = new ol.layer.Image({visible:false, opacity:0.8,
     properties:{id:'sentinel', title:'Sentinel-2 · índices'}});
+  const compareLayerA = new ol.layer.Image({visible:false, opacity:1});
+  const compareLayerB = new ol.layer.Image({visible:false, opacity:1});
   const parcelSource = new ol.source.Vector({
     attributions:'Parcelas · Catastro INSPIRE · recorte aportado 14/10/2026'
   });
@@ -541,7 +575,7 @@
   });
   const map = new ol.Map({
     target: 'map',
-    layers: [pnoa, sentinel, sigpac, catastro, zonaRegable, parcels],
+    layers: [pnoa, sentinel, compareLayerA, compareLayerB, sigpac, catastro, zonaRegable, parcels],
     view,
     controls: ol.control.defaults.defaults({zoom:false, rotate:false, attribution:true,
       attributionOptions:{target:'attributionTarget', collapsible:false}}).extend([
@@ -556,7 +590,7 @@
 
   // La leyenda sigue el estado de las capas, también si cambia desde código.
   const legendLayers = [[zonaRegable, 'legendZona'], [sigpac, 'legendSigpac'],
-    [catastro, 'legendCatastro'], [pnoa, 'legendPnoa'], [sentinel, 'legendSentinel'], [parcels, 'legendParcels']];
+    [catastro, 'legendCatastro'], [pnoa, 'legendPnoa'], [sentinel, 'legendSentinel'], [compareLayerA, 'legendComparison'], [parcels, 'legendParcels']];
   const updateLegend = () => {
     let anyVisible = false;
     for (const [layer, id] of legendLayers) {
@@ -625,6 +659,7 @@
   ];
   const areaFormat = new Intl.NumberFormat('es-ES', {maximumFractionDigits:2});
   const hectareFormat = new Intl.NumberFormat('es-ES', {maximumFractionDigits:4});
+  let refreshParcelComparison = () => {};
   let selectedParcel = null;
   let refreshParcelNdvi = () => {};
   const closeParcelCard = () => {
@@ -640,7 +675,7 @@
     // VectorSource uses its spatial index; interiors and holes work without a rendered fill.
     const feature = parcelSource.getFeaturesAtCoordinate(coordinate)[0];
     if (!feature) { closeParcelCard(); return; }
-    if (selectedParcel === feature) { refreshParcelNdvi(); return; }
+    if (selectedParcel === feature) { refreshParcelNdvi(); refreshParcelComparison(); return; }
     if (selectedParcel) selectedParcel.setStyle(undefined);
     selectedParcel = feature;
     feature.setStyle(parcelHighlight);
@@ -651,6 +686,7 @@
     parcelCard.hidden = false;
     parcelCard.scrollTop = 0;
     refreshParcelNdvi();
+    refreshParcelComparison();
     if (compact.matches) { setPanelOpen(false); document.getElementById('navMore').open = false; }
     if (opening) map.updateSize();
   };
@@ -667,6 +703,8 @@
   mapElement.setAttribute('aria-label', 'Mapa. Usa las flechas para desplazarte y Enter para consultar la parcela del centro. Escape cierra la ficha.');
   // END PARCEL CARD
 
+  let syncComparison = () => false;
+  let acceptComparisons = () => {};
   // BEGIN SENTINEL UI — same-origin processed products, never provider credentials.
   const indexSelect = document.getElementById('sentinelIndex');
   const dateSelect = document.getElementById('sentinelDate');
@@ -685,6 +723,7 @@
     const version = ++selectionVersion;
     sentinel.setVisible(false);
     satelliteDetails.hidden = true;
+    if (syncComparison()) return;
     const acquisition = acquisitions.find(item => item.id === dateSelect.value);
     const name = indexSelect.value;
     if (!acquisition || !name) {
@@ -759,6 +798,7 @@
       dateSelect.value = acquisitions[0].id;
       dateSelect.disabled = false;
       indexSelect.disabled = false;
+      acceptComparisons(catalog);
       updateSatellite();
     }).catch(() => {
       satelliteStatus.textContent = 'Sentinel no disponible. Puedes seguir usando las demás capas.';
@@ -787,6 +827,7 @@
     setAll('No disponible');
     date.textContent = acquisition ? formatDate(acquisition.datetime) : '—';
     quality.textContent = '';
+    if (document.getElementById('compareToggle').checked) return;
     if (!acquisition?.parcel_indices) return;
     setAll('Cargando…');
     try {
@@ -852,6 +893,188 @@
     }
   };
   // END PARCEL NDVI
+
+// BEGIN COMPARISON UI
+  const comparisonToggle = document.getElementById('compareToggle');
+  const comparisonDateA = document.getElementById('compareDateA');
+  const comparisonStatus = document.getElementById('compareStatus');
+  const comparisonSwipe = document.getElementById('compareSwipe');
+  const comparisonCache = new Map();
+  const comparisonImages = new Map();
+  let comparisonPairs = [], currentComparison = null, activeImages = [], comparisonRequest = 0;
+  const comparisonNames = ['NDVI','EVI2','NDMI'];
+  const comparisonSpec = () => comparisonPairs.find(p => p.a === comparisonDateA.value && p.b === dateSelect.value);
+  const updateComparisonImageStatus = () => {
+    if (!comparisonToggle.checked || activeImages.length !== 2) return;
+    if (activeImages.some(e => e.state === 'error')) {
+      compareLayerA.setVisible(false); compareLayerB.setVisible(false);
+      document.getElementById('compareBar').hidden = true;
+      document.getElementById('compareDivider').hidden = true;
+      comparisonStatus.textContent = 'No se pudieron cargar ambas imágenes. Desactiva y activa la comparación para reintentar.';
+    } else {
+      comparisonStatus.textContent = activeImages.every(e => e.state === 'ready')
+        ? `${indexSelect.value} · A izquierda / B derecha · misma escala de color. Transparente: sin dato válido. Pulsa una parcela para ver el cambio.`
+        : 'Cargando las dos imágenes…';
+    }
+  };
+  const comparisonImage = (acquisition, name) => {
+    const spec = acquisition.indices[name];
+    if (!spec || spec.projection !== 'EPSG:3857' || !Array.isArray(spec.extent) || spec.extent.length !== 4 ||
+        !spec.extent.every(Number.isFinite) || spec.extent[0] >= spec.extent[2] || spec.extent[1] >= spec.extent[3] ||
+        !Array.isArray(spec.range) || spec.range.length !== 2 || !spec.range.every(Number.isFinite) ||
+        !Array.isArray(spec.colors) || spec.colors.length < 2 || !spec.colors.every(c => /^#[0-9a-f]{6}$/i.test(c))) throw new Error('Invalid comparison image');
+    const url = productPath(spec.image, acquisition.id, name, 'png');
+    const key = `${url}:${spec.sha256}`;
+    if (comparisonImages.get(key)?.state === 'error') comparisonImages.delete(key);
+    if (!comparisonImages.has(key)) {
+      const entry = {state:'loading', source:new ol.source.ImageStatic({url, projection:spec.projection,
+        imageExtent:spec.extent, interpolate:false,
+        attributions:`Contiene datos Copernicus Sentinel-2 modificados · ${formatDate(acquisition.datetime)}`})};
+      entry.source.on('imageloadend', () => { entry.state='ready'; updateComparisonImageStatus(); });
+      entry.source.on('imageloaderror', () => { entry.state='error'; updateComparisonImageStatus(); });
+      comparisonImages.set(key, entry);
+    }
+    return comparisonImages.get(key);
+  };
+  for (const [layer, side] of [[compareLayerA,'a'],[compareLayerB,'b']]) {
+    layer.on('prerender', event => {
+      const ctx=event.context, size=map.getSize(), cut=size[0]*Number(comparisonSwipe.value)/100;
+      const left=side==='a'?0:cut, right=side==='a'?cut:size[0];
+      const points=[[left,0],[right,0],[right,size[1]],[left,size[1]]].map(p=>ol.render.getRenderPixel(event,p));
+      ctx.save(); ctx.beginPath(); ctx.moveTo(...points[0]);
+      for(const point of points.slice(1)) ctx.lineTo(...point);
+      ctx.closePath(); ctx.clip();
+    });
+    layer.on('postrender', event => event.context.restore());
+  }
+  comparisonSwipe.addEventListener('input', () => {
+    document.getElementById('compareDivider').style.left = `${Number(comparisonSwipe.value)}%`;
+    map.render();
+  });
+  document.getElementById('compareOpacity').addEventListener('input', event => {
+    const opacity=Number(event.target.value);
+    compareLayerA.setOpacity(opacity); compareLayerB.setOpacity(opacity);
+  });
+  acceptComparisons = catalog => {
+    comparisonPairs = (Array.isArray(catalog.comparisons)?catalog.comparisons:[]).filter(p =>
+      /^comparison-[0-9a-f]{24}$/.test(p.id) && /^[0-9a-f]{64}$/.test(p.sha256) &&
+      acquisitions.some(a=>a.id===p.a) && acquisitions.some(a=>a.id===p.b) && p.a!==p.b);
+    comparisonToggle.disabled = comparisonPairs.length === 0;
+    comparisonDateA.replaceChildren(...acquisitions.map(a => {
+      const option=document.createElement('option'); option.value=a.id; option.textContent=formatDate(a.datetime); return option;
+    }));
+    comparisonDateA.value = comparisonPairs[0]?.a || acquisitions[acquisitions.length-1]?.id || '';
+  };
+  syncComparison = () => {
+    ++comparisonRequest;
+    compareLayerA.setVisible(false); compareLayerB.setVisible(false);
+    activeImages=[]; currentComparison=null;
+    const enabled=comparisonToggle.checked;
+    document.getElementById('sentinelDateLabel').textContent=enabled?'B · imagen posterior':'Adquisición disponible';
+    document.getElementById('compareControls').hidden=!enabled;
+    document.getElementById('compareBar').hidden=true;
+    document.getElementById('compareDivider').hidden=true;
+    document.getElementById('parcelComparison').hidden=!enabled;
+    document.getElementById('parcelSingleIndices').hidden=enabled;
+    document.getElementById('parcelNdviQuality').hidden=enabled;
+    if (!enabled) return false;
+    satelliteStatus.textContent='Comparación A/B activa; la adquisición seleccionada es B.';
+    try {
+      const pair=comparisonSpec();
+      if (!pair) throw new Error('Elige dos fechas distintas: A anterior y B posterior, con comparación disponible.');
+      const a=acquisitions.find(x=>x.id===pair.a), b=acquisitions.find(x=>x.id===pair.b), name=indexSelect.value;
+      if (!comparisonNames.includes(name)) throw new Error('Selecciona NDVI, EVI2 o NDMI para comparar.');
+      const sa=a.indices[name], sb=b.indices[name];
+      if (JSON.stringify(sa.range)!==JSON.stringify(sb.range) || JSON.stringify(sa.colors)!==JSON.stringify(sb.colors))
+        throw new Error('Las imágenes no tienen la misma escala de color.');
+      activeImages=[comparisonImage(a,name),comparisonImage(b,name)];
+      currentComparison={pair,a,b};
+      compareLayerA.setSource(activeImages[0].source); compareLayerB.setSource(activeImages[1].source);
+      const opacity=Number(document.getElementById('compareOpacity').value);
+      compareLayerA.setOpacity(opacity); compareLayerB.setOpacity(opacity);
+      compareLayerA.setVisible(true); compareLayerB.setVisible(true);
+      document.getElementById('compareCaptionA').textContent=`A · ${formatDate(a.datetime)}`;
+      document.getElementById('compareCaptionB').textContent=`B · ${formatDate(b.datetime)}`;
+      document.getElementById('compareBar').hidden=false;
+      document.getElementById('compareDivider').hidden=false;
+      document.getElementById('compareGradient').style.background=`linear-gradient(to right, ${sa.colors.join(',')})`;
+      document.getElementById('compareMin').textContent=sa.range[0]; document.getElementById('compareMax').textContent=sa.range[1];
+      document.getElementById('comparisonLegendTitle').textContent=name+' · A/B';
+      document.getElementById('comparisonLegendGradient').style.background=document.getElementById('compareGradient').style.background;
+      document.getElementById('comparisonLegendMin').textContent=sa.range[0];
+      document.getElementById('comparisonLegendMax').textContent=sa.range[1];
+      updateComparisonImageStatus();
+    } catch(error) { comparisonStatus.textContent=error.message; }
+    refreshParcelComparison();
+    return true;
+  };
+  comparisonToggle.addEventListener('change', () => {
+    if(comparisonToggle.checked && !indexSelect.value) indexSelect.value='NDVI';
+    updateSatellite();
+  });
+  comparisonDateA.addEventListener('change', updateSatellite);
+  refreshParcelComparison = async () => {
+    const request=++comparisonRequest, context=currentComparison;
+    const note=document.getElementById('parcelComparisonNote');
+    for(const name of comparisonNames) for(const suffix of ['A','B','Delta','Coverage'])
+      document.getElementById('compare'+name+suffix).textContent='—';
+    document.getElementById('parcelComparisonDates').textContent='';
+    if (!comparisonToggle.checked || !selectedParcel || !context) {
+      note.textContent='Selecciona una comparación válida y pulsa una parcela.'; return;
+    }
+    const {pair,a,b}=context, ref=selectedParcel.get('refcat');
+    document.getElementById('parcelComparisonDates').textContent=`A ${formatDate(a.datetime)} → B ${formatDate(b.datetime)}`;
+    note.textContent='Cargando comparación de la parcela…';
+    try {
+      if(pair.parcel_web_sha256!==parcelWebHash) throw new Error('Parcelario distinto');
+      const path=productPath(pair.path,pair.id,'parcel-comparison','json'),key=path+':'+pair.sha256;
+      if(!comparisonCache.has(key)) {
+        const pending=(async()=>{
+          const response=await fetch(path); if(!response.ok) throw new Error('Tabla no disponible');
+          const bytes=await response.arrayBuffer();
+          const hash=Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',bytes)),b=>b.toString(16).padStart(2,'0')).join('');
+          if(hash!==pair.sha256) throw new Error('Checksum incoherente');
+          const data=JSON.parse(new TextDecoder().decode(bytes));
+          if(data.version!==1 || data.method!=='common_valid_pixel_centres' || data.min_valid_percent!==80 ||
+             data.a?.id!==a.id || data.b?.id!==b.id || data.a.datetime!==a.datetime || data.b.datetime!==b.datetime ||
+             data.parcel_web_sha256!==parcelWebHash || Object.keys(data.parcels||{}).length!==919 ||
+             JSON.stringify(data.columns)!=='["mean_a","mean_b","delta_b_minus_a","common_pixels","total_pixels"]') throw new Error('Tabla inválida');
+          for(const name of comparisonNames) {
+            const metadata=data.indices?.[name],resolution=name==='NDMI'?20:10;
+            if(metadata?.resolution_m!==resolution || metadata.pixel_area_m2!==resolution*resolution ||
+               metadata.a_sha256!==a.indices[name].sha256 || metadata.b_sha256!==b.indices[name].sha256) throw new Error('Índice incoherente');
+          }
+          return data;
+        })();
+        comparisonCache.set(key,pending);
+        pending.catch(()=>{if(comparisonCache.get(key)===pending) comparisonCache.delete(key);});
+      }
+      const data=await comparisonCache.get(key);
+      if(request!==comparisonRequest || !comparisonToggle.checked || !selectedParcel || selectedParcel.get('refcat')!==ref) return;
+      // Validate all rows before displaying any value, so a corrupt row cannot leave a partial comparison.
+      const rows=comparisonNames.map(name=>{
+        const row=data.parcels[ref]?.[name]; if(!Array.isArray(row)||row.length!==5) throw new Error('Parcela inválida');
+        const [va,vb,delta,count,total]=row;
+        if(!Number.isInteger(count)||!Number.isInteger(total)||count<0||total<0||count>total) throw new Error('Cobertura inválida');
+        const usable=total>0 && count/total>=.8;
+        if(usable ? ![va,vb,delta].every(Number.isFinite) || Math.abs(vb-va-delta)>.00021 ||
+           (name!=='EVI2' && (Math.abs(va)>1||Math.abs(vb)>1)) : [va,vb,delta].some(v=>v!==null)) throw new Error('Media inválida');
+        return {name,va,vb,delta,count,total,usable};
+      });
+      const number=new Intl.NumberFormat('es-ES',{minimumFractionDigits:3,maximumFractionDigits:3});
+      const signed=new Intl.NumberFormat('es-ES',{minimumFractionDigits:3,maximumFractionDigits:3,signDisplay:'exceptZero'});
+      for(const r of rows) {
+        for(const [suffix,value] of [['A',r.va],['B',r.vb],['Delta',r.delta]])
+          document.getElementById('compare'+r.name+suffix).textContent=r.usable ? (suffix==='Delta'?signed:number).format(value) : '—';
+        document.getElementById('compare'+r.name+'Coverage').textContent=r.total ? `${(r.count/r.total*100).toLocaleString('es-ES',{maximumFractionDigits:1})}%` : 'Sin píxeles';
+      }
+      note.textContent='Δ = B − A, en unidades del índice, sobre los mismos píxeles válidos. Mínimo 80% común; — indica datos insuficientes. No es un diagnóstico de encharcamiento.';
+    } catch(error) {
+      if(request===comparisonRequest && selectedParcel?.get('refcat')===ref)
+        note.textContent='Comparación no disponible. Vuelve a pulsar la parcela para reintentar.';
+    }
+  };
+// END COMPARISON UI
 
   // ---- Service status -------------------------------------------------------
   const states = {pnoa:'loading', sigpac:'loading', catastro:'idle'};
