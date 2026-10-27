@@ -47,7 +47,9 @@ function testCard(){
   assert.equal(els.parcelArea.textContent,'27.816,55 m² · 2,7817 ha');
   assert.equal(sizes,1);
   events.singleclick({coordinate:[1,2]});assert.equal(sizes,1);
+  els.parcelCard.scrollTop=150;
   hit=b;events.singleclick({coordinate:[1,2]});
+  assert.equal(els.parcelCard.scrollTop,0);
   assert.equal(a.style,undefined);assert(b.style);assert.equal(els.parcelReference.textContent,'<b>literal</b>');
   active=els.parcelClose;events.parcelCloseclick();
   assert.equal(active,els.map);assert.equal(b.style,undefined);assert.equal(els.parcelCard.hidden,true);

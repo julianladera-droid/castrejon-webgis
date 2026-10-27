@@ -1,5 +1,5 @@
 # SKILL · Castrejón WebGIS — Contrato de arquitectura y evolución
-Version: 0.1.24
+Version: 0.1.25
 Fecha base: 2026-09-30
 Estado: ACTIVO · se actualiza tras cada ciclo de pruebas
 
@@ -442,6 +442,12 @@ Formato de cada cambio:
 No borrar una regla por comodidad. Si una regla cambia, conservar el motivo en el historial.
 
 ## 12. Registro de cambios
+### 0.1.25 — 2026-10-27
+- Revisión móvil: índices antes de referencia/superficie para evitar escalas cortadas a 320×568; ficha compacta limitada al menor de 32dvh y 220px en móvil.
+- Cifras de índices a 16px en móvil, extremos a 10px y cobertura a 11px. Mantiene tres columnas y controles táctiles existentes.
+- Al seleccionar otra parcela, restaura el desplazamiento de la ficha al inicio para mostrar los índices; conserva la tabla en caché y protección contra respuestas tardías.
+- Regresión: prueba de desplazamiento al cambiar de selección, selección rápida con una sola descarga, revisión visual móvil y remota.
+
 ### 0.1.24 — 2026-10-27
 - Escalas visuales decorativas con marcador junto a las medias: NDVI/NDMI de -1 a 1 y EVI2 de 0 a 1, con extremos rotulados.
 - Sin clasificaciones agronómicas ni semáforos. La cifra sigue siendo exacta; EVI2 fuera de escala coloca el marcador en el extremo y se explica en la ayuda.

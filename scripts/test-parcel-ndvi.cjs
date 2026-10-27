@@ -44,6 +44,10 @@ function setup(custom){
   await s.select('r2');assert.equal(s.els.parcelNdviMarker.style.left,'50%');
   await s.select('r3');assert.equal(s.els.parcelNdviScale.hidden,true);
   assert.equal(s.els.parcelEvi2Scale.hidden,false);
+  const rapid=setup();rapid.select('r0');rapid.respond();await flush();
+  await Promise.all(Array.from({length:30},(_,i)=>rapid.select('r'+(i%4))));
+  assert.equal(rapid.requests.length,1);assert.equal(rapid.els.parcelNdvi.textContent,'Sin datos suficientes');
+  assert.equal(rapid.els.parcelNdviScale.hidden,true);assert.equal(rapid.els.parcelEvi2.textContent,'1,25');
   const late=setup();late.select('r0');late.context.dateSelect.value='B';late.select('r0');
   late.respond(1,late.b.bytes);await flush();late.respond();await flush();
   assert.equal(late.els.parcelImageDate.textContent,'2026-09-24');
