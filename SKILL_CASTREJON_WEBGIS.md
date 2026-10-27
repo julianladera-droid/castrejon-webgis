@@ -1,5 +1,5 @@
 # SKILL · Castrejón WebGIS — Contrato de arquitectura y evolución
-Version: 0.1.19
+Version: 0.1.20
 Fecha base: 2026-09-30
 Estado: ACTIVO · se actualiza tras cada ciclo de pruebas
 
@@ -103,7 +103,7 @@ Se considera fallo de arquitectura si ocurre cualquiera de estos casos:
 5. Una reproyección modifica/sobrescribe la geometría maestra.
 6. Un endpoint devuelve geometrías sin declarar el CRS contractual.
 7. Se mezclan coordenadas 25830/3857/4326 sin transformación explícita.
-8. La selección espacial o los permisos geográficos se aplican sobre geometrías reproyectadas de presentación en lugar de las maestras.
+8. Las consultas espaciales técnicas o los permisos geográficos se aplican sobre geometrías reproyectadas de presentación en lugar de las maestras. La identificación visual al pulsar una parcela pública sí puede usar su geometría de presentación; sólo muestra atributos existentes, sin calcular áreas ni decidir permisos.
 
 ## 3. Invariantes de datos
 1. Identificadores estables e inmutables para todas las entidades internas.
@@ -300,7 +300,7 @@ Modelo validado -> escenario -> ejecutar -> resultados SIMULADOS -> comparar con
 - Leyenda/estado de servicios.
 - Coordenadas del puntero.
 - Escala.
-- Ficha lateral reutilizable.
+- Ficha reutilizable; en esta fase, franja inferior compacta para mantener libres el mapa y las atribuciones.
 - Mensajes de carga/error visibles y no bloqueantes.
 - Diseño responsive: panel de capas plegado al entrar en móvil, controles táctiles de al menos 44 px y soporte vertical/horizontal.
 - Atribuciones y escala en una franja propia, fuera de las superposiciones del mapa; atribuciones siempre expandidas.
@@ -442,6 +442,16 @@ Formato de cada cambio:
 No borrar una regla por comodidad. Si una regla cambia, conservar el motivo en el historial.
 
 ## 12. Registro de cambios
+### 0.1.20 — 2026-10-27
+- Petición: ficha básica al pulsar una parcela, cómoda en móvil y sin ralentizar el mapa; comparador aplazado.
+- Causa: la capa sólo dibujaba límites, sin consulta de sus atributos públicos.
+- Cambio: identificación visual mediante el índice espacial del GeoJSON ya cargado, sólo en pulsación simple y con capa visible. Referencia y superficie recortada en m²/ha procedente del maestro 25830, sin cálculos geométricos web ni peticiones adicionales.
+- Una única parcela resaltada, ficha inferior no modal, cierre táctil de 44 px, Escape y consulta del centro mediante Enter con foco en el mapa. Ocultar la capa o alejarse fuera de su escala cierra la ficha. No consultar durante arrastre ni movimiento del cursor.
+- Regresión: selección/cambio/cierre, consulta vacía y capa oculta, atributos literales, unidades, ausencia de descargas adicionales, navegación y tamaños móviles. Archivos: index.html, scripts/test-parcels.cjs, README.md y este contrato.
+- Compatibilidad: geometrías, fuentes, carga diferida, calendario Sentinel y comparador conservados. Sin dependencias nuevas ni cambios de publicación.
+- Integridad: fijar LF para el GeoJSON público en .gitattributes; evita que la conversión automática de Windows cambie el hash sin modificar datos.
+- Verificación local: gate cartográfico, suites Node de parcelas/ficha y Sentinel aprobados; Python 7 pruebas aprobadas y 2 módulos omitidos por falta de GDAL. Navegador Chromium: ficha y cierre comprobados en escritorio, 390×844 y 320×568; no probado en teléfono físico ni publicado.
+
 ### 0.1.19 — 2026-10-14
 - Incorporar entrega parcelas_zona_regable_sin_caminos_20261014.zip: 919 parcelas recortadas, geometrías válidas EPSG:25830 y REFCAT único. Conservar original local sin cambios; no publicar ZIP, documentos auxiliares ni rutas locales.
 - Exportar GeoJSON de visualización EPSG:4326 con identificador REFCAT y superficie recortada calculada en 25830. No confundirla con superficie regada acreditada. Sin datos personales; clave conservada para futuras estadísticas zonales con la geometría maestra, nunca con el contorno suavizado.

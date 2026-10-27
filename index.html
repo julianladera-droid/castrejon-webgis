@@ -29,6 +29,15 @@
     .dot{width:8px;height:8px;flex:none;border-radius:50%;background:#9aaab5}
     .dot.ok{background:#2e8b57}.dot.busy{background:#d59a22}.dot.bad{background:#c44545}
     .workspace{min-height:0;display:grid;grid-template-rows:minmax(0,1fr) auto}
+    .workspace:has(.parcel-card:not([hidden])){grid-template-rows:minmax(0,1fr) auto auto}
+    .parcel-card{padding:8px max(12px,env(safe-area-inset-right,0px)) 8px max(12px,env(safe-area-inset-left,0px));background:var(--base);border-top:3px solid var(--water);max-height:32dvh;overflow-y:auto;overscroll-behavior:contain}
+    .parcel-card-head{display:flex;align-items:center;justify-content:space-between;gap:12px}
+    .parcel-card h2{font-size:14px;margin:0;color:var(--contrast)}
+    .parcel-card button{min-width:72px;min-height:44px;border:1px solid var(--line);border-radius:8px;background:var(--soft);color:var(--contrast);cursor:pointer}
+    .parcel-card dl{display:flex;flex-wrap:wrap;gap:6px 24px;margin:0;font-size:13px}
+    .parcel-card dt{font-size:11px;color:var(--muted)}
+    .parcel-card dd{margin:0;font-weight:700;overflow-wrap:anywhere}
+    .parcel-card p{font-size:11px;line-height:1.4;margin:6px 0 0;color:var(--muted)}
     .map-stage{min-height:0;position:relative;isolation:isolate}
     #map{position:absolute;inset:0;background:#dce7ea}
     .panel{position:absolute;top:68px;right:max(12px,env(safe-area-inset-right,0px));width:min(340px,calc(100% - 24px));max-height:calc(100% - 80px);display:flex;flex-direction:column;background:rgba(255,255,255,.97);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);z-index:10}
@@ -199,6 +208,19 @@
     </nav>
 
   </div>
+  <section class="parcel-card" id="parcelCard" aria-labelledby="parcelCardTitle" hidden>
+    <div class="parcel-card-head">
+      <h2 id="parcelCardTitle">Parcela seleccionada</h2>
+      <button id="parcelClose" type="button" aria-label="Cerrar ficha de parcela">Cerrar</button>
+    </div>
+    <div aria-live="polite" aria-atomic="true">
+      <dl>
+        <div><dt>Referencia catastral</dt><dd id="parcelReference"></dd></div>
+        <div><dt>Superficie dentro de la zona regable</dt><dd id="parcelArea"></dd></div>
+      </dl>
+    </div>
+    <p>Catastro · recorte aportado el 14/10/2026. No acredita superficie regada.</p>
+  </section>
   <footer class="map-footer" aria-label="Coordenadas, escala y atribuciones">
     <div class="legend" aria-label="Leyenda de capas activas" aria-live="polite" aria-atomic="true">
       <strong>Leyenda</strong>
@@ -501,7 +523,7 @@
     parcelRetry.hidden = !enabled || parcelState !== 'error';
     parcelStatus.textContent = !enabled ? 'Ocultas' : parcelState === 'error'
       ? 'No se pudieron cargar las parcelas' : detail === 0 ? 'Acércate para ver las parcelas'
-      : parcelState === 'ready' ? '919 parcelas · límites de referencia' : 'Cargando parcelas…';
+      : parcelState === 'ready' ? 'Pulsa una parcela para ver su ficha · 919 parcelas' : 'Cargando parcelas…';
     if (!enabled || detail === 0 || parcelState !== 'idle') return;
     parcelState = 'loading';
     fetch('data/parcels/parcelas.geojson').then(response => {
@@ -525,6 +547,56 @@
   parcelRetry.addEventListener('click', () => { parcelState = 'idle'; updateParcels(); });
   updateParcels();
   // END PARCEL UI
+
+  // BEGIN PARCEL CARD — indexed visual identification, no requests or metric geometry work.
+  const parcelCard = document.getElementById('parcelCard');
+  const parcelClose = document.getElementById('parcelClose');
+  const mapElement = document.getElementById('map');
+  const parcelHighlight = [
+    new ol.style.Style({stroke:new ol.style.Stroke({color:'#fff',width:5})}),
+    new ol.style.Style({stroke:new ol.style.Stroke({color:'#1B68A5',width:3}),
+      fill:new ol.style.Fill({color:'rgba(27,104,165,.10)'})})
+  ];
+  const areaFormat = new Intl.NumberFormat('es-ES', {maximumFractionDigits:2});
+  const hectareFormat = new Intl.NumberFormat('es-ES', {maximumFractionDigits:4});
+  let selectedParcel = null;
+  const closeParcelCard = () => {
+    if (selectedParcel) selectedParcel.setStyle(undefined);
+    selectedParcel = null;
+    if (parcelCard.hidden) return;
+    if (parcelCard.contains(document.activeElement)) mapElement.focus({preventScroll:true});
+    parcelCard.hidden = true;
+    map.updateSize();
+  };
+  const selectParcelAt = coordinate => {
+    if (!parcels.getVisible() || parcels.getOpacity() <= 0) return;
+    // VectorSource uses its spatial index; interiors and holes work without a rendered fill.
+    const feature = parcelSource.getFeaturesAtCoordinate(coordinate)[0];
+    if (!feature) { closeParcelCard(); return; }
+    if (selectedParcel === feature) return;
+    if (selectedParcel) selectedParcel.setStyle(undefined);
+    selectedParcel = feature;
+    feature.setStyle(parcelHighlight);
+    document.getElementById('parcelReference').textContent = feature.get('refcat');
+    const area = feature.get('area_m2');
+    document.getElementById('parcelArea').textContent = `${areaFormat.format(area)} m² · ${hectareFormat.format(area / 10000)} ha`;
+    const opening = parcelCard.hidden;
+    parcelCard.hidden = false;
+    if (compact.matches) setPanelOpen(false);
+    if (opening) map.updateSize();
+  };
+  map.on('singleclick', event => selectParcelAt(event.coordinate));
+  parcels.on('change:visible', () => { if (!parcels.getVisible()) closeParcelCard(); });
+  parcelClose.addEventListener('click', closeParcelCard);
+  document.getElementById('appShell').addEventListener('keydown', event => {
+    if (event.key === 'Escape' && !parcelCard.hidden) closeParcelCard();
+    if (event.key === 'Enter' && event.target === mapElement) {
+      event.preventDefault();
+      selectParcelAt(view.getCenter());
+    }
+  });
+  mapElement.setAttribute('aria-label', 'Mapa. Usa las flechas para desplazarte y Enter para consultar la parcela del centro. Escape cierra la ficha.');
+  // END PARCEL CARD
 
   // BEGIN SENTINEL UI — same-origin processed products, never provider credentials.
   const indexSelect = document.getElementById('sentinelIndex');

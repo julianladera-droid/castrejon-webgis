@@ -1,0 +1,2 @@
+# Preserve the exact public parcel bytes verified by metadata.json on every OS.
+data/parcels/parcelas.geojson text eol=lf

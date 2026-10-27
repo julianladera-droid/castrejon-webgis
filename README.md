@@ -18,6 +18,18 @@ Incluye el perímetro de referencia; no contiene parcelas internas, datos person
 
 ## Perímetro y área Sentinel (M4)
 
+Al pulsar dentro de una parcela visible se abre una ficha inferior con referencia
+catastral y superficie recortada en m² y ha. La superficie procede del maestro
+EPSG:25830: no acredita superficie regada. Una sola parcela se resalta; se puede
+cambiar pulsando otra, cerrar con «Cerrar» o Escape, o pulsar fuera. Al ocultar
+parcelas o alejarse hasta zoom 14, la ficha se cierra. Con foco en el mapa, Enter
+consulta la parcela del centro y las flechas desplazan la vista.
+
+La ficha reutiliza el GeoJSON y su índice espacial, sin descargas ni dependencias
+adicionales. Sólo consulta en pulsación simple; no durante arrastre, doble clic
+de zoom o movimiento del cursor. En móvil pliega el panel de capas y reserva una
+franja inferior desplazable para no cubrir atribuciones ni controles.
+
 Parcelario incorporado: 919 parcelas de la entrega del 14/10/2026, recortadas a
 ZR y con la exclusión de códigos 09000–09999 aplicada en origen. La capa aparece
 gradualmente entre zoom 14 y 16, con líneas amarillas finas sin relleno. Se carga
