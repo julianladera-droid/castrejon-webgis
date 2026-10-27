@@ -24,6 +24,15 @@ class NetworkPolicyTests(unittest.TestCase):
     def test_current_page(self):
         self.check(self.html)
 
+    def test_modified_vendor_is_rejected(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            (root / 'averias/vendor').mkdir(parents=True)
+            (root / 'averias/vendor/ol.js').write_text('modified library', encoding='utf-8')
+            with patch.object(gate, 'ROOT', root), patch.object(gate.subprocess, 'check_output', return_value=b'averias/vendor/ol.js\0'):
+                with self.assertRaisesRegex(ValueError, 'hash distinto'):
+                    gate.check_secrets()
+
     def test_forbidden_literals(self):
         cases = [
             'localhost', 'LOCALHOST', '127.0.0.1', '10.2.3.4',

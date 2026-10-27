@@ -46,9 +46,30 @@ jobs:
           node scripts/test-parcel-ndvi.cjs
           node scripts/test-water.cjs
           node scripts/test-comparison.cjs
+          node scripts/test-incidents.cjs
+          node scripts/test-incidents-map.cjs
+
+  wordpress:
+    name: WordPress incidents integration
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: npm install --prefix artifacts/qa @wp-playground/cli@3.1.61 fake-indexeddb@6.2.6
+      - run: python3 scripts/package-incidents.py
+      - run: node scripts/test-drafts.cjs
+      - run: node scripts/verify-wordpress.mjs
 
   deploy:
-    needs: gate
+    needs: [gate, wordpress]
     if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
     permissions:
       contents: read
@@ -79,6 +100,8 @@ jobs:
         run: |
           mkdir _site
           cp index.html .nojekyll _site/
+          mkdir -p _site/averias
+          cp averias/shared.js averias/map-layer.js averias/map-layer.css _site/averias/
           mkdir -p _site/data
           cp -r data/parcels _site/data/
           /usr/bin/python3 scripts/test_sentinel_web.py

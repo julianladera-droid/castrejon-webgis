@@ -1,2 +1,7 @@
 __pycache__/
 sentinel-output/
+.venv/
+.pytest_cache/
+.env
+backend/.env
+artifacts/

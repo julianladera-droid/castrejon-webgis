@@ -6,10 +6,118 @@ Visor de control de la **C.R. Canal de Castrejón Margen Derecha**.
 M0.2 + M4 — visor cartográfico con índices Sentinel y publicación automática.
 
 Capas actuales:
+- Averías públicas: fotografía, formulario, estado y descarga KMZ; plugin WordPress instalado y activo el 27/10/2026.
 - PNOA Máxima Actualidad (IGN/CNIG), XYZ/TMS.
 - Recintos SIGPAC (FEGA/MAPA), WMS.
 - Catastro INSPIRE, límites de parcela.
 - Zona regable: perímetro de referencia aportado en `ZR.gml`, pendiente de ajuste.
+
+## Averías: aplicación móvil y WordPress
+
+El usuario ha elegido aprovechar el WordPress existente para datos, fotografías y
+acceso del personal. `wordpress/castrejon-averias` es el plugin y `averias/` contiene
+los archivos canónicos del formulario y de la capa pública. El paquete se genera con
+`python scripts/package-incidents.py` en `artifacts/castrejon-averias-1.0.0.zip`.
+No se necesita FastAPI ni un servidor adicional para este módulo.
+
+La aplicación se sirve en `/averias-campo/` desde WordPress, fuera de la maquetación
+del tema. El visor sigue en GitHub Pages y consulta
+`https://comregantescastrejonmd.net/wp-json/castrejon/v1/incidents` sin credenciales.
+La configuración inicial del visor señala ese origen confirmado; si el plugin no
+está activo se muestra «Averías no disponibles», nunca una lista vacía engañosa.
+
+### Instalación
+
+1. Generar el ZIP y subirlo en **WordPress → Plugins → Añadir plugin → Subir plugin**.
+   Activar **Castrejón · Averías**. Requiere WordPress 6.6+, PHP 8.1+ y GD.
+2. La activación crea las tablas `castrejon_incidents` y
+   `castrejon_incident_events` con el prefijo de la instalación, y el rol
+   **Operario de averías**. Los administradores pueden publicar; ningún otro rol
+   obtiene permisos automáticamente. Asignar el rol al personal desde Usuarios.
+3. Abrir **Averías** en el menú de administración o `/averias-campo/` desde el móvil.
+   Opcionalmente añadir ese enlace al menú del portal. No se necesita una página
+   con un shortcode ni incrustar el visor en WordPress.
+4. Excluir `/averias-campo/`, `/averias-campo/session/` y la API del caché de páginas
+   si hay un plugin de caché adicional. El código envía cabeceras para impedir
+   almacenar sesiones. Comprobar que el dominio sirve los assets del plugin sin
+   reescritura hacia otro CDN: su CSP admite esos archivos del mismo origen.
+5. Desplegar el cambio del visor mediante el workflow Pages y comprobar desde el
+   dominio público que la lectura REST y la foto no fallan por CORS.
+6. Prueba de aceptación: publicar una incidencia real autorizada con foto/GPS,
+   consultarla sin sesión y actualizarla a «En reparación» y «Resuelta».
+   No se han insertado incidencias de prueba en producción.
+
+El conector WordPress permite instalar plugins del catálogo, pero no subir este ZIP
+propio. La carga requiere la interfaz de administración o un acceso de despliegue
+del alojamiento. El código local y las pruebas no equivalen a esa instalación.
+
+### Uso y datos
+
+- Campos: foto, tipo, elemento/referencia libre opcional, descripción, prioridad,
+  fecha de observación, ubicación y precisión GPS. No se inventa una relación con
+  un hidrante o parcela. La posición puede corregirse tocando el mapa o escribiendo
+  coordenadas; una corrección manual retira la precisión GPS.
+- **Guardar borrador** conserva datos y foto en IndexedDB del dispositivo. No los
+  publica ni sincroniza automáticamente. Tras un intento de envío, la copia queda
+  bloqueada para repetir exactamente el mismo UUID y contenido si la respuesta se
+  pierde. Una colisión con contenido diferente se rechaza. No borrar los datos del
+  navegador sin exportar antes los borradores importantes.
+- **Publicar** exige sesión WordPress y nonce REST válido, más la capacidad
+  `manage_castrejon_incidents`. El usuario confirma en pantalla que la foto y los
+  campos serán públicos. **Comprobar acceso** obtiene un nonce nuevo si caduca.
+- Lectura pública paginada de 250 en 250. El visor valida el contrato, ofrece
+  filtros por estado, listado accesible y actualización manual. La ficha de avería
+  tiene prioridad sobre la parcela en el mismo píxel. Una sola ficha abierta.
+- Actualizar estado usa una versión para rechazar ediciones concurrentes. Se
+  registra fecha de cierre y auditoría privada con el usuario; reabrir retira la
+  fecha de cierre. No hay borrado público de averías.
+- Fotos: el móvil convierte a JPEG de hasta 1600 px y el servidor vuelve a
+  decodificar/redimensionar, retirando metadatos. Máximo 2 MB de foto de entrada,
+  16 megapíxeles al decodificar en servidor y 3 MB de solicitud de publicación.
+  Foto y datos se guardan en la misma fila InnoDB, con auditoría transaccional.
+  No se usa la biblioteca de medios ni se expone el autor en la API pública.
+- KMZ: ZIP con `doc.kml`, campos `ExtendedData` y `files/foto.jpg` incluida; funciona
+  sin conexión para borradores. Es intercambio/copia, no un mecanismo de importación.
+- Las coordenadas de campo se conservan en EPSG:4326, con fuente GPS/manual. Son
+  observaciones operativas, no el maestro técnico. La futura incorporación al
+  inventario requiere normalizar a EPSG:25830; aquí no se calculan metros o áreas.
+- La PWA prepara formulario y recursos locales tras una primera visita con red.
+  El fondo PNOA requiere conexión. No guarda sesiones ni respuestas de la API en
+  caché. GPS/cámara dependen de HTTPS y de los permisos del dispositivo.
+- La desactivación/desinstalación conserva las tablas para evitar perder el
+  histórico. Incluir ambas tablas en las copias de seguridad de WordPress. Esta
+  primera versión no incluye edición de texto/foto ya publicados ni importación KMZ.
+
+### Verificación
+
+`node scripts/test-incidents.cjs` comprueba validación, KMZ con imagen, paginación,
+fallos de red y exclusión de sesiones/API del service worker.
+`node scripts/test-incidents-map.cjs` verifica selección, cierre, filtros y fallos
+sin confundirlos con ausencia de incidencias.
+Para IndexedDB y WordPress desechable:
+
+```sh
+npm install --prefix artifacts/qa @wp-playground/cli@3.1.61 fake-indexeddb@6.2.6
+python scripts/package-incidents.py
+node scripts/test-drafts.cjs
+node scripts/verify-wordpress.mjs
+```
+
+El último comando instala el ZIP en WordPress Playground (PHP 8.3, WordPress 6.9),
+prueba roles, REST pública, cookie/nonce por HTTP, fotos, colisiones, reintentos,
+versiones y auditoría. Usa SQLite de Playground; no sustituye la comprobación final
+en MySQL/WordPress.com. `--preview` mantiene un entorno local con datos sintéticos.
+No ejecutar `test-wordpress-incidents.php` en producción.
+
+Validado localmente: suites anteriores, regresiones JS del visor y gate; Python
+15 pruebas con 5 omisiones por faltar GDAL en ese entorno. Navegador a 390×844:
+foto local, coordenadas, guardado y KMZ descargado con CRC/XML/JPEG comprobados.
+Instalación real verificada el 27/10/2026 en `comregantescastrejonmd.net`: plugin
+1.0.0 activo, acceso autorizado con la cuenta administradora, API anónima 200 sin
+registros ficticios, CORS para Pages, sesión anónima sin permisos y service worker
+servido correctamente. Pendientes: GPS/cámara en teléfono físico y primera avería
+real. El envío completo se ha probado en WordPress local, sin crear datos de prueba
+en producción.
 
 ## Arquitectura de esta fase
 GitHub Pages sirve únicamente el frontend estático. WordPress actúa como portal y enlaza al visor. Los servicios cartográficos se consumen directamente desde sus proveedores oficiales.

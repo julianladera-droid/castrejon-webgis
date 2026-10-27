@@ -1,5 +1,5 @@
 # SKILL · Castrejón WebGIS — Contrato de arquitectura y evolución
-Version: 0.1.29
+Version: 0.1.30
 Fecha base: 2026-09-30
 Estado: ACTIVO · se actualiza tras cada ciclo de pruebas
 
@@ -442,6 +442,19 @@ Formato de cada cambio:
 No borrar una regla por comodidad. Si una regla cambia, conservar el motivo en el historial.
 
 ## 12. Registro de cambios
+### 0.1.30 — 2026-10-27 · Averías públicas y captura móvil
+- Necesidad: capturar foto, GPS y formulario desde campo y consultar públicamente cada avería en el visor, con edición reservada al personal.
+- Decisión expresa del usuario: usar WordPress para formularios, fotos y acceso del personal, evitando servidor adicional. Excepción limitada a la separación portal/backend de §2 y §12.1: plugin `wordpress/castrejon-averias`, formulario independiente del tema en `/averias-campo/`, REST pública de lectura y escritura protegida. El visor sigue en Pages; WordPress no ejecuta GIS pesado ni se convierte en maestro técnico.
+- Observaciones puntuales de campo conservadas como coordenadas de intercambio EPSG:4326 (GPS/manual) con fuente y precisión. Excepción documentada para este registro operativo; no constituye inventario técnico. Una incorporación futura al maestro exige normalización EPSG:25830 en servidor/QGIS. No calcular metros/superficies ni inferir vínculos por proximidad.
+- Autorización: sesión WordPress y nonce REST, capacidad específica `manage_castrejon_incidents`, rol «Operario de averías» y administradores. Lectura/fotos públicas; identidad de operarios y auditoría fuera de la respuesta pública. No almacenar contraseñas ni tokens en el frontend.
+- Foto obligatoria al publicar; JPEG normalizado sin EXIF, límites de tamaño y píxeles. Datos y foto en la misma fila de tabla propia InnoDB; auditoría transaccional. No se publica como adjunto de medios con autor visible.
+- Borradores IndexedDB con foto, UUID estable y reintento idempotente. Guardar localmente no publica. Publicar es una acción expresa del operario; no hay envío automático al recuperar cobertura. Exportación KMZ con foto incluida también sin servidor.
+- PWA limitada a la captura: caché del formulario, nunca sesiones, respuestas API ni mapas de terceros. El primer acceso exige conexión; el fondo cartográfico requiere cobertura.
+- Integración: capa pública, filtros por estado, listado accesible y ficha con prioridad, tipo, elemento, fechas, descripción y fotografía. La selección de avería tiene prioridad sobre la parcela en el mismo píxel; una sola ficha abierta.
+- Configuración del visor al origen WordPress confirmado `https://comregantescastrejonmd.net`; CSP limitada a lectura y fotos de ese origen. Un plugin todavía sin activar o un error de red se muestra como indisponibilidad, nunca cero averías.
+- Regresiones: autorización, validación, fotos, idempotencia, concurrencia; borradores/KMZ; selección y errores del visor; suites cartográficas existentes. Registrar por separado las verificaciones realmente ejecutadas y las pendientes de WordPress/teléfono.
+- Gate: el OpenLayers 10.6.1 distribuido para uso sin conexión contiene una concatenación `api_key` que el detector confunde con un secreto. Se verifica su SHA-256 (normalizando finales de línea) antes de omitir únicamente ese patrón en ese archivo; los demás patrones y archivos conservan el control.
+
 ### 0.1.29 — 2026-10-27
 - Validación: 36 pruebas Python con GDAL sin omisiones y suites Node/gate aprobadas. Superficies de tres parcelas cotejadas celda a celda. Chromium: 45137A04000082 muestra 2,9%/1803,46 m²; cambio a 45137A04000046 muestra 0%; interruptor, comparación y fecha sin referencia verificados. Capa 16,3 kB + tabla 42,6 kB; 51 fragmentos en 18 parcelas, seis parcelas con cobertura insuficiente.
 - Revisión visual: especificar agua nueva junto al resultado y advertir en la ayuda que el cambio puede incluir variaciones de cauces o balsas; no se dispone aún de una máscara validada de usos agrícolas.

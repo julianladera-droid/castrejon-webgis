@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Gate M0 offline: stdlib Python + Node; no descarga ni instala nada."""
 import json
+import hashlib
 from html.parser import HTMLParser
 from pathlib import Path
 import re
@@ -12,7 +13,7 @@ ROOT = Path(__file__).resolve().parents[1]
 VOID = set('area base br col embed hr img input link meta param source track wbr'.split())
 OL_JS = 'https://cdn.jsdelivr.net/npm/ol@10.6.1/dist/ol.js'
 OL_CSS = 'https://cdn.jsdelivr.net/npm/ol@10.6.1/ol.css'
-ALLOWED_REMOTE_HOSTS = {'cdn.jsdelivr.net','tms-pnoa-ma.idee.es','sigpac-hubcloud.es','ovc.catastro.meh.es'}
+ALLOWED_REMOTE_HOSTS = {'cdn.jsdelivr.net','tms-pnoa-ma.idee.es','sigpac-hubcloud.es','ovc.catastro.meh.es','comregantescastrejonmd.net'}
 
 
 def require(condition, message):
@@ -88,7 +89,13 @@ def check_secrets():
         path = ROOT / name
         require(not path.is_symlink(), f'Archivo simbólico no previsto: {name}')
         content = path.read_bytes().decode('utf-8', errors='replace')
+        verified_vendor = name == 'averias/vendor/ol.js' and hashlib.sha256(content.replace('\r\n', '\n').encode()).hexdigest() == 'eb5ceb37f7f15f210e9a9db54e471b994ed1f3b205af73c98a7156c95a911b77'
+        if name == 'averias/vendor/ol.js':
+            require(verified_vendor, 'OpenLayers local: hash distinto de la distribución revisada')
         for kind, pattern in patterns.items():
+            if verified_vendor and kind == 'secreto literal':
+                # A public library URL concatenation, not a credential. All other scans still run.
+                continue
             # Nunca imprimir el valor coincidente (tampoco contexto ni trazas).
             require(not re.search(pattern, content), f'Secreto evidente ({kind}) en {name}')
     print('OK: patrones de secretos evidentes en archivos versionados', flush=True)
@@ -158,7 +165,7 @@ def main():
     require(OL_CSS in page.links, 'HTML: falta CSS OpenLayers previsto')
     require(len(page.scripts) >= 2 and page.scripts[0]['src'] == OL_JS,
             'HTML: OpenLayers debe preceder al código del visor')
-    require([s['src'] for s in page.scripts if s['src']] == [OL_JS],
+    require([s['src'] for s in page.scripts if s['src']] == [OL_JS, 'averias/shared.js', 'averias/map-layer.js'],
             'HTML: script externo nuevo; incorporarlo expresamente al gate')
     require(all(not s['code'].strip() for s in page.scripts if s['src']),
             'HTML: código inline ignorado por un atributo src')

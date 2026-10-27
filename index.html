@@ -4,9 +4,10 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
   <meta name="referrer" content="no-referrer" />
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; img-src 'self' data: blob: https://tms-pnoa-ma.idee.es https://sigpac-hubcloud.es https://ovc.catastro.meh.es; connect-src 'self' https://tms-pnoa-ma.idee.es https://sigpac-hubcloud.es https://ovc.catastro.meh.es; font-src 'self' data:; object-src 'none'; frame-src 'none'; worker-src 'none'; base-uri 'none'; form-action 'none'; upgrade-insecure-requests" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; img-src 'self' data: blob: https://tms-pnoa-ma.idee.es https://sigpac-hubcloud.es https://ovc.catastro.meh.es https://comregantescastrejonmd.net; connect-src 'self' https://tms-pnoa-ma.idee.es https://sigpac-hubcloud.es https://ovc.catastro.meh.es https://comregantescastrejonmd.net; font-src 'self' data:; object-src 'none'; frame-src 'none'; worker-src 'none'; base-uri 'none'; form-action 'none'; upgrade-insecure-requests" />
   <title>Visor de control C.R. Canal de Castrejón Margen Derecha</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ol@10.6.1/ol.css">
+  <link rel="stylesheet" href="averias/map-layer.css">
   <style>
     :root{
       --base:#fff;--contrast:#173B63;--green:#357C45;--aqua:#43B9D1;
@@ -186,6 +187,16 @@
         <span id="panelTitle">Capas del mapa</span> <span id="panelGlyph" aria-hidden="true">−</span>
       </button>
       <div class="panel-body" id="layerPanelBody">
+        <section class="sentinel-controls" aria-label="Averías públicas">
+          <label class="layer-choice" for="incidentToggle"><input id="incidentToggle" type="checkbox" checked><span>Averías</span></label>
+          <p><span class="incident-key pending"></span> Pendiente · <span class="incident-key repairing"></span> En reparación · <span class="incident-key resolved"></span> Resuelta</p>
+          <label for="incidentFilter">Estado</label>
+          <select id="incidentFilter"><option value="">Todos</option><option value="pendiente">Pendientes</option><option value="en_reparacion">En reparación</option><option value="resuelta">Resueltas</option></select>
+          <p id="incidentStatus" role="status">Consultando averías…</p>
+          <button id="incidentRefresh" type="button">Actualizar averías</button>
+          <details class="incident-list"><summary>Ver listado (<span id="incidentCount">0</span>)</summary><div id="incidentList"></div></details>
+          <a href="https://comregantescastrejonmd.net/averias-campo/">Abrir aplicación de campo ↗</a>
+        </section>
         <section class="sentinel-controls" aria-label="Índices Sentinel">
           <h2>Sentinel · vegetación</h2>
           <label for="sentinelIndex">Índice</label>
@@ -291,6 +302,10 @@
     </nav>
 
   </div>
+  <section class="parcel-card incident-card" id="incidentCard" aria-labelledby="incidentTitle" hidden>
+    <div class="parcel-card-head"><h2 id="incidentTitle">Avería seleccionada</h2><button id="incidentClose" type="button">Cerrar</button></div>
+    <div class="incident-content"><div><img id="incidentPhoto" alt="Fotografía de la avería"><p id="incidentPhotoError" hidden>No se pudo cargar la foto. <button id="incidentPhotoRetry" type="button">Reintentar</button></p></div><div><span id="incidentState" class="incident-state"></span><p id="incidentDescription"></p><dl id="incidentDetails"></dl><button id="incidentKmz" type="button">Descargar KMZ con foto</button></div></div>
+  </section>
   <section class="parcel-card" id="parcelCard" aria-labelledby="parcelCardTitle" hidden>
     <div class="parcel-card-head">
       <div><h2 id="parcelCardTitle">Parcela seleccionada</h2><p aria-live="polite">Imagen: <strong id="parcelImageDate">—</strong></p></div>
@@ -357,6 +372,8 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/ol@10.6.1/dist/ol.js"></script>
+<script src="averias/shared.js"></script>
+<script src="averias/map-layer.js"></script>
 <script>
 (() => {
   'use strict';
@@ -664,6 +681,7 @@
   // END PARCEL UI
 
   // BEGIN PARCEL CARD — indexed visual identification, no requests or metric geometry work.
+  let incidentUI = null;
   const parcelCard = document.getElementById('parcelCard');
   const parcelClose = document.getElementById('parcelClose');
   const mapElement = document.getElementById('map');
@@ -707,14 +725,16 @@
     if (compact.matches) { setPanelOpen(false); document.getElementById('navMore').open = false; }
     if (opening) map.updateSize();
   };
-  map.on('singleclick', event => selectParcelAt(event.coordinate));
+  map.on('singleclick', event => {
+    if (!incidentUI?.selectAtPixel(event.pixel)) selectParcelAt(event.coordinate);
+  });
   parcels.on('change:visible', () => { if (!parcels.getVisible()) closeParcelCard(); });
   parcelClose.addEventListener('click', closeParcelCard);
   document.getElementById('appShell').addEventListener('keydown', event => {
     if (event.key === 'Escape' && !parcelCard.hidden) closeParcelCard();
     if (event.key === 'Enter' && event.target === mapElement) {
       event.preventDefault();
-      selectParcelAt(view.getCenter());
+      if (!incidentUI?.selectAtPixel(map.getPixelFromCoordinate(view.getCenter()))) selectParcelAt(view.getCenter());
     }
   });
   mapElement.setAttribute('aria-label', 'Mapa. Usa las flechas para desplazarte y Enter para consultar la parcela del centro. Escape cierra la ficha.');
@@ -1406,6 +1426,7 @@
   compact.addEventListener('change', adaptLayout);
   adaptLayout();
 
+  if (window.CastrejonIncidentLayer) incidentUI = window.CastrejonIncidentLayer.init({map,closeParcel:closeParcelCard,setPanelOpen,compact});
   // Focus map for keyboard interactions after click.
   map.on('click', () => document.getElementById('map').focus({preventScroll:true}));
 })();

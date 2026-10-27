@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#173b63">
+  <meta name="referrer" content="no-referrer">
+  <meta name="api-base" content="__API_BASE__">
+  <meta name="app-home" content="__APP_HOME__">
+  <!-- ASSET_BASE -->
+  <title>Averías · Castrejón</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="app.css">
+  <link rel="stylesheet" href="vendor/ol.css">
+  <script defer src="vendor/ol.js"></script>
+  <script defer src="shared.js"></script>
+  <script defer src="app.js"></script>
+</head>
+<body>
+  <header><a class="brand" href="https://julianladera-droid.github.io/castrejon-webgis/" aria-label="Volver al visor público"><span class="mark">CR</span><span><small>CANAL DE CASTREJÓN · MARGEN DERECHA</small><strong>Averías en campo</strong></span></a><span id="connection" class="badge">Comprobando conexión</span></header>
+  <main>
+    <div class="intro"><div><p class="eyebrow">REGISTRO DE INCIDENCIAS</p><h1>Del campo al mapa.</h1><p>Una foto, una ubicación y los detalles de la avería.</p></div><a class="button secondary" href="https://julianladera-droid.github.io/castrejon-webgis/">Ver mapa público ↗</a></div>
+    <section class="session" aria-label="Acceso del personal"><p id="sessionStatus" role="status">Puedes guardar borradores en este dispositivo. Comprobando acceso…</p><a id="login" class="button" hidden>Entrar con WordPress</a><button id="sessionRefresh" type="button" class="secondary">Comprobar acceso</button></section>
+    <nav class="tabs" aria-label="Secciones de averías"><a href="#capture">Nueva avería</a><a href="#draftSection">Mis borradores <span id="draftCount">0</span></a><a href="#publishedSection">Publicadas</a></nav>
+    <div id="message" class="message" role="status" aria-live="polite" hidden></div>
+    <div class="columns">
+    <form id="incidentForm">
+      <section class="card" id="capture"><div class="section-head"><h2><span>1</span> Fotografía</h2><button type="button" class="text-button" id="newDraft">Nueva ficha</button></div><p>Fotografía la avería con suficiente detalle.</p>
+        <label class="photo-picker" for="photo"><span id="photoHint">＋ Hacer foto o elegir imagen</span><img id="photoPreview" alt="Vista previa de la avería" hidden><input id="photo" type="file" accept="image/jpeg,image/png,image/webp" capture="environment"></label>
+        <p class="hint">La foto y la descripción serán públicas al publicar.</p>
+      </section>
+      <section class="card"><h2><span>2</span> Ubicación</h2><button id="locate" type="button">◎ Usar mi ubicación GPS</button><p id="locationStatus" role="status">Todavía no has marcado la ubicación.</p>
+        <div id="locationMap" tabindex="0" aria-label="Mapa para situar la avería. Pulsa el mapa o introduce las coordenadas debajo."></div><p class="hint">Pulsa sobre el mapa para corregir el punto. Fondo: PNOA · IGN/CNIG. El fondo requiere conexión.</p>
+        <details><summary>Introducir coordenadas</summary><div class="field-pair"><label>Latitud<input id="latitude" type="number" step="any" min="35" max="45" inputmode="decimal"></label><label>Longitud<input id="longitude" type="number" step="any" min="-10" max="5" inputmode="decimal"></label></div><button type="button" class="secondary" id="manualLocation">Usar estas coordenadas</button></details>
+      </section>
+      <section class="card"><h2><span>3</span> Datos de la avería</h2><div class="field-pair"><label>Tipo<select id="kind" required><option value="fuga">Fuga de agua</option><option value="rotura">Rotura</option><option value="obstruccion">Obstrucción</option><option value="electrica">Avería eléctrica</option><option value="otra">Otra</option></select></label><label>Prioridad<select id="priority" required><option value="normal">Normal</option><option value="alta">Alta</option><option value="urgente">Urgente</option></select></label></div>
+        <label>Elemento o referencia <span class="hint">(opcional)</span><input id="element" maxlength="120" placeholder="Ej.: válvula del ramal 4"></label>
+        <label>Descripción<textarea id="description" minlength="5" maxlength="2000" required rows="4" placeholder="Qué ocurre y qué se observa en el lugar"></textarea></label>
+        <label>Fecha de observación<input id="observedAt" type="datetime-local" required></label>
+        <p class="hint">Incluye información de la avería. Evita nombres, teléfonos o datos personales en la descripción y la foto.</p>
+        <div class="actions"><button type="submit" id="saveDraft">Guardar borrador</button><button type="button" id="exportDraft" class="secondary">Descargar KMZ</button></div><p id="saveStatus" class="hint">El borrador se guarda solo en este dispositivo. No aparece en el mapa público.</p>
+      </section>
+    </form>
+    <aside>
+      <section class="card" id="draftSection"><h2>Mis borradores</h2><p>Revisa la ficha y pulsa «Publicar» para enviarla. Si falla el envío, conserva el borrador y reintenta.</p><div id="draftList"></div><p class="hint">Los borradores dependen del almacenamiento del navegador. Descarga un KMZ como copia antes de borrar sus datos.</p></section>
+      <section class="card" id="publishedSection"><div class="section-head"><h2>Averías publicadas</h2><button id="refreshPublished" type="button" class="text-button">Actualizar</button></div><label>Estado<select id="statusFilter"><option value="">Todos los estados</option><option value="pendiente">Pendientes</option><option value="en_reparacion">En reparación</option><option value="resuelta">Resueltas</option></select></label><p id="publishedStatus" role="status">Pendiente de consulta.</p><div id="publishedList"></div></section>
+    </aside>
+    </div>
+  </main>
+  <footer>C.R. Canal de Castrejón Margen Derecha · Registro de observaciones de campo</footer>
+</body>
+</html>
