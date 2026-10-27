@@ -1,5 +1,5 @@
 # SKILL · Castrejón WebGIS — Contrato de arquitectura y evolución
-Version: 0.1.26
+Version: 0.1.27
 Fecha base: 2026-09-30
 Estado: ACTIVO · se actualiza tras cada ciclo de pruebas
 
@@ -442,6 +442,13 @@ Formato de cada cambio:
 No borrar una regla por comodidad. Si una regla cambia, conservar el motivo en el historial.
 
 ## 12. Registro de cambios
+### 0.1.27 — 2026-10-27
+- Horizontal entre 560 y 1000px de ancho y hasta 500px de alto: ficha lateral de 240–280px, mapa en columna independiente y atribuciones compartidas debajo. Sin cubrir parcelas con la ficha.
+- Capas abierto se limita a 320px en el lado derecho para mantener visible la parte izquierda del mapa.
+- Cabecera compacta en una sola fila y controles móviles también en pantallas bajas de hasta 1000px, sin depender del dispositivo apuntador.
+- Al cambiar entre ficha lateral/inferior se actualiza el tamaño del mapa, se cierran menús y se vuelve al inicio de la ficha; mantiene selección y tabla en caché.
+- Validación: gate y pruebas de ficha/caché; comprobación visual horizontal 568×320 y 844×390, cambio de parcela y retorno a vertical.
+
 ### 0.1.26 — 2026-10-27
 - Controles móviles en una fila: Capas, zoom, inicio y Más (historial/pantalla completa). Objetivos táctiles de al menos 44px y foco visible.
 - Capas abierto es un panel inferior desplazable limitado al 70dvh/480px, con cabecera Cerrar capas fija dentro del panel; cerrado deja sólo un botón compacto sobre el mapa.
