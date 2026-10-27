@@ -55,7 +55,7 @@
     #map{position:absolute;inset:0;background:#dce7ea}
     .panel{position:absolute;top:68px;right:max(12px,env(safe-area-inset-right,0px));width:min(340px,calc(100% - 24px));max-height:calc(100% - 80px);display:flex;flex-direction:column;background:rgba(255,255,255,.97);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);z-index:10}
     .panel-head{display:flex;align-items:center;justify-content:space-between;gap:16px;flex:none;width:100%;min-height:48px;padding:10px 14px;border:0;border-radius:14px;background:transparent;color:var(--contrast);cursor:pointer;text-align:left;font-weight:800}
-    .panel-head span{font-size:22px;line-height:1}
+    .panel-head #panelGlyph{font-size:22px;line-height:1}
     .panel-body{min-height:0;overflow-y:auto;overscroll-behavior:contain;touch-action:pan-y;padding:0 14px 10px;border-top:1px solid var(--line)}
     .layer{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:2px 8px;align-items:center;padding:6px 0;border-bottom:1px solid var(--line)}
     .layer:last-child{border-bottom:0}
@@ -68,6 +68,9 @@
     .opacity output{text-align:right;font-size:12px;font-variant-numeric:tabular-nums}
     .toolbar{position:absolute;right:max(12px,env(safe-area-inset-right,0px));top:12px;display:flex;gap:8px;z-index:11}
     .tool{width:44px;height:44px;flex:none;border:1px solid var(--line);border-radius:12px;background:rgba(255,255,255,.97);box-shadow:0 4px 14px rgba(23,59,99,.12);color:var(--contrast);cursor:pointer;font-size:20px;font-weight:800}
+    .nav-more,.nav-more-body{display:contents}
+    .nav-more>summary,.tool-label{display:none}
+    .tool:focus-visible,.panel-head:focus-visible{outline:3px solid var(--water);outline-offset:2px}
     @media(hover:hover){.tool:hover,.panel-head:hover{background:var(--soft)}}
     .tool:disabled{opacity:.38;cursor:not-allowed}
     .map-footer{padding:6px max(12px,env(safe-area-inset-right,0px)) calc(6px + env(safe-area-inset-bottom,0px)) max(12px,env(safe-area-inset-left,0px));background:var(--base);border-top:1px solid var(--line);z-index:12}
@@ -109,10 +112,19 @@
       .topbar{padding-top:calc(8px + env(safe-area-inset-top,0px));padding-bottom:8px;gap:4px;flex-wrap:wrap}
       .brand{gap:8px}.mark{width:32px;height:32px;border-radius:10px;font-size:12px}
       .eyebrow{font-size:9px}.title{font-size:13px}.top-status{max-width:none;flex-basis:100%;font-size:10px;line-height:1.2}
-      .panel{top:70px;max-height:calc(100% - 82px);width:min(340px,calc(100% - 24px))}
-      .panel.collapsed{width:auto;min-width:156px}
-      .toolbar{top:10px;left:max(12px,env(safe-area-inset-left,0px));right:max(12px,env(safe-area-inset-right,0px));margin-left:auto;max-width:360px;display:grid;grid-auto-flow:column;grid-auto-columns:minmax(44px,1fr);gap:6px}
-      .tool{width:100%;height:48px;background:var(--base)}
+      .panel{position:fixed;top:auto;bottom:max(12px,env(safe-area-inset-bottom,0px));left:max(12px,env(safe-area-inset-left,0px));right:max(12px,env(safe-area-inset-right,0px));width:auto;max-height:min(70dvh,480px);z-index:30}
+      .panel.collapsed{position:absolute;top:10px;bottom:auto;right:auto;width:90px;max-height:none}
+      .panel-head{min-height:44px;padding:8px 10px;gap:6px;font-size:13px}
+      .map-stage:has(.panel:not(.collapsed)),.map-stage:has(.nav-more[open]){z-index:20}
+      .toolbar{top:10px;left:auto;right:max(12px,env(safe-area-inset-right,0px));gap:6px}
+      .tool{width:44px;height:44px;background:var(--base)}
+      .nav-more{display:block;position:relative}
+      .nav-more>summary{display:flex;align-items:center;justify-content:center;list-style:none;font-size:12px}
+      .nav-more>summary::-webkit-details-marker{display:none}
+      .nav-more-body{position:absolute;right:0;top:50px;display:flex;flex-direction:column;gap:4px;padding:6px;background:var(--base);border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow);max-height:calc(100dvh - 150px);overflow-y:auto}
+      .nav-more:not([open]) .nav-more-body{display:none}
+      .nav-more-body .tool{width:180px;display:flex;align-items:center;gap:10px;padding:0 10px;box-shadow:none;font-size:18px}
+      .tool-label{display:inline;font-size:12px;font-weight:600}
       .readout{gap:10px}.reference-scale{display:none}
       .map-footer{padding-top:5px;padding-bottom:calc(5px + env(safe-area-inset-bottom,0px))}
       .chip{font-size:10px}.crosshair{display:block}
@@ -144,7 +156,7 @@
 
     <section id="layerPanel" class="panel" aria-label="Selector de capas">
       <button class="panel-head" id="collapseBtn" type="button" aria-expanded="true" aria-controls="layerPanelBody">
-        Capas del mapa <span id="panelGlyph" aria-hidden="true">−</span>
+        <span id="panelTitle">Capas del mapa</span> <span id="panelGlyph" aria-hidden="true">−</span>
       </button>
       <div class="panel-body" id="layerPanelBody">
         <section class="sentinel-controls" aria-label="Índices Sentinel">
@@ -215,13 +227,18 @@
       </div>
     </section>
 
-    <nav class="toolbar" aria-label="Navegación del mapa">
-      <button class="tool" id="backBtn" title="Vista anterior" aria-label="Vista anterior">←</button>
-      <button class="tool" id="forwardBtn" title="Vista siguiente" aria-label="Vista siguiente">→</button>
+    <nav id="mapToolbar" class="toolbar" aria-label="Navegación del mapa">
       <button class="tool" id="zoomInBtn" title="Acercar" aria-label="Acercar">+</button>
       <button class="tool" id="zoomOutBtn" title="Alejar" aria-label="Alejar">−</button>
       <button class="tool" id="homeBtn" title="Volver al inicio" aria-label="Volver al centro inicial">⌂</button>
-      <button class="tool" id="fullBtn" title="Pantalla completa" aria-label="Pantalla completa">⛶</button>
+      <details class="nav-more" id="navMore" open>
+        <summary id="navMoreToggle" class="tool" aria-label="Más controles del mapa">Más</summary>
+        <div class="nav-more-body">
+          <button class="tool" id="backBtn" title="Vista anterior" aria-label="Vista anterior">←<span class="tool-label">Vista anterior</span></button>
+          <button class="tool" id="forwardBtn" title="Vista siguiente" aria-label="Vista siguiente">→<span class="tool-label">Vista siguiente</span></button>
+          <button class="tool" id="fullBtn" title="Pantalla completa" aria-label="Pantalla completa">⛶<span class="tool-label">Pantalla completa</span></button>
+        </div>
+      </details>
     </nav>
 
   </div>
@@ -620,7 +637,7 @@
     parcelCard.hidden = false;
     parcelCard.scrollTop = 0;
     refreshParcelNdvi();
-    if (compact.matches) setPanelOpen(false);
+    if (compact.matches) { setPanelOpen(false); document.getElementById('navMore').open = false; }
     if (opening) map.updateSize();
   };
   map.on('singleclick', event => selectParcelAt(event.coordinate));
@@ -985,13 +1002,27 @@
     panel.classList.toggle('collapsed', !open);
     panelBody.hidden = !open;
     panelButton.setAttribute('aria-expanded', String(open));
+    document.getElementById('panelTitle').textContent = compact.matches ? (open ? 'Cerrar capas' : 'Capas') : 'Capas del mapa';
+    if (open && compact.matches) document.getElementById('navMore').open = false;
     document.getElementById('panelGlyph').textContent = open ? '−' : '+';
   };
   panelButton.addEventListener('click', () => setPanelOpen(panelBody.hidden));
   panel.addEventListener('keydown', event => {
-    if (event.key === 'Escape') { setPanelOpen(false); panelButton.focus(); }
+    if (event.key === 'Escape') { event.stopPropagation(); setPanelOpen(false); panelButton.focus(); }
+  });
+  const navMore = document.getElementById('navMore');
+  navMore.addEventListener('toggle', () => { if (compact.matches && navMore.open) setPanelOpen(false); });
+  document.getElementById('mapToolbar').addEventListener('click', event => {
+    if (compact.matches && event.target.closest('button')) {
+      if (navMore.contains(event.target)) document.getElementById('navMoreToggle').focus();
+      navMore.open = false; setPanelOpen(false);
+    }
+  });
+  navMore.addEventListener('keydown', event => {
+    if (event.key === 'Escape' && compact.matches) { event.stopPropagation(); navMore.open = false; document.getElementById('navMoreToggle').focus(); }
   });
   const adaptLayout = () => {
+    navMore.open = !compact.matches;
     setPanelOpen(!compact.matches);
     document.getElementById('coordsLabel').textContent = compact.matches ? 'Centro' : 'EPSG:4326';
     showCoordinates(view.getCenter());

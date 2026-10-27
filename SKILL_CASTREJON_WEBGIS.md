@@ -1,5 +1,5 @@
 # SKILL · Castrejón WebGIS — Contrato de arquitectura y evolución
-Version: 0.1.25
+Version: 0.1.26
 Fecha base: 2026-09-30
 Estado: ACTIVO · se actualiza tras cada ciclo de pruebas
 
@@ -442,6 +442,12 @@ Formato de cada cambio:
 No borrar una regla por comodidad. Si una regla cambia, conservar el motivo en el historial.
 
 ## 12. Registro de cambios
+### 0.1.26 — 2026-10-27
+- Controles móviles en una fila: Capas, zoom, inicio y Más (historial/pantalla completa). Objetivos táctiles de al menos 44px y foco visible.
+- Capas abierto es un panel inferior desplazable limitado al 70dvh/480px, con cabecera Cerrar capas fija dentro del panel; cerrado deja sólo un botón compacto sobre el mapa.
+- Más usa details nativo; menús mutuamente excluyentes y cierre tras usar controles, Escape o elegir parcela. Mantiene controles completos en escritorio.
+- Sin peticiones ni dependencias nuevas. Regresión: gate, selección/caché y revisión móvil de controles, capas, desplazamiento y cierre.
+
 ### 0.1.25 — 2026-10-27
 - Revisión móvil: índices antes de referencia/superficie para evitar escalas cortadas a 320×568; ficha compacta limitada al menor de 32dvh y 220px en móvil.
 - Cifras de índices a 16px en móvil, extremos a 10px y cobertura a 11px. Mantiene tres columnas y controles táctiles existentes.

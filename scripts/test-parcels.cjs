@@ -24,7 +24,7 @@ function testCard(){
   const html=fs.readFileSync('index.html','utf8');
   const cardCode=html.split('// BEGIN PARCEL CARD')[1].split('// END PARCEL CARD')[0].split('\n').slice(1).join('\n');
   const events={}, els={}; let active=null, visible=true, queries=0, sizes=0, collapsed=0;
-  for(const id of ['parcelCard','parcelClose','map','parcelReference','parcelArea','appShell']){
+  for(const id of ['parcelCard','parcelClose','map','parcelReference','parcelArea','appShell','navMore']){
     els[id]={hidden:id==='parcelCard',textContent:'',setAttribute(){},
       contains:el=>el===els.parcelClose,focus(){active=this;},
       addEventListener:(name,fn)=>events[id+name]=fn};
@@ -41,7 +41,9 @@ function testCard(){
     view:{getCenter:()=>[1,2]}};
   vm.runInNewContext(cardCode,context);
   assert.equal(queries,0);assert.equal(events.pointermove,undefined);assert.equal(events.click,undefined);
+  els.navMore.open=true;
   events.singleclick({coordinate:[1,2]});
+  assert.equal(els.navMore.open,false);
   assert.equal(els.parcelCard.hidden,false);assert(a.style);assert.equal(collapsed,1);
   assert.equal(els.parcelReference.textContent,'45137A03400128');
   assert.equal(els.parcelArea.textContent,'27.816,55 m² · 2,7817 ha');
