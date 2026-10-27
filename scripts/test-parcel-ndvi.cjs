@@ -22,7 +22,7 @@ function setup(custom){
   const context={Map,crypto:crypto.webcrypto,TextDecoder,Uint8Array,Date,selectedParcel:null,
     acquisitions:[a.acquisition,b.acquisition],dateSelect:{value:'A'},parcelWebHash:'web',refreshParcelNdvi:null,
     formatDate:d=>d.slice(0,10),productPath:(p,id)=>{assert.equal(p,`sentinel/${id}/parcel-indices.json`);return p;},
-    document:{getElementById:id=>els[id]??={textContent:''}},
+    document:{getElementById:id=>els[id]??={textContent:'',style:{},hidden:true}},
     fetch:path=>new Promise(resolve=>requests.push({path,resolve}))};
   vm.createContext(context);vm.runInContext(code,context);
   return {context,els,requests,a,b,select(ref){context.selectedParcel={get:()=>ref};return context.refreshParcelNdvi();},
@@ -38,6 +38,12 @@ function setup(custom){
   assert.match(s.els.parcelNdviCoverage.textContent,/70%/);
   assert.equal(s.els.parcelEvi2.textContent,'1,25');assert.equal(s.els.parcelNdmi.textContent,'Sin datos suficientes');
   await s.select('r0');assert.equal(s.els.parcelNdmi.textContent,'-0,25');assert.equal(s.requests.length,1);
+  assert.equal(s.els.parcelNdmiMarker.style.left,'37.5%');
+  assert.equal(s.els.parcelEvi2Marker.style.left,'100%');
+  assert.equal(s.els.parcelEvi2.textContent,'1,25');
+  await s.select('r2');assert.equal(s.els.parcelNdviMarker.style.left,'50%');
+  await s.select('r3');assert.equal(s.els.parcelNdviScale.hidden,true);
+  assert.equal(s.els.parcelEvi2Scale.hidden,false);
   const late=setup();late.select('r0');late.context.dateSelect.value='B';late.select('r0');
   late.respond(1,late.b.bytes);await flush();late.respond();await flush();
   assert.equal(late.els.parcelImageDate.textContent,'2026-09-24');
@@ -45,7 +51,8 @@ function setup(custom){
   assert.notEqual(closed.els.parcelNdvi.textContent,'0,46');
   const bad=setup();bad.select('r0');bad.respond(0,Buffer.from('{}'));await flush();
   assert.equal(bad.els.parcelNdvi.textContent,'No disponible');
-  bad.select('r0');assert.equal(bad.requests.length,2);bad.respond(1);await flush();
+  assert.equal(bad.els.parcelNdviScale.hidden,true);
+  bad.select('r0');assert.equal(bad.els.parcelNdviScale.hidden,true);assert.equal(bad.requests.length,2);bad.respond(1);await flush();
   assert.equal(bad.els.parcelNdvi.textContent,'0,46');
   const mismatch=setup();mismatch.context.parcelWebHash='different';await mismatch.select('r0');
   assert.equal(mismatch.requests.length,0);assert.equal(mismatch.els.parcelNdvi.textContent,'No disponible');

@@ -1,5 +1,5 @@
 # SKILL · Castrejón WebGIS — Contrato de arquitectura y evolución
-Version: 0.1.23
+Version: 0.1.24
 Fecha base: 2026-09-30
 Estado: ACTIVO · se actualiza tras cada ciclo de pruebas
 
@@ -442,6 +442,12 @@ Formato de cada cambio:
 No borrar una regla por comodidad. Si una regla cambia, conservar el motivo en el historial.
 
 ## 12. Registro de cambios
+### 0.1.24 — 2026-10-27
+- Escalas visuales decorativas con marcador junto a las medias: NDVI/NDMI de -1 a 1 y EVI2 de 0 a 1, con extremos rotulados.
+- Sin clasificaciones agronómicas ni semáforos. La cifra sigue siendo exacta; EVI2 fuera de escala coloca el marcador en el extremo y se explica en la ayuda.
+- Se ocultan las escalas durante carga, error o cobertura insuficiente; se actualizan con las mismas garantías de selección y fecha de las medias.
+- Sólo HTML/CSS y tres posiciones de marcador; ninguna consulta o dependencia adicional. Regresión: cero, valores negativos, extremos EVI2 y ausencia de datos.
+
 ### 0.1.23 — 2026-10-27
 - Ayuda breve en la ficha mediante details/summary nativos, cerrada inicialmente, fuera de la región de anuncios de las medias.
 - Explica NDVI (cobertura/vigor vegetal), EVI2 (vegetación, útil con cubierta densa) y NDMI (agua en la vegetación), sin umbrales universales ni prescripciones de riego.

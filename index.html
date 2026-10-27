@@ -41,6 +41,12 @@
     .parcel-card .parcel-indices{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:8px;max-width:460px}
     .parcel-indices small{display:block;font-size:10px;font-weight:400;color:var(--muted);margin-top:2px}
     .parcel-card p{font-size:11px;line-height:1.4;margin:6px 0 0;color:var(--muted)}
+    .parcel-scale{display:block;margin:6px 0 2px}
+    .parcel-scale[hidden]{display:none}
+    .parcel-scale-track{display:block;position:relative;height:6px;border-radius:3px;background:linear-gradient(90deg,#e7dfcf,#b5cb87,#35764b);margin:0 3px}
+    .parcel-scale-moisture .parcel-scale-track{background:linear-gradient(90deg,#e7dfcf,#a9c9d7,#346d9a)}
+    .parcel-scale-marker{position:absolute;top:-3px;height:12px;width:3px;background:#172c38;outline:1px solid white;border-radius:2px;transform:translateX(-50%)}
+    .parcel-scale-labels{display:flex;justify-content:space-between;font-size:9px;font-weight:400;color:var(--muted);margin-top:3px}
     .parcel-help{max-width:460px;margin-top:4px;font-size:12px}
     .parcel-help summary{min-height:44px;align-content:center;cursor:pointer;color:var(--contrast);font-weight:700}
     .parcel-help summary:focus-visible{outline:2px solid var(--water);outline-offset:2px;border-radius:4px}
@@ -226,9 +232,9 @@
         <div><dt>Superficie dentro de la zona regable</dt><dd id="parcelArea"></dd></div>
       </dl>
       <dl class="parcel-indices" aria-label="Índices medios estimados">
-        <div><dt>NDVI · 10 m</dt><dd><span id="parcelNdvi">No disponible</span><small id="parcelNdviCoverage"></small></dd></div>
-        <div><dt>EVI2 · 10 m</dt><dd><span id="parcelEvi2">No disponible</span><small id="parcelEvi2Coverage"></small></dd></div>
-        <div><dt>NDMI · 20 m</dt><dd><span id="parcelNdmi">No disponible</span><small id="parcelNdmiCoverage"></small></dd></div>
+        <div><dt>NDVI · 10 m</dt><dd><span id="parcelNdvi">No disponible</span><span id="parcelNdviScale" class="parcel-scale" aria-hidden="true" hidden><span class="parcel-scale-track"><span id="parcelNdviMarker" class="parcel-scale-marker"></span></span><span class="parcel-scale-labels"><span>−1</span><span>1</span></span></span><small id="parcelNdviCoverage"></small></dd></div>
+        <div><dt>EVI2 · 10 m</dt><dd><span id="parcelEvi2">No disponible</span><span id="parcelEvi2Scale" class="parcel-scale" aria-hidden="true" hidden><span class="parcel-scale-track"><span id="parcelEvi2Marker" class="parcel-scale-marker"></span></span><span class="parcel-scale-labels"><span>0</span><span>1</span></span></span><small id="parcelEvi2Coverage"></small></dd></div>
+        <div><dt>NDMI · 20 m</dt><dd><span id="parcelNdmi">No disponible</span><span id="parcelNdmiScale" class="parcel-scale parcel-scale-moisture" aria-hidden="true" hidden><span class="parcel-scale-track"><span id="parcelNdmiMarker" class="parcel-scale-marker"></span></span><span class="parcel-scale-labels"><span>−1</span><span>1</span></span></span><small id="parcelNdmiCoverage"></small></dd></div>
       </dl>
       <p id="parcelNdviQuality"></p>
     </div>
@@ -237,6 +243,7 @@
       <p><strong>NDVI:</strong> indica la cobertura y el vigor de la vegetación. Valores más altos suelen señalar más vegetación verde.</p>
       <p><strong>EVI2:</strong> complementa al NDVI y distingue mejor los cambios con vegetación densa. Valores más altos suelen indicar mayor desarrollo vegetal.</p>
       <p><strong>NDMI:</strong> refleja el contenido de agua de la vegetación. Valores más altos suelen indicar más agua en las hojas, no en el suelo.</p>
+      <p>La barra sitúa el valor entre los extremos indicados; no clasifica el estado del cultivo. En EVI2, los valores fuera de 0–1 se marcan en el extremo y la cifra conserva el valor real.</p>
       <p>Interpreta cada índice según el cultivo y la época. Las cifras de índices distintos no son equivalentes.</p>
     </details>
     <p>Catastro · recorte aportado el 14/10/2026. No acredita superficie regada.</p>
@@ -738,6 +745,7 @@
       for (const id of Object.values(parcelIndexFields)) {
         document.getElementById(id).textContent = text;
         document.getElementById(id+'Coverage').textContent = '';
+        document.getElementById(id+'Scale').hidden = true;
       }
     };
     setAll('No disponible');
@@ -787,6 +795,13 @@
           throw new Error('Media inválida');
         document.getElementById(id).textContent = usable
           ? mean.toLocaleString('es-ES', {minimumFractionDigits:2, maximumFractionDigits:2}) : 'Sin datos suficientes';
+        const scale = document.getElementById(id+'Scale');
+        scale.hidden = !usable;
+        if (usable) {
+          const min = name === 'EVI2' ? 0 : -1;
+          const position = Math.max(0, Math.min(1, (mean - min) / (1 - min)));
+          document.getElementById(id+'Marker').style.left = `${position * 100}%`;
+        }
         document.getElementById(id+'Coverage').textContent = total
           ? `${(valid/total*100).toLocaleString('es-ES',{maximumFractionDigits:1})}% píxeles válidos${usable ? '' : ' · mín. 80%'}`
           : 'Sin centros de píxel';
