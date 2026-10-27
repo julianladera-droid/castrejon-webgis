@@ -19,7 +19,7 @@ for(const f of data.features){
   }
 }
 const code=fs.readFileSync('index.html','utf8').split('// BEGIN PARCEL UI')[1].split('// END PARCEL UI')[0].split('\n').slice(1).join('\n');
-const flush=async()=>{for(let i=0;i<15;i++)await Promise.resolve();};
+const flush=async()=>{await new Promise(r=>setTimeout(r,20));};
 function testCard(){
   const html=fs.readFileSync('index.html','utf8');
   const cardCode=html.split('// BEGIN PARCEL CARD')[1].split('// END PARCEL CARD')[0].split('\n').slice(1).join('\n');
@@ -66,13 +66,13 @@ function setup(fail=false){
   for(const id of ['parcelsToggle','parcelsStatus','parcelsRetry'])els[id]={checked:true,addEventListener:(n,f)=>events[id+n]=f};
   const parcels={setVisible(v){this.visible=v;},setOpacity(v){this.opacity=v;}};
   let count=0;
-  vm.runInNewContext(code,{document:{getElementById:id=>els[id]},parcels,
+  vm.runInNewContext(code,{crypto:crypto.webcrypto,TextDecoder,document:{getElementById:id=>els[id]},parcels,
     parcelSource:{addFeatures:f=>count+=f.length},view:{getZoom:()=>zoom,on:(n,f)=>events[n]=f},
     fetch:()=>{requests++;return new Promise(r=>resolve=r);},
     ol:{format:{GeoJSON:class{readFeatures(d,o){assert.equal(o.featureProjection,'EPSG:3857');return d.features;}}}}});
   return {els,parcels,events,requests:()=>requests,count:()=>count,
     zoom(z){zoom=z;events['change:resolution']();},
-    respond(ok=!fail){resolve({ok,json:async()=>data});}};
+    respond(ok=!fail){resolve({ok,arrayBuffer:async()=>raw});}};
 }
 (async()=>{
   testCard();

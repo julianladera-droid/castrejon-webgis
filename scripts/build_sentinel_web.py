@@ -9,6 +9,7 @@ from datetime import datetime, timezone
 
 import numpy as np
 from osgeo import gdal
+from parcel_ndvi import build_parcel_ndvi
 
 PALETTES = {
     'NDVI': {'label': 'NDVI · vigor vegetal', 'range': [-1, 1],
@@ -68,7 +69,7 @@ def validate_product(folder):
     return manifest, rasters
 
 
-def build(folder, output):
+def build(folder, output, master_path=None, web_folder=None):
     gdal.UseExceptions()
     manifest, rasters = validate_product(folder)
     item = manifest['source_item']
@@ -95,6 +96,14 @@ def build(folder, output):
             'extent': [x, y+dy*warped.RasterYSize, x+dx*warped.RasterXSize, y],
             'image': f"sentinel/{item['id']}/{name}.png",
             'download': f"sentinel/{item['id']}/{name}.tif"}
+    if master_path is not None:
+        stats = build_parcel_ndvi(rasters['NDVI'], manifest, master_path, web_folder)
+        payload = (json.dumps(stats, separators=(',', ':'), allow_nan=False)+'\n').encode('utf-8')
+        (destination/'parcel-ndvi.json').write_bytes(payload)
+        acquisition['parcel_ndvi'] = {
+            'path': f"sentinel/{item['id']}/parcel-ndvi.json",
+            'sha256': hashlib.sha256(payload).hexdigest(),
+            'parcel_web_sha256': stats['parcel_web_sha256']}
     # Public provenance is deliberately minimal: no full provider catalogue or credentials.
     catalog = {'version': 1, 'acquisitions': [acquisition]}
     (output/'catalog.json').write_text(json.dumps(catalog, indent=2)+'\n', encoding='utf-8')
@@ -107,4 +116,5 @@ if __name__ == '__main__':
     parser.add_argument('input', type=Path)
     parser.add_argument('output', type=Path)
     args = parser.parse_args()
-    build(args.input, args.output)
+    root = Path(__file__).resolve().parents[1]
+    build(args.input, args.output, root/'data/parcel-master.json', root/'data/parcels')

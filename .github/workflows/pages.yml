@@ -43,6 +43,7 @@ jobs:
           python3 scripts/check_webgis.py
           node scripts/test-sentinel-ui.cjs
           node scripts/test-parcels.cjs
+          node scripts/test-parcel-ndvi.cjs
 
   deploy:
     needs: gate
@@ -98,6 +99,7 @@ jobs:
           mkdir -p _site/data
           cp -r data/parcels _site/data/
           /usr/bin/python3 scripts/test_sentinel_web.py
+          /usr/bin/python3 scripts/test_parcel_ndvi.py
           /usr/bin/python3 scripts/build_sentinel_web.py sentinel-product _site/sentinel
       - name: Upload static site
         uses: actions/upload-pages-artifact@v3

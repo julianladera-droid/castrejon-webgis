@@ -30,6 +30,26 @@ adicionales. Sólo consulta en pulsación simple; no durante arrastre, doble cli
 de zoom o movimiento del cursor. En móvil pliega el panel de capas y reserva una
 franja inferior desplazable para no cubrir atribuciones ni controles.
 
+La ficha incluye NDVI medio y fecha de la adquisición seleccionada, incluso con
+«Sin índice». Pages calcula una tabla por adquisición a partir del NDVI original
+validado a 10 m y las geometrías maestras EPSG:25830 de `data/parcel-master.json`.
+Ese archivo técnico no se copia al sitio: sólo se publica la tabla de resultados.
+Regenerar el maestro con `scripts/prepare_parcel_master.py ruta/al/zip` usando
+Python de QGIS; se comprueban los hashes de la entrega y de la capa pública.
+
+La media usa los centros de píxel dentro del recorte parcelario, sin ponderar
+bordes. Excluye nodata, valores no finitos y NDVI fuera de [-1,1], sin saturarlos.
+Exige al menos 80% de centros válidos; las parcelas sin centros a esta resolución
+o con cobertura insuficiente muestran «Sin datos suficientes». El porcentaje
+describe píxeles muestreados, no superficie regada. Se indica la fecha real y se
+marca una imagen de más de 30 días como antigua. No es diagnóstico agronómico.
+
+La tabla se descarga sólo al consultar una parcela y se reutiliza durante la
+sesión. Se verifican hash, adquisición, fecha y correspondencia con el parcelario
+cargado. No se descargan TIFF ni se calculan estadísticas en el dispositivo.
+Pruebas: `node scripts/test-parcel-ndvi.cjs` y, con GDAL/NumPy,
+`python scripts/test_parcel_ndvi.py` (obligatoria antes de publicar).
+
 Parcelario incorporado: 919 parcelas de la entrega del 14/10/2026, recortadas a
 ZR y con la exclusión de códigos 09000–09999 aplicada en origen. La capa aparece
 gradualmente entre zoom 14 y 16, con líneas amarillas finas sin relleno. Se carga
@@ -40,7 +60,7 @@ acredita riego. Se mantienen las coordenadas sin suavizar para respetar límites
 compartidos y fragmentos pequeños. El original EPSG:25830 se conserva localmente
 en `sentinel-output/parcel-master/`; regenerar con QGIS/GDAL Python y
 `scripts/prepare_parcels.py ruta/al/zip`. Esa geometría original y REFCAT serán
-la base de estadísticas zonales; este cambio no calcula estadísticas por parcela.
+la base del NDVI medio parcelario calculado antes de publicar.
 La copia web EPSG:4326 se representa en EPSG:3857 y no es el maestro de cálculo.
 Validación: `node scripts/test-parcels.cjs` y comprobación visual con Sentinel.
 
@@ -82,7 +102,8 @@ Las zonas sin calidad suficiente son transparentes.
 Las escalas de color son fijas: NDVI y NDMI de -1 a 1, EVI2 de 0 a 1. EVI2 fuera
 de ese rango satura el color, pero conserva sus valores en el GeoTIFF técnico.
 NDMI representa una estimación relacionada con humedad de la vegetación, no
-una medida directa de humedad del suelo. No son estadísticas por parcela.
+una medida directa de humedad del suelo. La ficha ofrece únicamente la media
+parcelaria de NDVI; los porcentajes del panel Sentinel describen el rectángulo.
 
 Pages genera PNG RGBA EPSG:3857 a partir de los GeoTIFF EPSG:25830 validados.
 El navegador sólo solicita la imagen del índice elegido y el catálogo al mismo

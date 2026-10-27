@@ -1,5 +1,5 @@
 # SKILL · Castrejón WebGIS — Contrato de arquitectura y evolución
-Version: 0.1.20
+Version: 0.1.21
 Fecha base: 2026-09-30
 Estado: ACTIVO · se actualiza tras cada ciclo de pruebas
 
@@ -442,6 +442,13 @@ Formato de cada cambio:
 No borrar una regla por comodidad. Si una regla cambia, conservar el motivo en el historial.
 
 ## 12. Registro de cambios
+### 0.1.21 — 2026-10-27
+- Petición: NDVI medio y fecha en la ficha, sin buscador ni comparador.
+- Cálculo previo a Pages sobre GeoTIFF NDVI 10 m EPSG:25830 validado y geometría original de la entrega parcelaria, nunca sobre la copia web reproyectada. Exportación técnica reproducible en data/parcel-master.json, fuera del paquete público Pages, ligada por hashes a la entrega y a la copia web.
+- Media aritmética de píxeles cuyo centro cae dentro de la parcela recortada; excluir nodata, no finitos y valores fuera de [-1,1], sin saturarlos. Conservar recuentos y porcentaje sobre centros muestreados. Umbral inicial explícito: 80% válido; ninguna media para cero centros o cobertura insuficiente. Es una estimación a 10 m, no diagnóstico ni media ponderada por intersección de bordes.
+- Publicar una tabla pequeña ligada al identificador, fecha, hash del NDVI y hash parcelario del catálogo. La ficha sigue la adquisición seleccionada incluso sin superposición; carga diferida compartida y caché por adquisición. No descargar TIFF ni ejecutar GIS en el navegador. Datos ausentes nunca equivalen a cero; fallos de carga no bloquean el mapa.
+- Regresiones: media conocida, huecos, multipolígonos, parcelas pequeñas, nodata/extremos, umbral, fecha/identidad, respuestas tardías y cambio/cierre de ficha. Pruebas GDAL obligatorias en el job de publicación, antes de empaquetar.
+
 ### 0.1.20 — 2026-10-27
 - Petición: ficha básica al pulsar una parcela, cómoda en móvil y sin ralentizar el mapa; comparador aplazado.
 - Causa: la capa sólo dibujaba límites, sin consulta de sus atributos públicos.

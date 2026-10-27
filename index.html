@@ -217,7 +217,10 @@
       <dl>
         <div><dt>Referencia catastral</dt><dd id="parcelReference"></dd></div>
         <div><dt>Superficie dentro de la zona regable</dt><dd id="parcelArea"></dd></div>
+        <div><dt>NDVI medio · estimado</dt><dd id="parcelNdvi">No disponible</dd></div>
+        <div><dt>Fecha de la imagen</dt><dd id="parcelImageDate">—</dd></div>
       </dl>
+      <p id="parcelNdviQuality"></p>
     </div>
     <p>Catastro · recorte aportado el 14/10/2026. No acredita superficie regada.</p>
   </section>
@@ -515,6 +518,7 @@
   const parcelStatus = document.getElementById('parcelsStatus');
   const parcelRetry = document.getElementById('parcelsRetry');
   let parcelState = 'idle';
+  let parcelWebHash = null;
   const updateParcels = () => {
     const detail = Math.max(0, Math.min(1, (view.getZoom()-14)/2));
     const enabled = parcelToggle.checked;
@@ -526,9 +530,12 @@
       : parcelState === 'ready' ? 'Pulsa una parcela para ver su ficha · 919 parcelas' : 'Cargando parcelas…';
     if (!enabled || detail === 0 || parcelState !== 'idle') return;
     parcelState = 'loading';
-    fetch('data/parcels/parcelas.geojson').then(response => {
+    fetch('data/parcels/parcelas.geojson').then(async response => {
       if (!response.ok) throw new Error('Parcelas no disponibles');
-      return response.json();
+      const bytes = await response.arrayBuffer();
+      parcelWebHash = Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256', bytes)),
+        b => b.toString(16).padStart(2,'0')).join('');
+      return JSON.parse(new TextDecoder().decode(bytes));
     }).then(data => {
       if (data.type !== 'FeatureCollection' || data.features?.length !== 919 ||
           new Set(data.features.map(f=>f.id)).size !== data.features.length ||
@@ -560,6 +567,7 @@
   const areaFormat = new Intl.NumberFormat('es-ES', {maximumFractionDigits:2});
   const hectareFormat = new Intl.NumberFormat('es-ES', {maximumFractionDigits:4});
   let selectedParcel = null;
+  let refreshParcelNdvi = () => {};
   const closeParcelCard = () => {
     if (selectedParcel) selectedParcel.setStyle(undefined);
     selectedParcel = null;
@@ -573,7 +581,7 @@
     // VectorSource uses its spatial index; interiors and holes work without a rendered fill.
     const feature = parcelSource.getFeaturesAtCoordinate(coordinate)[0];
     if (!feature) { closeParcelCard(); return; }
-    if (selectedParcel === feature) return;
+    if (selectedParcel === feature) { refreshParcelNdvi(); return; }
     if (selectedParcel) selectedParcel.setStyle(undefined);
     selectedParcel = feature;
     feature.setStyle(parcelHighlight);
@@ -582,6 +590,7 @@
     document.getElementById('parcelArea').textContent = `${areaFormat.format(area)} m² · ${hectareFormat.format(area / 10000)} ha`;
     const opening = parcelCard.hidden;
     parcelCard.hidden = false;
+    refreshParcelNdvi();
     if (compact.matches) setPanelOpen(false);
     if (opening) map.updateSize();
   };
@@ -612,6 +621,7 @@
     return path;
   };
   const updateSatellite = () => {
+    refreshParcelNdvi();
     const version = ++selectionVersion;
     sentinel.setVisible(false);
     satelliteDetails.hidden = true;
@@ -695,6 +705,75 @@
       dateSelect.replaceChildren();
     });
   // END SENTINEL UI
+
+  // BEGIN PARCEL NDVI — one small, verified table per acquisition, fetched only on selection.
+  const ndviCache = new Map();
+  let ndviRequest = 0;
+  refreshParcelNdvi = async () => {
+    const version = ++ndviRequest;
+    if (!selectedParcel) return;
+    const ref = selectedParcel.get('refcat');
+    const value = document.getElementById('parcelNdvi');
+    const date = document.getElementById('parcelImageDate');
+    const quality = document.getElementById('parcelNdviQuality');
+    const acquisition = acquisitions.find(item => item.id === dateSelect.value);
+    value.textContent = 'No disponible';
+    date.textContent = acquisition ? formatDate(acquisition.datetime) : '—';
+    quality.textContent = '';
+    if (!acquisition?.parcel_ndvi) return;
+    value.textContent = 'Cargando…';
+    try {
+      const spec = acquisition.parcel_ndvi;
+      if (spec.parcel_web_sha256 !== parcelWebHash) throw new Error('Parcelario distinto');
+      const path = productPath(spec.path, acquisition.id, 'parcel-ndvi', 'json');
+      const key = `${path}:${spec.sha256}`;
+      if (!ndviCache.has(key)) {
+        const pending = (async () => {
+          const response = await fetch(path);
+          if (!response.ok) throw new Error('NDVI parcelario no disponible');
+          const bytes = await response.arrayBuffer();
+          const hash = Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256', bytes)),
+            b => b.toString(16).padStart(2,'0')).join('');
+          if (hash !== spec.sha256) throw new Error('Tabla parcelaria incoherente');
+          const data = JSON.parse(new TextDecoder().decode(bytes));
+          if (data.version !== 1 || data.acquisition_id !== acquisition.id ||
+              data.datetime !== acquisition.datetime || data.ndvi_sha256 !== acquisition.indices.NDVI.sha256 ||
+              data.parcel_web_sha256 !== spec.parcel_web_sha256 || data.resolution_m !== 10 ||
+              data.method !== 'pixel_center_mean' || data.min_valid_percent !== 80 ||
+              !data.parcels || Object.keys(data.parcels).length !== 919) throw new Error('Tabla inválida');
+          return data;
+        })();
+        ndviCache.set(key, pending);
+        pending.catch(() => { if (ndviCache.get(key) === pending) ndviCache.delete(key); });
+      }
+      const data = await ndviCache.get(key);
+      if (version !== ndviRequest || !selectedParcel || selectedParcel.get('refcat') !== ref) return;
+      const row = data.parcels[ref];
+      if (!row || !Number.isInteger(row.total_pixels) || !Number.isInteger(row.valid_pixels) ||
+          row.total_pixels < 0 || row.valid_pixels < 0 || row.valid_pixels > row.total_pixels ||
+          !Number.isFinite(row.valid_percent) || row.valid_percent < 0 || row.valid_percent > 100 ||
+          Math.abs(row.valid_percent - (row.total_pixels ? row.valid_pixels/row.total_pixels*100 : 0)) > .011 ||
+          !['ok','no_pixels','insufficient'].includes(row.status)) throw new Error('Parcela inválida');
+      if (row.status === 'ok') {
+        if (!row.total_pixels || row.valid_pixels/row.total_pixels < .8 ||
+            !Number.isFinite(row.mean) || row.mean < -1 || row.mean > 1) throw new Error('Media inválida');
+        value.textContent = row.mean.toLocaleString('es-ES', {minimumFractionDigits:2, maximumFractionDigits:2});
+        quality.textContent = `Sentinel-2 · 10 m · ${row.valid_percent.toLocaleString('es-ES')}% de píxeles válidos`;
+      } else {
+        if (row.mean !== null) throw new Error('Media sin calidad');
+        value.textContent = 'Sin datos suficientes';
+        quality.textContent = row.status === 'no_pixels' ? 'Parcela sin centros de píxel a 10 m.'
+          : `Sólo ${row.valid_percent.toLocaleString('es-ES')}% de píxeles válidos; mínimo 80%.`;
+      }
+      if (Date.now()-Date.parse(acquisition.datetime) > 30*86400000) quality.textContent += ' · Imagen antigua';
+    } catch {
+      if (version === ndviRequest && selectedParcel?.get('refcat') === ref) {
+        value.textContent = 'No disponible';
+        quality.textContent = 'No se pudo cargar el NDVI. Vuelve a seleccionar la parcela para reintentar.';
+      }
+    }
+  };
+  // END PARCEL NDVI
 
   // ---- Service status -------------------------------------------------------
   const states = {pnoa:'loading', sigpac:'loading', catastro:'idle'};
