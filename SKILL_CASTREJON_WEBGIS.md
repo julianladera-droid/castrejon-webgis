@@ -1,5 +1,5 @@
 # SKILL · Castrejón WebGIS — Contrato de arquitectura y evolución
-Version: 0.1.22
+Version: 0.1.23
 Fecha base: 2026-09-30
 Estado: ACTIVO · se actualiza tras cada ciclo de pruebas
 
@@ -442,6 +442,13 @@ Formato de cada cambio:
 No borrar una regla por comodidad. Si una regla cambia, conservar el motivo en el historial.
 
 ## 12. Registro de cambios
+### 0.1.23 — 2026-10-27
+- Ayuda breve en la ficha mediante details/summary nativos, cerrada inicialmente, fuera de la región de anuncios de las medias.
+- Explica NDVI (cobertura/vigor vegetal), EVI2 (vegetación, útil con cubierta densa) y NDMI (agua en la vegetación), sin umbrales universales ni prescripciones de riego.
+- HTML estático: sin dependencias, consultas, cálculo o escuchadores adicionales. Conserva altura máxima y desplazamiento de la ficha móvil.
+- Validación: gate existente y revisión visual de abrir/cerrar la ayuda en móvil; publicación y comprobación remota.
+- Referencias: https://www.usgs.gov/special-topics/remote-sensing-phenology/science/ndvi-foundation-remote-sensing-phenology ; https://algorithm-catalogue.apex.esa.int/apps/enhanced_vegetation_index ; https://www.usgs.gov/landsat-missions/normalized-difference-moisture-index
+
 ### 0.1.22 — 2026-10-27
 - Añadir medias EVI2 y NDMI junto a NDVI, con una fecha común de adquisición. Tres columnas compactas y cobertura válida por índice; conservar carga diferida única y caché.
 - Cálculo en rejilla nativa EPSG:25830: NDVI/EVI2 a 10 m, NDMI a 20 m, sin remuestrear NDMI a 10 m. Umbral 80% por índice; nodata/no finitos excluidos. NDVI/NDMI admiten [-1,1]; EVI2 conserva valores finitos fuera de la escala visual 0–1, sin recorte ni saturación estadística.

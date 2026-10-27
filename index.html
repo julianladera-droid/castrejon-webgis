@@ -41,6 +41,10 @@
     .parcel-card .parcel-indices{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:8px;max-width:460px}
     .parcel-indices small{display:block;font-size:10px;font-weight:400;color:var(--muted);margin-top:2px}
     .parcel-card p{font-size:11px;line-height:1.4;margin:6px 0 0;color:var(--muted)}
+    .parcel-help{max-width:460px;margin-top:4px;font-size:12px}
+    .parcel-help summary{min-height:44px;align-content:center;cursor:pointer;color:var(--contrast);font-weight:700}
+    .parcel-help summary:focus-visible{outline:2px solid var(--water);outline-offset:2px;border-radius:4px}
+    .parcel-help p{font-size:12px}
     .map-stage{min-height:0;position:relative;isolation:isolate}
     #map{position:absolute;inset:0;background:#dce7ea}
     .panel{position:absolute;top:68px;right:max(12px,env(safe-area-inset-right,0px));width:min(340px,calc(100% - 24px));max-height:calc(100% - 80px);display:flex;flex-direction:column;background:rgba(255,255,255,.97);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);z-index:10}
@@ -228,6 +232,13 @@
       </dl>
       <p id="parcelNdviQuality"></p>
     </div>
+    <details class="parcel-help">
+      <summary>Qué indican estos valores</summary>
+      <p><strong>NDVI:</strong> indica la cobertura y el vigor de la vegetación. Valores más altos suelen señalar más vegetación verde.</p>
+      <p><strong>EVI2:</strong> complementa al NDVI y distingue mejor los cambios con vegetación densa. Valores más altos suelen indicar mayor desarrollo vegetal.</p>
+      <p><strong>NDMI:</strong> refleja el contenido de agua de la vegetación. Valores más altos suelen indicar más agua en las hojas, no en el suelo.</p>
+      <p>Interpreta cada índice según el cultivo y la época. Las cifras de índices distintos no son equivalentes.</p>
+    </details>
     <p>Catastro · recorte aportado el 14/10/2026. No acredita superficie regada.</p>
   </section>
   <footer class="map-footer" aria-label="Coordenadas, escala y atribuciones">
