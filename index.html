@@ -37,6 +37,9 @@
     .parcel-card dl{display:flex;flex-wrap:wrap;gap:6px 24px;margin:0;font-size:13px}
     .parcel-card dt{font-size:11px;color:var(--muted)}
     .parcel-card dd{margin:0;font-weight:700;overflow-wrap:anywhere}
+    .parcel-card .parcel-meta{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;max-width:460px}
+    .parcel-card .parcel-indices{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:8px;max-width:460px}
+    .parcel-indices small{display:block;font-size:10px;font-weight:400;color:var(--muted);margin-top:2px}
     .parcel-card p{font-size:11px;line-height:1.4;margin:6px 0 0;color:var(--muted)}
     .map-stage{min-height:0;position:relative;isolation:isolate}
     #map{position:absolute;inset:0;background:#dce7ea}
@@ -210,15 +213,18 @@
   </div>
   <section class="parcel-card" id="parcelCard" aria-labelledby="parcelCardTitle" hidden>
     <div class="parcel-card-head">
-      <h2 id="parcelCardTitle">Parcela seleccionada</h2>
+      <div><h2 id="parcelCardTitle">Parcela seleccionada</h2><p aria-live="polite">Imagen: <strong id="parcelImageDate">—</strong></p></div>
       <button id="parcelClose" type="button" aria-label="Cerrar ficha de parcela">Cerrar</button>
     </div>
     <div aria-live="polite" aria-atomic="true">
-      <dl>
+      <dl class="parcel-meta">
         <div><dt>Referencia catastral</dt><dd id="parcelReference"></dd></div>
         <div><dt>Superficie dentro de la zona regable</dt><dd id="parcelArea"></dd></div>
-        <div><dt>NDVI medio · estimado</dt><dd id="parcelNdvi">No disponible</dd></div>
-        <div><dt>Fecha de la imagen</dt><dd id="parcelImageDate">—</dd></div>
+      </dl>
+      <dl class="parcel-indices" aria-label="Índices medios estimados">
+        <div><dt>NDVI · 10 m</dt><dd><span id="parcelNdvi">No disponible</span><small id="parcelNdviCoverage"></small></dd></div>
+        <div><dt>EVI2 · 10 m</dt><dd><span id="parcelEvi2">No disponible</span><small id="parcelEvi2Coverage"></small></dd></div>
+        <div><dt>NDMI · 20 m</dt><dd><span id="parcelNdmi">No disponible</span><small id="parcelNdmiCoverage"></small></dd></div>
       </dl>
       <p id="parcelNdviQuality"></p>
     </div>
@@ -706,70 +712,80 @@
     });
   // END SENTINEL UI
 
-  // BEGIN PARCEL NDVI — one small, verified table per acquisition, fetched only on selection.
-  const ndviCache = new Map();
-  let ndviRequest = 0;
+  // BEGIN PARCEL NDVI — one compact table for all indices, loaded only on selection.
+  const indexCache = new Map();
+  const parcelIndexFields = {NDVI:'parcelNdvi', EVI2:'parcelEvi2', NDMI:'parcelNdmi'};
+  let parcelIndexRequest = 0;
   refreshParcelNdvi = async () => {
-    const version = ++ndviRequest;
+    const version = ++parcelIndexRequest;
     if (!selectedParcel) return;
     const ref = selectedParcel.get('refcat');
-    const value = document.getElementById('parcelNdvi');
     const date = document.getElementById('parcelImageDate');
     const quality = document.getElementById('parcelNdviQuality');
     const acquisition = acquisitions.find(item => item.id === dateSelect.value);
-    value.textContent = 'No disponible';
+    const setAll = text => {
+      for (const id of Object.values(parcelIndexFields)) {
+        document.getElementById(id).textContent = text;
+        document.getElementById(id+'Coverage').textContent = '';
+      }
+    };
+    setAll('No disponible');
     date.textContent = acquisition ? formatDate(acquisition.datetime) : '—';
     quality.textContent = '';
-    if (!acquisition?.parcel_ndvi) return;
-    value.textContent = 'Cargando…';
+    if (!acquisition?.parcel_indices) return;
+    setAll('Cargando…');
     try {
-      const spec = acquisition.parcel_ndvi;
+      const spec = acquisition.parcel_indices;
       if (spec.parcel_web_sha256 !== parcelWebHash) throw new Error('Parcelario distinto');
-      const path = productPath(spec.path, acquisition.id, 'parcel-ndvi', 'json');
+      const path = productPath(spec.path, acquisition.id, 'parcel-indices', 'json');
       const key = `${path}:${spec.sha256}`;
-      if (!ndviCache.has(key)) {
+      if (!indexCache.has(key)) {
         const pending = (async () => {
           const response = await fetch(path);
-          if (!response.ok) throw new Error('NDVI parcelario no disponible');
+          if (!response.ok) throw new Error('Índices parcelarios no disponibles');
           const bytes = await response.arrayBuffer();
           const hash = Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256', bytes)),
             b => b.toString(16).padStart(2,'0')).join('');
           if (hash !== spec.sha256) throw new Error('Tabla parcelaria incoherente');
           const data = JSON.parse(new TextDecoder().decode(bytes));
-          if (data.version !== 1 || data.acquisition_id !== acquisition.id ||
-              data.datetime !== acquisition.datetime || data.ndvi_sha256 !== acquisition.indices.NDVI.sha256 ||
-              data.parcel_web_sha256 !== spec.parcel_web_sha256 || data.resolution_m !== 10 ||
+          if (data.version !== 2 || data.acquisition_id !== acquisition.id ||
+              data.datetime !== acquisition.datetime || data.parcel_web_sha256 !== spec.parcel_web_sha256 ||
               data.method !== 'pixel_center_mean' || data.min_valid_percent !== 80 ||
+              JSON.stringify(data.columns) !== '["mean","valid_pixels","total_pixels"]' ||
               !data.parcels || Object.keys(data.parcels).length !== 919) throw new Error('Tabla inválida');
+          for (const name of Object.keys(parcelIndexFields)) {
+            if (data.indices?.[name]?.sha256 !== acquisition.indices[name]?.sha256 ||
+                data.indices?.[name]?.resolution_m !== (name === 'NDMI' ? 20 : 10)) throw new Error('Índice incoherente');
+          }
           return data;
         })();
-        ndviCache.set(key, pending);
-        pending.catch(() => { if (ndviCache.get(key) === pending) ndviCache.delete(key); });
+        indexCache.set(key, pending);
+        pending.catch(() => { if (indexCache.get(key) === pending) indexCache.delete(key); });
       }
-      const data = await ndviCache.get(key);
-      if (version !== ndviRequest || !selectedParcel || selectedParcel.get('refcat') !== ref) return;
-      const row = data.parcels[ref];
-      if (!row || !Number.isInteger(row.total_pixels) || !Number.isInteger(row.valid_pixels) ||
-          row.total_pixels < 0 || row.valid_pixels < 0 || row.valid_pixels > row.total_pixels ||
-          !Number.isFinite(row.valid_percent) || row.valid_percent < 0 || row.valid_percent > 100 ||
-          Math.abs(row.valid_percent - (row.total_pixels ? row.valid_pixels/row.total_pixels*100 : 0)) > .011 ||
-          !['ok','no_pixels','insufficient'].includes(row.status)) throw new Error('Parcela inválida');
-      if (row.status === 'ok') {
-        if (!row.total_pixels || row.valid_pixels/row.total_pixels < .8 ||
-            !Number.isFinite(row.mean) || row.mean < -1 || row.mean > 1) throw new Error('Media inválida');
-        value.textContent = row.mean.toLocaleString('es-ES', {minimumFractionDigits:2, maximumFractionDigits:2});
-        quality.textContent = `Sentinel-2 · 10 m · ${row.valid_percent.toLocaleString('es-ES')}% de píxeles válidos`;
-      } else {
-        if (row.mean !== null) throw new Error('Media sin calidad');
-        value.textContent = 'Sin datos suficientes';
-        quality.textContent = row.status === 'no_pixels' ? 'Parcela sin centros de píxel a 10 m.'
-          : `Sólo ${row.valid_percent.toLocaleString('es-ES')}% de píxeles válidos; mínimo 80%.`;
+      const data = await indexCache.get(key);
+      if (version !== parcelIndexRequest || !selectedParcel || selectedParcel.get('refcat') !== ref) return;
+      const rows = data.parcels[ref];
+      for (const [name, id] of Object.entries(parcelIndexFields)) {
+        const row = rows?.[name];
+        if (!Array.isArray(row) || row.length !== 3) throw new Error('Parcela inválida');
+        const [mean, valid, total] = row;
+        if (!Number.isInteger(total) || !Number.isInteger(valid) || total < 0 || valid < 0 || valid > total)
+          throw new Error('Cobertura inválida');
+        const usable = total > 0 && valid/total >= .8;
+        if (usable ? (!Number.isFinite(mean) || (name !== 'EVI2' && (mean < -1 || mean > 1))) : mean !== null)
+          throw new Error('Media inválida');
+        document.getElementById(id).textContent = usable
+          ? mean.toLocaleString('es-ES', {minimumFractionDigits:2, maximumFractionDigits:2}) : 'Sin datos suficientes';
+        document.getElementById(id+'Coverage').textContent = total
+          ? `${(valid/total*100).toLocaleString('es-ES',{maximumFractionDigits:1})}% píxeles válidos${usable ? '' : ' · mín. 80%'}`
+          : 'Sin centros de píxel';
       }
+      quality.textContent = 'Medias estimadas · Sentinel-2. NDMI: humedad de la vegetación, no del suelo.';
       if (Date.now()-Date.parse(acquisition.datetime) > 30*86400000) quality.textContent += ' · Imagen antigua';
     } catch {
-      if (version === ndviRequest && selectedParcel?.get('refcat') === ref) {
-        value.textContent = 'No disponible';
-        quality.textContent = 'No se pudo cargar el NDVI. Vuelve a seleccionar la parcela para reintentar.';
+      if (version === parcelIndexRequest && selectedParcel?.get('refcat') === ref) {
+        setAll('No disponible');
+        quality.textContent = 'No se pudieron cargar los índices. Vuelve a seleccionar la parcela para reintentar.';
       }
     }
   };

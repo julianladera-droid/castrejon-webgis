@@ -9,7 +9,7 @@ from datetime import datetime, timezone
 
 import numpy as np
 from osgeo import gdal
-from parcel_ndvi import build_parcel_ndvi
+from parcel_ndvi import build_parcel_indices
 
 PALETTES = {
     'NDVI': {'label': 'NDVI · vigor vegetal', 'range': [-1, 1],
@@ -97,11 +97,11 @@ def build(folder, output, master_path=None, web_folder=None):
             'image': f"sentinel/{item['id']}/{name}.png",
             'download': f"sentinel/{item['id']}/{name}.tif"}
     if master_path is not None:
-        stats = build_parcel_ndvi(rasters['NDVI'], manifest, master_path, web_folder)
+        stats = build_parcel_indices(rasters, manifest, master_path, web_folder)
         payload = (json.dumps(stats, separators=(',', ':'), allow_nan=False)+'\n').encode('utf-8')
-        (destination/'parcel-ndvi.json').write_bytes(payload)
-        acquisition['parcel_ndvi'] = {
-            'path': f"sentinel/{item['id']}/parcel-ndvi.json",
+        (destination/'parcel-indices.json').write_bytes(payload)
+        acquisition['parcel_indices'] = {
+            'path': f"sentinel/{item['id']}/parcel-indices.json",
             'sha256': hashlib.sha256(payload).hexdigest(),
             'parcel_web_sha256': stats['parcel_web_sha256']}
     # Public provenance is deliberately minimal: no full provider catalogue or credentials.

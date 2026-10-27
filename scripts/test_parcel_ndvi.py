@@ -54,5 +54,22 @@ class ParcelNdviTests(unittest.TestCase):
         ds.SetGeoTransform((0,20,0,30,0,-20))
         with self.assertRaises(ValueError): summarize(ds,polygon())
 
+    def test_evi2_not_clipped_to_display_range(self):
+        ds=self.raster([[1.5,-.5,2],[1.5,-.5,2],[1.5,-.5,2]])
+        row=summarize(ds,polygon(),'EVI2')
+        self.assertEqual(row['valid_pixels'],9); self.assertEqual(row['mean'],1)
+        ds=self.raster([[1.5,1.5,1.5]])
+        self.assertEqual(summarize(ds,polygon(0,20,30,30),'EVI2')['mean'],1.5)
+
+    def test_ndmi_native_grid_and_independent_coverage(self):
+        ds=self.raster([[.2,.4],[.6,.8]])
+        ds.SetGeoTransform((0,20,0,40,0,-20))
+        row=summarize(ds,polygon(0,0,40,40),'NDMI')
+        self.assertEqual(row['total_pixels'],4);self.assertEqual(row['mean'],.5)
+        ds.GetRasterBand(1).WriteArray(np.array([[.2,.4],[.6,-9999]]))
+        self.assertEqual(summarize(ds,polygon(0,0,40,40),'NDMI')['status'],'insufficient')
+        self.assertEqual(summarize(ds,polygon(0,0,8,8),'NDMI')['status'],'no_pixels')
+        with self.assertRaises(ValueError): summarize(self.raster([[.5]]),polygon(),'NDMI')
+
 
 if __name__ == '__main__': unittest.main()
