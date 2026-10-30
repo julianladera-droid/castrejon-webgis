@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Castrejón · Averías
  * Description: Captura móvil de averías con foto y GPS; capa pública para el visor de Castrejón.
- * Version: 1.0.0
+ * Version: 1.1.0
  * Requires at least: 6.6
  * Requires PHP: 8.1
  * License: GPL-2.0-or-later
@@ -193,6 +193,14 @@ function ca_update($request) {
 }
 
 add_action('rest_api_init', function () {
+    register_rest_route(CA_NS, '/location-check', [
+      'methods' => 'POST', 'permission_callback' => 'ca_permission', 'callback' => function ($request) {
+        if (strlen($request->get_body()) > 4096) { return new WP_Error('ca_size', 'Ubicación demasiado grande.', ['status' => 413]); }
+        try { $quality = ca_location_quality($request->get_json_params()); }
+        catch (InvalidArgumentException $error) { return new WP_Error('ca_invalid', $error->getMessage(), ['status' => 422]); }
+        return new WP_REST_Response($quality,200,['Cache-Control' => 'no-store']);
+      }
+    ]);
     register_rest_route(CA_NS, '/incidents', [
       ['methods' => 'GET', 'callback' => 'ca_list', 'permission_callback' => '__return_true'],
       ['methods' => 'POST', 'callback' => 'ca_create', 'permission_callback' => 'ca_permission']

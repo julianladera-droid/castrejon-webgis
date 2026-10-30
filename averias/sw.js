@@ -1,8 +1,8 @@
 /* Served by WordPress under /averias-campo/sw.js. Never cache API/session data. */
 const ASSETS = __ASSETS__;
-const CACHE = 'castrejon-field-v1';
+const CACHE = 'castrejon-field-v1.1.0';
 const HOME = new URL('./', self.location).href;
-const FILES = ['app.css','app.js','shared.js','icon.svg','manifest.webmanifest','vendor/ol.js','vendor/ol.css'].map(path=>new URL(path,ASSETS).href);
+const FILES = ['app.css','app.js','shared.js','location-policy.js','location.js','icon.svg','manifest.webmanifest','vendor/ol.js','vendor/ol.css'].map(path=>new URL(path+(/\.(js|css)$/.test(path)?'?v=1.1.0':''),ASSETS).href);
 self.addEventListener('install',event=>event.waitUntil((async()=>{const cache=await caches.open(CACHE);await cache.addAll([HOME,...FILES]);})()));
 self.addEventListener('activate',event=>event.waitUntil((async()=>{for(const name of await caches.keys())if(name.startsWith('castrejon-field-')&&name!==CACHE)await caches.delete(name);await self.clients.claim();})()));
 self.addEventListener('fetch',event=>{

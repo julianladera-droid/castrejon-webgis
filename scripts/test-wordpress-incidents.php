@@ -49,4 +49,18 @@ check_ca($download->get_status() === 200 && str_starts_with($download->get_data(
 check_ca(request_ca('PATCH','incidents/'.$id,['status'=>'resuelta','version'=>4])->get_status() === 403, 'anonymous update denied');
 global $wpdb;
 check_ca((int)$wpdb->get_var("SELECT count(*) FROM {$wpdb->prefix}castrejon_incident_events") === 4, 'audit excludes duplicate and rejected writes');
+foreach ([['longitude'=>true],['latitude'=>'39.83'],['longitude'=>INF],['latitude'=>NAN],['latitude'=>91],['longitude'=>181],['location_source'=>'gps','accuracy_m'=>null],['location_source'=>'gps','accuracy_m'=>-1],['location_source'=>'gps','accuracy_m'=>100001]] as $bad) {
+    $rejected = false;
+    try { ca_validate(array_merge($data,$bad)); } catch (InvalidArgumentException $error) { $rejected = true; }
+    check_ca($rejected,'invalid location rejected by domain: '.wp_json_encode($bad));
+}
+$manual = ca_validate(array_merge($data,['accuracy_m'=>120]));
+check_ca($manual['accuracy_m'] === null,'manual strips stale GPS accuracy');
+wp_set_current_user($staff);
+foreach ([[-4.5,39.84],[-3.7038,40.4168],[39.834749,-4.371848],[0,0]] as [$longitude,$latitude]) {
+    $outside = array_merge($data,['id'=>wp_generate_uuid4(),'longitude'=>$longitude,'latitude'=>$latitude]);
+    check_ca(request_ca('POST','incidents',$outside)->get_status() === 201,'advisory QA must allow confirmed outside locations');
+    check_ca(request_ca('POST','incidents',$outside)->get_status() === 200,'outside retry retains original hash');
+}
+echo "PASS: invalid coordinates/accuracy rejected; manual accuracy cleared; exterior/far/swapped/zero locations accepted without schema changes\n";
 echo "PASS: WordPress roles, public read/photo, photo validation, idempotence, collision, coordinates, version conflicts, closure/reopen and audit\n";

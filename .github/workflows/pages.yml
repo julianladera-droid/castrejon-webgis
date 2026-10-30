@@ -46,6 +46,9 @@ jobs:
           node scripts/test-parcel-ndvi.cjs
           node scripts/test-water.cjs
           node scripts/test-comparison.cjs
+          python3 scripts/build-location-policy.py --check
+          node scripts/test-location.cjs
+          node scripts/test-incidents-form.cjs
           node scripts/test-incidents.cjs
           node scripts/test-incidents-map.cjs
 
@@ -67,6 +70,12 @@ jobs:
       - run: python3 scripts/package-incidents.py
       - run: node scripts/test-drafts.cjs
       - run: node scripts/verify-wordpress.mjs
+      - name: Plugin package
+        uses: actions/upload-artifact@v4
+        with:
+          name: castrejon-averias-1.1.0
+          path: artifacts/castrejon-averias-1.1.0.zip
+          retention-days: 14
 
   deploy:
     needs: [gate, wordpress]
