@@ -1,0 +1,13 @@
+[
+  {"name":"inside GPS","longitude":-4.371848,"latitude":39.834749,"location_source":"gps","accuracy_m":5,"status":"inside_reference","codes":[]},
+  {"name":"boundary","longitude":-4.316468,"latitude":39.829437,"location_source":"gps","accuracy_m":50,"status":"inside_reference","codes":[]},
+  {"name":"outside in reference bbox","longitude":-4.45,"latitude":39.82,"location_source":"gps","accuracy_m":5,"status":"outside_reference","codes":["outside_reference"]},
+  {"name":"nearby canal candidate","longitude":-4.5,"latitude":39.84,"location_source":"manual","accuracy_m":null,"status":"outside_reference","codes":["outside_reference","manual_location"]},
+  {"name":"Madrid old limits","longitude":-3.7038,"latitude":40.4168,"location_source":"gps","accuracy_m":6,"status":"far_from_reference","codes":["far_from_reference"]},
+  {"name":"swapped axes","longitude":39.834749,"latitude":-4.371848,"location_source":"manual","accuracy_m":null,"status":"far_from_reference","codes":["far_from_reference","possible_axis_swap","manual_location"]},
+  {"name":"longitude sign","longitude":4.371848,"latitude":39.834749,"location_source":"manual","accuracy_m":null,"status":"far_from_reference","codes":["far_from_reference","possible_longitude_sign","manual_location"]},
+  {"name":"low accuracy","longitude":-4.371848,"latitude":39.834749,"location_source":"gps","accuracy_m":50.01,"status":"inside_reference","codes":["gps_low_accuracy"]},
+  {"name":"zero accuracy","longitude":-4.371848,"latitude":39.834749,"location_source":"gps","accuracy_m":0,"status":"inside_reference","codes":["gps_accuracy_unknown"]},
+  {"name":"far and poor GPS","longitude":0,"latitude":0,"location_source":"gps","accuracy_m":100000,"status":"far_from_reference","codes":["far_from_reference","gps_low_accuracy"]},
+  {"name":"WGS bounds","longitude":180,"latitude":90,"location_source":"manual","accuracy_m":null,"status":"far_from_reference","codes":["far_from_reference","manual_location"]}
+]

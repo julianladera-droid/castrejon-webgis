@@ -11,11 +11,13 @@
   <title>Averías · Castrejón</title>
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" href="icon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="app.css">
-  <link rel="stylesheet" href="vendor/ol.css">
-  <script defer src="vendor/ol.js"></script>
-  <script defer src="shared.js"></script>
-  <script defer src="app.js"></script>
+  <link rel="stylesheet" href="app.css?v=1.1.0">
+  <link rel="stylesheet" href="vendor/ol.css?v=1.1.0">
+  <script defer src="vendor/ol.js?v=1.1.0"></script>
+  <script defer src="shared.js?v=1.1.0"></script>
+  <script defer src="location-policy.js?v=1.1.0"></script>
+  <script defer src="location.js?v=1.1.0"></script>
+  <script defer src="app.js?v=1.1.0"></script>
 </head>
 <body>
   <header><a class="brand" href="https://julianladera-droid.github.io/castrejon-webgis/" aria-label="Volver al visor público"><span class="mark">CR</span><span><small>CANAL DE CASTREJÓN · MARGEN DERECHA</small><strong>Averías en campo</strong></span></a><span id="connection" class="badge">Comprobando conexión</span></header>
@@ -32,7 +34,8 @@
       </section>
       <section class="card"><h2><span>2</span> Ubicación</h2><button id="locate" type="button">◎ Usar mi ubicación GPS</button><p id="locationStatus" role="status">Todavía no has marcado la ubicación.</p>
         <div id="locationMap" tabindex="0" aria-label="Mapa para situar la avería. Pulsa el mapa o introduce las coordenadas debajo."></div><p class="hint">Pulsa sobre el mapa para corregir el punto. Fondo: PNOA · IGN/CNIG. El fondo requiere conexión.</p>
-        <details><summary>Introducir coordenadas</summary><div class="field-pair"><label>Latitud<input id="latitude" type="number" step="any" min="35" max="45" inputmode="decimal"></label><label>Longitud<input id="longitude" type="number" step="any" min="-10" max="5" inputmode="decimal"></label></div><button type="button" class="secondary" id="manualLocation">Usar estas coordenadas</button></details>
+        <div id="locationQuality" class="location-quality" role="status" aria-live="polite" hidden></div>
+        <details><summary>Introducir coordenadas</summary><p class="hint">WGS 84, grados decimales. Ejemplo: latitud 39,834749; longitud -4,371848. Se admite coma o punto. Al editar se retira la precisión GPS.</p><div class="field-pair"><label>Latitud<input id="latitude" type="text" inputmode="decimal" autocomplete="off" aria-describedby="locationStatus"></label><label>Longitud<input id="longitude" type="text" inputmode="decimal" autocomplete="off" aria-describedby="locationStatus"></label></div><button type="button" class="secondary" id="manualLocation">Usar estas coordenadas</button></details>
       </section>
       <section class="card"><h2><span>3</span> Datos de la avería</h2><div class="field-pair"><label>Tipo<select id="kind" required><option value="fuga">Fuga de agua</option><option value="rotura">Rotura</option><option value="obstruccion">Obstrucción</option><option value="electrica">Avería eléctrica</option><option value="otra">Otra</option></select></label><label>Prioridad<select id="priority" required><option value="normal">Normal</option><option value="alta">Alta</option><option value="urgente">Urgente</option></select></label></div>
         <label>Elemento o referencia <span class="hint">(opcional)</span><input id="element" maxlength="120" placeholder="Ej.: válvula del ramal 4"></label>

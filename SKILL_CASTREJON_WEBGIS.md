@@ -1,5 +1,5 @@
 # SKILL · Castrejón WebGIS — Contrato de arquitectura y evolución
-Version: 0.1.30
+Version: 0.1.31
 Fecha base: 2026-09-30
 Estado: ACTIVO · se actualiza tras cada ciclo de pruebas
 
@@ -442,6 +442,16 @@ Formato de cada cambio:
 No borrar una regla por comodidad. Si una regla cambia, conservar el motivo en el historial.
 
 ## 12. Registro de cambios
+### 0.1.31 — 2026-10-30 · Revisión de ubicación antes de publicar
+- Fallo/reproducción: un punto peninsular alejado superaba los límites -10/5 y 35/45; editar los campos podía conservar el GPS anterior.
+- Causa: validación regional demasiado amplia, sin revisión espacial ni sincronización de entradas pendientes.
+- Corrección: comprobación orientativa de pertenencia al polígono de referencia y envolvente ampliada 0,15° por eje para destacar anomalías. Son relaciones angulares de calidad, sin cálculo de metros/superficies, asignación de parcelas ni permisos geográficos. La referencia simplificada pendiente de ajuste nunca impide publicar.
+- Coordenadas imposibles/no finitas se rechazan; exteriores y errores probables de eje/signo se advierten sin autocorrección. GPS >50 m o precisión cero se revisa; manual admite coma/punto decimal y retira precisión GPS. Se confirma la revisión antes del primer envío.
+- Regresión: paridad PHP/JS, interior/borde/exterior/lejanía, ejes/signo, manual pendiente, GPS, cancelación y reintentos; caché móvil actualizado.
+- Archivos: averias/, wordpress/castrejon-averias/, scripts/ y workflow Pages.
+- Compatibilidad: mismo esquema, hashes, UUID, IndexedDB, consulta pública y reintentos; endpoint orientativo adicional. No se exige un campo nuevo a clientes antiguos ni se reinterpretan registros históricos.
+
+
 ### 0.1.30 — 2026-10-27 · Averías públicas y captura móvil
 - Necesidad: capturar foto, GPS y formulario desde campo y consultar públicamente cada avería en el visor, con edición reservada al personal.
 - Decisión expresa del usuario: usar WordPress para formularios, fotos y acceso del personal, evitando servidor adicional. Excepción limitada a la separación portal/backend de §2 y §12.1: plugin `wordpress/castrejon-averias`, formulario independiente del tema en `/averias-campo/`, REST pública de lectura y escritura protegida. El visor sigue en Pages; WordPress no ejecuta GIS pesado ni se convierte en maestro técnico.

@@ -8,9 +8,9 @@
         !['normal','alta','urgente'].includes(record.priority)) throw new Error('Revisa el tipo y la prioridad.');
     if (typeof record.description !== 'string' || record.description.trim().length < 5 || record.description.length > 2000 ||
         typeof record.element !== 'string' || record.element.length > 120) throw new Error('Escribe una descripción entre 5 y 2000 caracteres.');
-    if (!Number.isFinite(record.longitude) || !Number.isFinite(record.latitude) || record.longitude < -10 || record.longitude > 5 || record.latitude < 35 || record.latitude > 45)
+    if (!Number.isFinite(record.longitude) || !Number.isFinite(record.latitude) || Math.abs(record.longitude)>180 || Math.abs(record.latitude)>90)
       throw new Error('Obtén la ubicación GPS o marca un punto del mapa.');
-    if (!['gps','manual'].includes(record.location_source) || (record.location_source === 'gps' && (!Number.isFinite(record.accuracy_m) || record.accuracy_m < 0)))
+    if (!['gps','manual'].includes(record.location_source) || (record.location_source === 'gps' && (!Number.isFinite(record.accuracy_m) || record.accuracy_m < 0 || record.accuracy_m > 100000)))
       throw new Error('Revisa la ubicación y su precisión.');
     const time = Date.parse(record.observed_at);
     if (!Number.isFinite(time) || time > Date.now() + 300000 || time < Date.UTC(2000,0,1)) throw new Error('Revisa la fecha de observación.');

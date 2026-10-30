@@ -17,7 +17,7 @@ Capas actuales:
 El usuario ha elegido aprovechar el WordPress existente para datos, fotografías y
 acceso del personal. `wordpress/castrejon-averias` es el plugin y `averias/` contiene
 los archivos canónicos del formulario y de la capa pública. El paquete se genera con
-`python scripts/package-incidents.py` en `artifacts/castrejon-averias-1.0.0.zip`.
+`python scripts/package-incidents.py` en `artifacts/castrejon-averias-1.1.0.zip`.
 No se necesita FastAPI ni un servidor adicional para este módulo.
 
 La aplicación se sirve en `/averias-campo/` desde WordPress, fuera de la maquetación
@@ -88,8 +88,57 @@ del alojamiento. El código local y las pruebas no equivalen a esa instalación.
   histórico. Incluir ambas tablas en las copias de seguridad de WordPress. Esta
   primera versión no incluye edición de texto/foto ya publicados ni importación KMZ.
 
+### Calidad de ubicación (plugin 1.1.0)
+
+Antes del primer envío, la ficha y cada borrador muestran una revisión espacial.
+La confirmación repite las coordenadas y los avisos calculados por WordPress en
+`POST /castrejon/v1/location-check` (mismos permisos/nonce, sin guardar ni cachear).
+Cancelar conserva el borrador editable y no envía la foto ni la incidencia.
+
+- Se rechazan coordenadas imposibles, no numéricas o no finitas en WGS 84:
+  longitud ±180°, latitud ±90°. No se corrigen automáticamente ejes ni signos.
+- Se comprueba la pertenencia al polígono de referencia simplificado que ya muestra
+  el visor, incluidos sus bordes. Fuera se avisa de que puede tratarse de una
+  infraestructura del canal situada fuera de las parcelas.
+- Fuera de la envolvente de referencia ampliada **0,15° por cada eje** se muestra
+  un aviso destacado de punto muy alejado. Es un umbral provisional de anomalía,
+  no un límite territorial, un buffer métrico ni un ámbito autorizado. Se señalan
+  además posibles intercambios de ejes o signo de longitud.
+- El perímetro sigue pendiente de ajuste. **Todos los avisos territoriales permiten
+  publicar tras revisarlos y confirmar**. Estar dentro tampoco acredita exactitud,
+  pertenencia a una parcela o vínculo con una infraestructura.
+- GPS con precisión peor de **50 m** requiere revisión; 50 m exactos no activan el
+  aviso. Precisión cero se señala como desconocida, nunca como posición exacta.
+  Se puede repetir el GPS o corregir el punto. Su incertidumbre no se utiliza para
+  declarar que una posición está dentro. Los valores negativos, ausentes/no finitos
+  o superiores a 100.000 m son inválidos en origen GPS.
+- Las entradas manuales admiten coma o punto decimal, sin miles ni grados/minutos.
+  Al guardar o exportar se aplican también las coordenadas escritas aunque no se
+  haya pulsado «Usar estas coordenadas». Se retira la precisión GPS anterior.
+
+La política y su procedencia se empaquetan en el plugin y en la caché móvil, sin
+consultar servicios GIS externos. Tras cambiar la referencia, ejecutar
+`python scripts/build-location-policy.py`; `--check` detecta copias desactualizadas.
+Son comprobaciones de pertenencia angular, sin calcular áreas o distancias.
+
+Actualización: desplegar primero la lectura del visor de este cambio y después
+sustituir el plugin por el ZIP **1.1.0**. El job WordPress de Actions ofrece el ZIP
+como artefacto tras superar las pruebas. Pages no instala plugins en WordPress.
+No se migran tablas ni borradores. Los registros anteriores siguen consultándose;
+los borradores sin enviar se revisan con la política actual. Los ya intentados
+conservan exactamente UUID/contenido/foto y su reintento idempotente. El endpoint
+original no exige campos de revisión nuevos a clientes anteriores.
+
+Los recursos de captura llevan versión y el service worker cambia de caché para
+impedir que una página nueva use JavaScript de captura de 1.0.0. Tras actualizar
+el plugin, reabrir el formulario. No borrar los datos del navegador.
+
 ### Verificación
 
+`node scripts/test-location.cjs` comprueba interior/borde/exterior, lejanía, ejes,
+signo, precisión y entrada decimal. `node scripts/test-incidents-form.cjs` ejecuta
+los manejadores reales con dobles locales: edición manual pendiente, GPS/mapa,
+borrador anterior, cancelación y reintentos idénticos.
 `node scripts/test-incidents.cjs` comprueba validación, KMZ con imagen, paginación,
 fallos de red y exclusión de sesiones/API del service worker.
 `node scripts/test-incidents-map.cjs` verifica selección, cierre, filtros y fallos
@@ -104,10 +153,20 @@ node scripts/verify-wordpress.mjs
 ```
 
 El último comando instala el ZIP en WordPress Playground (PHP 8.3, WordPress 6.9),
-prueba roles, REST pública, cookie/nonce por HTTP, fotos, colisiones, reintentos,
+prueba paridad espacial PHP/JS, ubicaciones exteriores admitidas, roles, REST pública,
+cookie/nonce por HTTP, fotos, colisiones, reintentos,
 versiones y auditoría. Usa SQLite de Playground; no sustituye la comprobación final
 en MySQL/WordPress.com. `--preview` mantiene un entorno local con datos sintéticos.
 No ejecutar `test-wordpress-incidents.php` en producción.
+
+Verificación del cambio 1.1.0 (30/10/2026): suites JS y gate aprobados;
+WordPress 6.9/PHP 8.3 desechable con paridad de 11 casos PHP/JS, endpoint protegido,
+ubicaciones exteriores admitidas e idempotencia. Python: 16 pruebas, 5 omisiones
+por ausencia de GDAL. Chromium con GPS simulado ±120 m, coma decimal sin pulsar
+«Usar estas coordenadas», IndexedDB, cancelación antes del envío y reapertura sin
+conexión; sin desbordamiento horizontal a 320×568, 390×844 y 844×390. PNOA bloqueado
+en esa prueba de navegador; no certifica disponibilidad de servicios remotos.
+Pendientes: GPS/cámara en teléfono físico e instalación de 1.1.0 en producción.
 
 Validado localmente: suites anteriores, regresiones JS del visor y gate; Python
 15 pruebas con 5 omisiones por faltar GDAL en ese entorno. Navegador a 390×844:

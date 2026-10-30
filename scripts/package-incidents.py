@@ -3,7 +3,7 @@ from pathlib import Path
 import zipfile
 
 ROOT = Path(__file__).resolve().parents[1]
-OUTPUT = ROOT / 'artifacts' / 'castrejon-averias-1.0.0.zip'
+OUTPUT = ROOT / 'artifacts' / 'castrejon-averias-1.1.0.zip'
 
 
 def main():

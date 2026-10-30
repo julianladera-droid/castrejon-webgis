@@ -1,5 +1,6 @@
 <?php
 // Pure validation helpers, independently testable without bootstrapping WordPress.
+require_once __DIR__ . '/location.php';
 function ca_uuid($value) {
     return is_string($value) && preg_match('/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/D', $value);
 }
@@ -20,17 +21,11 @@ function ca_validate($input) {
         }
         $data[$key] = trim($text);
     }
-    foreach (['longitude' => [-10, 5], 'latitude' => [35, 45]] as $key => $limits) {
-        $value = $input[$key] ?? null;
-        if ((!is_float($value) && !is_int($value)) || !is_finite((float) $value) || $value < $limits[0] || $value > $limits[1]) {
-            throw new InvalidArgumentException('Falta una ubicación válida en España peninsular.');
-        }
-        $data[$key] = (float) $value;
+    ca_location_validate($input);
+    foreach (['longitude', 'latitude'] as $key) {
+        $data[$key] = (float) $input[$key];
     }
     $accuracy = $input['accuracy_m'] ?? null;
-    if ($data['location_source'] === 'gps' && ((!is_int($accuracy) && !is_float($accuracy)) || !is_finite((float) $accuracy) || $accuracy < 0 || $accuracy > 100000)) {
-        throw new InvalidArgumentException('Falta la precisión del GPS.');
-    }
     $data['accuracy_m'] = $data['location_source'] === 'manual' ? null : $accuracy;
     $date = $input['observed_at'] ?? null;
     if (!is_string($date) || !preg_match('/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d{1,3})?Z$/D', $date) ||
