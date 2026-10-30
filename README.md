@@ -6,7 +6,7 @@ Visor de control de la **C.R. Canal de Castrejón Margen Derecha**.
 M0.2 + M4 — visor cartográfico con índices Sentinel y publicación automática.
 
 Capas actuales:
-- Averías públicas: fotografía, formulario, estado y descarga KMZ; plugin WordPress instalado y activo el 27/10/2026.
+- Averías públicas: fotografía, formulario, estado y descarga KMZ; plugin WordPress **1.1.0 instalado y activo el 30/10/2026** (instalación inicial 1.0.0: 27/10/2026).
 - PNOA Máxima Actualidad (IGN/CNIG), XYZ/TMS.
 - Recintos SIGPAC (FEGA/MAPA), WMS.
 - Catastro INSPIRE, límites de parcela.
@@ -166,7 +166,15 @@ por ausencia de GDAL. Chromium con GPS simulado ±120 m, coma decimal sin pulsar
 «Usar estas coordenadas», IndexedDB, cancelación antes del envío y reapertura sin
 conexión; sin desbordamiento horizontal a 320×568, 390×844 y 844×390. PNOA bloqueado
 en esa prueba de navegador; no certifica disponibilidad de servicios remotos.
-Pendientes: GPS/cámara en teléfono físico e instalación de 1.1.0 en producción.
+Desplegado en producción el 30/10/2026: PR #4 integrada en `main`; Pages publicado
+con la ejecución [41095746249, intento 2](https://github.com/julianladera-droid/castrejon-webgis/actions/runs/41095746249).
+El primer intento falló al descargar artefactos Sentinel con HTTP 503 (límite de
+salida); el reintento terminó correctamente sin cambiar las comprobaciones.
+Plugin 1.1.0 sustituido mediante carga del ZIP en WordPress y verificado activo.
+Comprobación en `/averias-campo/`: acceso autorizado, lectura del histórico y
+avisos distintos para punto muy alejado y exterior próximo, con entrada manual
+mediante coma decimal. No se publicaron incidencias de prueba en producción.
+Pendiente: GPS/cámara en teléfono físico.
 
 Validado localmente: suites anteriores, regresiones JS del visor y gate; Python
 15 pruebas con 5 omisiones por faltar GDAL en ese entorno. Navegador a 390×844:
