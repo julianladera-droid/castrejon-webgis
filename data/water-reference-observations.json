@@ -1,0 +1,12 @@
+{
+  "version": 1,
+  "source": "User observations supplied on 2026-11-01",
+  "spatial_precision": "parcel presence, no inundation polygons or pixel labels",
+  "observations": [
+    {"refcat": "45137A00900001", "dates": ["2026-10-14", "2026-10-31"], "presence": true},
+    {"refcat": "45137A00900059", "dates": ["2026-10-14", "2026-10-31"], "presence": true},
+    {"refcat": "45137A03300153", "period": ["2023-08-01", "2023-08-31"], "target_date": "2023-08-16", "presence": true, "note": "Repeated events, water under vegetation, especially south; user reports visible signal in RGB."},
+    {"refcat": "45137A03300155", "period": ["2023-08-01", "2023-08-31"], "target_date": "2023-08-16", "presence": true, "note": "User identifies this parcel as having most water; vegetation present."}
+  ],
+  "october_trend": "User reports decreasing water from 2026-10-10 to 2026-10-31. No acquisition is asserted for 2026-10-10; no depth or volume measured."
+}

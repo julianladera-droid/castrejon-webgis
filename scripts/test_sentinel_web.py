@@ -17,29 +17,39 @@ except ImportError:
 
 class PublicationTests(unittest.TestCase):
     def test_fixed_scale_and_transparent_nodata(self):
-        a = np.array([[-1, 0, 1, -9999, np.nan]])
+        a = np.array([[-1, 0, 1, -9999, np.nan, -23, 7.2]])
         rgba = colorize(a, np.isfinite(a) & (a != -9999), PALETTES['NDVI'])
         self.assertEqual(rgba[:, 0, 0].tolist(), [49, 75, 145, 255])
         self.assertEqual(rgba[:, 0, 2].tolist(), [0, 104, 55, 255])
-        self.assertEqual(rgba[3, 0].tolist(), [255, 255, 255, 0, 0])
+        self.assertEqual(rgba[3, 0].tolist(), [255, 255, 255, 0, 0, 0, 0])
+
+    def test_legacy_and_changed_original_dn_are_rejected(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            folder = Path(tmp)
+            manifest = self.fixture(folder)
+            manifest['version'] = 1
+            (folder/'manifest.json').write_text(json.dumps(manifest))
+            with self.assertRaisesRegex(ValueError, 'Incompatible'): validate_product(folder)
+            manifest['version'] = 2
+            (folder/'manifest.json').write_text(json.dumps(manifest))
+            with (folder/'raw_B03_10m.tif').open('ab') as stream: stream.write(b'changed')
+            with self.assertRaisesRegex(ValueError, 'Original DN'): validate_product(folder)
 
     def fixture(self, path):
-        manifest = {'status': 'quality_passed', 'source_item': {'id': 'TEST_20250101',
-                    'properties': {'datetime': '2025-01-01T11:00:00Z'}},
-                    'aoi': {'crs': 'EPSG:25830', 'bounds': [380000, 4400000, 380040, 4400040]}, 'indices': {}}
+        from sentinel_pipeline import process_rasters
+        from sentinel_contract import RAW_BANDS
+        item = {'id': 'TEST_20250101', 'properties': {'datetime': '2025-01-01T11:00:00Z'}, 'assets': {}}
         srs = osr.SpatialReference(); srs.ImportFromEPSG(25830)
-        for name in PALETTES:
-            resolution = 20 if name == 'NDMI' else 10
+        rasters = {}
+        for name, resolution in RAW_BANDS.items():
             size = 40//resolution
-            file = path/f'{name}.tif'
-            ds = gdal.GetDriverByName('GTiff').Create(str(file), size, size, 1, gdal.GDT_Float32)
+            ds = gdal.GetDriverByName('MEM').Create('', size, size, 1, gdal.GDT_Float32)
             ds.SetProjection(srs.ExportToWkt()); ds.SetGeoTransform([380000, resolution, 0, 4400040, 0, -resolution])
             ds.GetRasterBand(1).SetNoDataValue(-9999)
-            ds.GetRasterBand(1).WriteArray(np.full((size, size), .5)); ds = None
-            manifest['indices'][name] = {'sha256': hashlib.sha256(file.read_bytes()).hexdigest(),
-                'valid_percent_rectangle': 100, 'resolution_m': resolution}
-        (path/'manifest.json').write_text(json.dumps(manifest))
-        return manifest
+            ds.GetRasterBand(1).WriteArray(np.full((size, size), 4 if name.startswith('SCL') else 7000 if name.startswith(('B08', 'B8A')) else 3000))
+            item['assets'][name] = {'href': 'fixture', 'raster:scale': .0001, 'raster:offset': -.1, 'nodata': 0}
+            rasters[name] = ds
+        return process_rasters(rasters, item, {'crs': 'EPSG:25830', 'bounds': [380000, 4400000, 380040, 4400040]}, path, {'fixture': True})
 
     def test_publication_and_reject_tampered_data(self):
         with tempfile.TemporaryDirectory() as tmp:

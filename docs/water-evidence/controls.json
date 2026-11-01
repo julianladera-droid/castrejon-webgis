@@ -1,0 +1,127 @@
+{
+  "crs": "EPSG:25830",
+  "status": "visual_context_not_pixel_ground_truth",
+  "source": "fixed-stretch RGB 2023-08-16; controls fixed without tuning thresholds",
+  "features": [
+    {
+      "refcat": "east_bare_soil",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              385390,
+              4410710
+            ],
+            [
+              385450,
+              4410710
+            ],
+            [
+              385450,
+              4410890
+            ],
+            [
+              385390,
+              4410890
+            ],
+            [
+              385390,
+              4410710
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "refcat": "north_dense_crop",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              385090,
+              4410870
+            ],
+            [
+              385260,
+              4410870
+            ],
+            [
+              385260,
+              4410920
+            ],
+            [
+              385090,
+              4410920
+            ],
+            [
+              385090,
+              4410870
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "refcat": "northwest_roof_context",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              384940,
+              4410830
+            ],
+            [
+              385050,
+              4410830
+            ],
+            [
+              385050,
+              4410890
+            ],
+            [
+              384940,
+              4410890
+            ],
+            [
+              384940,
+              4410830
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "refcat": "west_dark_context",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              384990,
+              4410630
+            ],
+            [
+              385020,
+              4410630
+            ],
+            [
+              385020,
+              4410670
+            ],
+            [
+              384990,
+              4410670
+            ],
+            [
+              384990,
+              4410630
+            ]
+          ]
+        ]
+      }
+    }
+  ]
+}

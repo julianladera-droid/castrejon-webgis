@@ -5,6 +5,15 @@ on:
     # Daily calendar check; only due dates contact Copernicus.
     - cron: '30 5 * * *'
   workflow_dispatch:
+    inputs:
+      date:
+        description: 'Exact observation day YYYY-MM-DD (empty: latest)'
+        required: false
+        type: string
+      item_id:
+        description: 'Exact product ID (optional, use with date for reproducibility)'
+        required: false
+        type: string
 
 permissions:
   contents: read
@@ -46,19 +55,28 @@ jobs:
         run: /usr/bin/python3 scripts/test_sentinel.py
       - name: Select existing L2A product
         id: selection
-        run: /usr/bin/python3 scripts/sentinel_pipeline.py --catalogue-only
+        env:
+          OBSERVATION_DATE: ${{ inputs.date }}
+          OBSERVATION_ITEM: ${{ inputs.item_id }}
+        run: |
+          args=()
+          if [ -n "$OBSERVATION_DATE" ]; then args+=(--date "$OBSERVATION_DATE"); fi
+          if [ -n "$OBSERVATION_ITEM" ]; then args+=(--item-id "$OBSERVATION_ITEM"); fi
+          /usr/bin/python3 scripts/sentinel_pipeline.py --catalogue-only "${args[@]}"
       - name: Reuse already processed acquisition
         id: product-cache
         uses: actions/cache@v4
         with:
           path: sentinel-output/
-          key: sentinel-v1-${{ hashFiles('scripts/sentinel_pipeline.py', 'data/sentinel-aoi.json') }}-${{ steps.selection.outputs.item }}
+          key: sentinel-v2-${{ hashFiles('scripts/sentinel_pipeline.py', 'scripts/sentinel_contract.py', 'scripts/spectral_quality.py', 'scripts/water_detection.py', 'scripts/parcel_grid.py', 'data/sentinel-aoi.json') }}-${{ steps.selection.outputs.item }}
       - name: Download and calculate rectangular AOI
         if: steps.product-cache.outputs.cache-hit != 'true'
         env:
           CDSE_S3_ACCESS_KEY: ${{ secrets.CDSE_S3_ACCESS_KEY }}
           CDSE_S3_SECRET_KEY: ${{ secrets.CDSE_S3_SECRET_KEY }}
         run: /usr/bin/python3 scripts/sentinel_pipeline.py --catalogue-file sentinel-output/selection.json
+      - name: Verify cached or calculated product
+        run: /usr/bin/python3 -c "import sys; from pathlib import Path; sys.path.insert(0, 'scripts'); from build_sentinel_web import validate_product; validate_product(Path('sentinel-output'))"
       - name: Save products and provenance
         if: always()
         uses: actions/upload-artifact@v4

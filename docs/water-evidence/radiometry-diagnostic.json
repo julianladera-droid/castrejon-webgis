@@ -1,0 +1,42 @@
+[
+  {
+    "id": "S2A_MSIL2A_20261031T110121_N0513_R094_T30TUK_20261031T173605",
+    "published_sha256": "141053c7efdf8cafb3bf4a4996b606217e0290ecfc38e94e0fddb82a3a960867",
+    "declared_sha256": "141053c7efdf8cafb3bf4a4996b606217e0290ecfc38e94e0fddb82a3a960867",
+    "max_abs_difference_from_original_dn_float32_formula": 0.0,
+    "parcels": {
+      "45137A00900001": {
+        "min": 0.09837289899587631,
+        "max": 0.6187500357627869,
+        "out_of_range_count": 0,
+        "valid_raw_count": 280
+      },
+      "45137A00900059": {
+        "min": -0.03448275849223137,
+        "max": 0.668760359287262,
+        "out_of_range_count": 0,
+        "valid_raw_count": 421
+      }
+    }
+  },
+  {
+    "id": "S2A_MSIL2A_20261014T110941_N0513_R137_T30TUK_20261014T173008",
+    "published_sha256": "b16f8f0e0feebdebc2b969ee216dccb5121116677c8c76be56ec75f14da4eecc",
+    "declared_sha256": "b16f8f0e0feebdebc2b969ee216dccb5121116677c8c76be56ec75f14da4eecc",
+    "max_abs_difference_from_original_dn_float32_formula": 0.0,
+    "parcels": {
+      "45137A00900001": {
+        "min": -22.999603271484375,
+        "max": 7.200034141540527,
+        "out_of_range_count": 27,
+        "valid_raw_count": 280
+      },
+      "45137A00900059": {
+        "min": -3.857161045074463,
+        "max": 0.8107143640518188,
+        "out_of_range_count": 11,
+        "valid_raw_count": 421
+      }
+    }
+  }
+]

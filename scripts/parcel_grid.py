@@ -56,3 +56,28 @@ def require_same_grid(a, b):
             a.GetGeoTransform() != b.GetGeoTransform() or
             (a.RasterXSize,a.RasterYSize) != (b.RasterXSize,b.RasterYSize)):
         raise ValueError('Comparison requires identical original metric grids')
+
+
+def require_nested_grid(fine, coarse):
+    """Exact 2x2 nesting, including origin/extent; no shape-only alignment."""
+    fg, cg = fine.GetGeoTransform(), coarse.GetGeoTransform()
+    if (fine.GetSpatialRef().GetAuthorityCode(None) != '25830' or
+            not fine.GetSpatialRef().IsSame(coarse.GetSpatialRef()) or
+            fg != (cg[0], 10, 0, cg[3], 0, -10) or
+            cg[1:] != (20, 0, cg[3], 0, -20) or
+            fine.RasterXSize != coarse.RasterXSize * 2 or
+            fine.RasterYSize != coarse.RasterYSize * 2):
+        raise ValueError('Expected exactly nested 10m/20m metric grids')
+
+
+def mean_2x2(values):
+    """Area mean on nested cells; any missing subcell invalidates the parent."""
+    h, w = values.shape
+    if h % 2 or w % 2:
+        raise ValueError('Incomplete 2x2 blocks')
+    return values.reshape(h//2, 2, w//2, 2).mean(axis=(1, 3))
+
+
+def repeat_2x2(values):
+    """Parent-cell support only; this does not recover 10m spatial detail."""
+    return np.repeat(np.repeat(values, 2, axis=0), 2, axis=1)

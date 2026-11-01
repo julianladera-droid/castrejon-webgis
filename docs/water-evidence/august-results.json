@@ -1,0 +1,2853 @@
+{
+  "master_sha256": "be7c39285c5d1a010aa6180e431679c316a7bb070ee042ae19e0295c25873850",
+  "observations": [
+    {
+      "product": "S2A_MSIL2A_20230806T105621_N0509_R094_T30TUK_20230806T170756",
+      "datetime": "2023-08-06T11:10:15.198000Z",
+      "manifest_sha256": "30b6d74162ebedd3f89360e2fa4eb01047fd243a2f8e54d6b090ddb9fed175cd",
+      "status": "quality_passed",
+      "experiments": {
+        "guided_ndwi": {
+          "method": "within_date_ridge_mean_preserving_detail_v1",
+          "guides": [
+            "NDWI"
+          ],
+          "coefficients": [
+            0.5892846850187907,
+            0.5029876094518546
+          ],
+          "training_blocks": 812,
+          "max_abs_reaggregation_error": 2.235174181852706e-08,
+          "rmse_reaggregation": 1.1230789510586725e-08,
+          "status": "experimental_not_operational",
+          "original_B11_resolution_m": 20,
+          "estimated_grid_m": 10
+        },
+        "guided_ndwi_ndvi": {
+          "method": "within_date_ridge_mean_preserving_detail_v1",
+          "guides": [
+            "NDWI",
+            "NDVI"
+          ],
+          "coefficients": [
+            0.4754710410759145,
+            -0.009365635444434561,
+            -0.3156094557299967
+          ],
+          "training_blocks": 812,
+          "max_abs_reaggregation_error": 2.6077032061477823e-08,
+          "rmse_reaggregation": 1.1076022614225546e-08,
+          "status": "experimental_not_operational",
+          "original_B11_resolution_m": 20,
+          "estimated_grid_m": 10
+        }
+      },
+      "parcels": {
+        "45137A03300153": {
+          "combined": {
+            "water_m2": 0.0,
+            "ambiguous_m2": 0.0,
+            "unknown_m2": 0.0,
+            "parcel_m2": 52915.239,
+            "classified_percent": 100.0,
+            "water_percent": 0.0
+          },
+          "scl": {
+            "water_m2": 0.0,
+            "ambiguous_m2": 0.0,
+            "unknown_m2": 0.0,
+            "parcel_m2": 52915.239,
+            "classified_percent": 100.0,
+            "water_percent": 0.0
+          },
+          "mndwi20": {
+            "water_m2": 0.0,
+            "ambiguous_m2": 0.0,
+            "unknown_m2": 0.0,
+            "parcel_m2": 52915.239,
+            "classified_percent": 100.0,
+            "water_percent": 0.0
+          },
+          "ndwi": {
+            "water_m2": 0.0,
+            "ambiguous_m2": 0.0,
+            "unknown_m2": 0.0,
+            "parcel_m2": 52915.239,
+            "classified_percent": 100.0,
+            "water_percent": 0.0
+          },
+          "nearest_b11_mndwi": {
+            "water_m2": 0.0,
+            "ambiguous_m2": 0.0,
+            "unknown_m2": 0.0,
+            "parcel_m2": 52915.239,
+            "classified_percent": 100.0,
+            "water_percent": 0.0
+          },
+          "guided_ndwi": {
+            "water_m2": 0.0,
+            "ambiguous_m2": 0.0,
+            "unknown_m2": 0.0,
+            "parcel_m2": 52915.239,
+            "classified_percent": 100.0,
+            "water_percent": 0.0
+          },
+          "guided_ndwi_ndvi": {
+            "water_m2": 0.0,
+            "ambiguous_m2": 0.0,
+            "unknown_m2": 0.0,
+            "parcel_m2": 52915.239,
+            "classified_percent": 100.0,
+            "water_percent": 0.0
+          },
+          "indices": {
+            "NDVI": {
+              "centres": 525,
+              "valid_centres": 525,
+              "min": 0.1799265593290329,
+              "max": 0.8685015439987183,
+              "median": 0.711983859539032,
+              "mean": 0.66786585688591
+            },
+            "NDWI": {
+              "centres": 525,
+              "valid_centres": 525,
+              "min": -0.7074422836303711,
+              "max": -0.3532763421535492,
+              "median": -0.6169074177742004,
+              "mean": -0.600300976378577
+            },
+            "MNDWI": {
+              "centres": 133,
+              "valid_centres": 133,
+              "min": -0.5957040786743164,
+              "max": -0.4194202721118927,
+              "median": -0.520728588104248,
+              "mean": -0.5177785727314483
+            },
+            "NDMI": {
+              "centres": 133,
+              "valid_centres": 133,
+              "min": -0.07223035395145416,
+              "max": 0.3376568555831909,
+              "median": 0.13407525420188904,
+              "mean": 0.13521559249663978
+            }
+          }
+        },
+        "45137A03300155": {
+          "combined": {
+            "water_m2": 0.0,
+            "ambiguous_m2": 0.0,
+            "unknown_m2": 0.0,
+            "parcel_m2": 33008.527,
+            "classified_percent": 100.0,
+            "water_percent": 0.0
+          },
+          "scl": {
+            "water_m2": 0.0,
+            "ambiguous_m2": 0.0,
+            "unknown_m2": 0.0,
+            "parcel_m2": 33008.527,
+            "classified_percent": 100.0,
+            "water_percent": 0.0
+          },
+          "mndwi20": {
+            "water_m2": 0.0,
+            "ambiguous_m2": 0.0,
+            "unknown_m2": 0.0,
+            "parcel_m2": 33008.527,
+            "classified_percent": 100.0,
+            "water_percent": 0.0
+          },
+          "ndwi": {
+            "water_m2": 0.0,
+            "ambiguous_m2": 0.0,
+            "unknown_m2": 0.0,
+            "parcel_m2": 33008.527,
+            "classified_percent": 100.0,
+            "water_percent": 0.0
+          },
+          "nearest_b11_mndwi": {
+            "water_m2": 0.0,
+            "ambiguous_m2": 0.0,
+            "unknown_m2": 0.0,
+            "parcel_m2": 33008.527,
+            "classified_percent": 100.0,
+            "water_percent": 0.0
+          },
+          "guided_ndwi": {
+            "water_m2": 0.0,
+            "ambiguous_m2": 0.0,
+            "unknown_m2": 0.0,
+            "parcel_m2": 33008.527,
+            "classified_percent": 100.0,
+            "water_percent": 0.0
+          },
+          "guided_ndwi_ndvi": {
+            "water_m2": 0.0,
+            "ambiguous_m2": 0.0,
+            "unknown_m2": 0.0,
+            "parcel_m2": 33008.527,
+            "classified_percent": 100.0,
+            "water_percent": 0.0
+          },
+          "indices": {
+            "NDVI": {
+              "centres": 330,
+              "valid_centres": 330,
+              "min": 0.11873351037502289,
+              "max": 0.8132053017616272,
+              "median": 0.5844016969203949,
+              "mean": 0.5662758644331586
+            },
+            "NDWI": {
+              "centres": 330,
+              "valid_centres": 330,
+              "min": -0.6819599270820618,
+              "max": -0.23255814611911774,
+              "median": -0.5788128972053528,
+              "mean": -0.5568805243029739
+            },
+            "MNDWI": {
+              "centres": 84,
+              "valid_centres": 84,
+              "min": -0.6355583071708679,
+              "max": -0.3402214050292969,
+              "median": -0.5117725729942322,
+              "mean": -0.5103152280762082
+            },
+            "NDMI": {
+              "centres": 84,
+              "valid_centres": 84,
+              "min": -0.0675654485821724,
+              "max": 0.223505437374115,
+              "median": 0.08168322965502739,
+              "mean": 0.08021926902611518
+            }
+          }
+        }
+      }
+    },
+    {
+      "product": "S2A_MSIL2A_20230809T110621_N0509_R137_T30TUK_20230809T171606",
+      "datetime": "2023-08-09T11:20:11.411000Z",
+      "manifest_sha256": "f756675122f5d94b5aa411f9b0a4708abf331fb287251678781a881b760d2ac9",
+      "status": "quality_passed",
+      "experiments": {
+        "guided_ndwi": {
+          "method": "within_date_ridge_mean_preserving_detail_v1",
+          "guides": [
+            "NDWI"
+          ],
+          "coefficients": [
+            0.49563589968413835,
+            0.4490123140562252
+          ],
+          "training_blocks": 812,
+          "max_abs_reaggregation_error": 2.235174181852706e-08,
+          "rmse_reaggregation": 1.1508877249881588e-08,
+          "status": "experimental_not_operational",
+          "original_B11_resolution_m": 20,
+          "estimated_grid_m": 10
+        },
+        "guided_ndwi_ndvi": {
+          "method": "within_date_ridge_mean_preserving_detail_v1",
+          "guides": [
+            "NDWI",
+            "NDVI"
+          ],
+          "coefficients": [
+            0.44000700844421764,
+            0.14423585164029643,
+            -0.21811477341022328
+          ],
+          "training_blocks": 812,
+          "max_abs_reaggregation_error": 2.2351741790771484e-08,
+          "rmse_reaggregation": 1.1877926828923476e-08,
+          "status": "experimental_not_operational",
+          "original_B11_resolution_m": 20,
+          "estimated_grid_m": 10
+        }
+      },
+      "parcels": {
+        "45137A03300153": {
+          "combined": {
+            "water_m2": 0.0,
+            "ambiguous_m2": 0.0,
+            "unknown_m2": 0.0,
+            "parcel_m2": 52915.239,
+            "classified_percent": 100.0,
+            "water_percent": 0.0
+          },
+          "scl": {
+            "water_m2": 0.0,
+            "ambiguous_m2": 0.0,
+            "unknown_m2": 0.0,
+            "parcel_m2": 52915.239,
+            "classified_percent": 100.0,
+            "water_percent": 0.0
+          },
+          "mndwi20": {
+            "water_m2": 0.0,
+            "ambiguous_m2": 0.0,
+            "unknown_m2": 0.0,
+            "parcel_m2": 52915.239,
+            "classified_percent": 100.0,
+            "water_percent": 0.0
+          },
+          "ndwi": {
+            "water_m2": 0.0,
+            "ambiguous_m2": 0.0,
+            "unknown_m2": 0.0,
+            "parcel_m2": 52915.239,
+            "classified_percent": 100.0,
+            "water_percent": 0.0
+          },
+          "nearest_b11_mndwi": {
+            "water_m2": 0.0,
+            "ambiguous_m2": 0.0,
+            "unknown_m2": 0.0,
+            "parcel_m2": 52915.239,
+            "classified_percent": 100.0,
+            "water_percent": 0.0
+          },
+          "guided_ndwi": {
+            "water_m2": 0.0,
+            "ambiguous_m2": 0.0,
+            "unknown_m2": 0.0,
+            "parcel_m2": 52915.239,
+            "classified_percent": 100.0,
+            "water_percent": 0.0
+          },
+          "guided_ndwi_ndvi": {
+            "water_m2": 0.0,
+            "ambiguous_m2": 0.0,
+            "unknown_m2": 0.0,
+            "parcel_m2": 52915.239,
+            "classified_percent": 100.0,
+            "water_percent": 0.0
+          },
+          "indices": {
+            "NDVI": {
+              "centres": 525,
+              "valid_centres": 525,
+              "min": 0.18827839195728302,
+              "max": 0.5898653864860535,
+              "median": 0.489871084690094,
+              "mean": 0.46330002381688073
+            },
+            "NDWI": {
+              "centres": 525,
+              "valid_centres": 525,
+              "min": -0.5641990900039673,
+              "max": -0.33648914098739624,
+              "median": -0.5016241073608398,
+              "mean": -0.4912417930080777
+            },
+            "MNDWI": {
+              "centres": 133,
+              "valid_centres": 133,
+              "min": -0.4665304124355316,
+              "max": -0.35358718037605286,
+              "median": -0.42110154032707214,
+              "mean": -0.41969321925837294
+            },
+            "NDMI": {
+              "centres": 133,
+              "valid_centres": 133,
+              "min": -0.015545506030321121,
+              "max": 0.22306294739246368,
+              "median": 0.12774747610092163,
+              "mean": 0.11880159100580652
+            }
+          }
+        },
+        "45137A03300155": {
+          "combined": {
+            "water_m2": 0.0,
+            "ambiguous_m2": 0.0,
+            "unknown_m2": 0.0,
+            "parcel_m2": 33008.527,
+            "classified_percent": 100.0,
+            "water_percent": 0.0
+          },
+          "scl": {
+            "water_m2": 0.0,
+            "ambiguous_m2": 0.0,
+            "unknown_m2": 0.0,
+            "parcel_m2": 33008.527,
+            "classified_percent": 100.0,
+            "water_percent": 0.0
+          },
+          "mndwi20": {
+            "water_m2": 0.0,
+            "ambiguous_m2": 0.0,
+            "unknown_m2": 0.0,
+            "parcel_m2": 33008.527,
+            "classified_percent": 100.0,
+            "water_percent": 0.0
+          },
+          "ndwi": {
+            "water_m2": 0.0,
+            "ambiguous_m2": 0.0,
+            "unknown_m2": 0.0,
+            "parcel_m2": 33008.527,
+            "classified_percent": 100.0,
+            "water_percent": 0.0
+          },
+          "nearest_b11_mndwi": {
+            "water_m2": 0.0,
+            "ambiguous_m2": 0.0,
+            "unknown_m2": 0.0,
+            "parcel_m2": 33008.527,
+            "classified_percent": 100.0,
+            "water_percent": 0.0
+          },
+          "guided_ndwi": {
+            "water_m2": 0.0,
+            "ambiguous_m2": 0.0,
+            "unknown_m2": 0.0,
+            "parcel_m2": 33008.527,
+            "classified_percent": 100.0,
+            "water_percent": 0.0
+          },
+          "guided_ndwi_ndvi": {
+            "water_m2": 0.0,
+            "ambiguous_m2": 0.0,
+            "unknown_m2": 0.0,
+            "parcel_m2": 33008.527,
+            "classified_percent": 100.0,
+            "water_percent": 0.0
+          },
+          "indices": {
+            "NDVI": {
+              "centres": 330,
+              "valid_centres": 330,
+              "min": 0.1463664323091507,
+              "max": 0.5357637405395508,
+              "median": 0.42635948956012726,
+              "mean": 0.40847933107253276
+            },
+            "NDWI": {
+              "centres": 330,
+              "valid_centres": 330,
+              "min": -0.5493482351303101,
+              "max": -0.2506384551525116,
+              "median": -0.4726465344429016,
+              "mean": -0.46245916964429795
+            },
+            "MNDWI": {
+              "centres": 84,
+              "valid_centres": 84,
+              "min": -0.4687541127204895,
+              "max": -0.30724748969078064,
+              "median": -0.4289963096380234,
+              "mean": -0.42093191189425333
+            },
+            "NDMI": {
+              "centres": 84,
+              "valid_centres": 84,
+              "min": -0.006142321974039078,
+              "max": 0.15613576769828796,
+              "median": 0.0848812609910965,
+              "mean": 0.08160514769094464
+            }
+          }
+        }
+      }
+    },
+    {
+      "product": "S2A_MSIL2A_20230816T105631_N0509_R094_T30TUK_20230816T171602",
+      "datetime": "2023-08-16T11:10:16.137000Z",
+      "manifest_sha256": "5acae75003092b51505714f284376a9e43e107e0b8a325ac2eb72e03a6c7a191",
+      "status": "quality_passed",
+      "experiments": {
+        "guided_ndwi": {
+          "method": "within_date_ridge_mean_preserving_detail_v1",
+          "guides": [
+            "NDWI"
+          ],
+          "coefficients": [
+            0.6143549647033529,
+            0.5531812336761834
+          ],
+          "training_blocks": 812,
+          "max_abs_reaggregation_error": 5.21540641784668e-08,
+          "rmse_reaggregation": 1.1071392492559106e-08,
+          "status": "experimental_not_operational",
+          "original_B11_resolution_m": 20,
+          "estimated_grid_m": 10
+        },
+        "guided_ndwi_ndvi": {
+          "method": "within_date_ridge_mean_preserving_detail_v1",
+          "guides": [
+            "NDWI",
+            "NDVI"
+          ],
+          "coefficients": [
+            0.4990610753955255,
+            0.07077026945502382,
+            -0.27633325192824176
+          ],
+          "training_blocks": 812,
+          "max_abs_reaggregation_error": 2.235174181852706e-08,
+          "rmse_reaggregation": 9.850988246296357e-09,
+          "status": "experimental_not_operational",
+          "original_B11_resolution_m": 20,
+          "estimated_grid_m": 10
+        }
+      },
+      "parcels": {
+        "45137A03300153": {
+          "combined": {
+            "water_m2": 0.0,
+            "ambiguous_m2": 0.0,
+            "unknown_m2": 0.0,
+            "parcel_m2": 52915.239,
+            "classified_percent": 100.0,
+            "water_percent": 0.0
+          },
+          "scl": {
+            "water_m2": 0.0,
+            "ambiguous_m2": 0.0,
+            "unknown_m2": 0.0,
+            "parcel_m2": 52915.239,
+            "classified_percent": 100.0,
+            "water_percent": 0.0
+          },
+          "mndwi20": {
+            "water_m2": 0.0,
+            "ambiguous_m2": 0.0,
+            "unknown_m2": 0.0,
+            "parcel_m2": 52915.239,
+            "classified_percent": 100.0,
+            "water_percent": 0.0
+          },
+          "ndwi": {
+            "water_m2": 0.0,
+            "ambiguous_m2": 0.0,
+            "unknown_m2": 0.0,
+            "parcel_m2": 52915.239,
+            "classified_percent": 100.0,
+            "water_percent": 0.0
+          },
+          "nearest_b11_mndwi": {
+            "water_m2": 0.0,
+            "ambiguous_m2": 0.0,
+            "unknown_m2": 0.0,
+            "parcel_m2": 52915.239,
+            "classified_percent": 100.0,
+            "water_percent": 0.0
+          },
+          "guided_ndwi": {
+            "water_m2": 0.0,
+            "ambiguous_m2": 0.0,
+            "unknown_m2": 0.0,
+            "parcel_m2": 52915.239,
+            "classified_percent": 100.0,
+            "water_percent": 0.0
+          },
+          "guided_ndwi_ndvi": {
+            "water_m2": 0.0,
+            "ambiguous_m2": 0.0,
+            "unknown_m2": 0.0,
+            "parcel_m2": 52915.239,
+            "classified_percent": 100.0,
+            "water_percent": 0.0
+          },
+          "indices": {
+            "NDVI": {
+              "centres": 525,
+              "valid_centres": 525,
+              "min": 0.182176411151886,
+              "max": 0.9134020805358887,
+              "median": 0.8236901164054871,
+              "mean": 0.7614552531355904
+            },
+            "NDWI": {
+              "centres": 525,
+              "valid_centres": 525,
+              "min": -0.7382282614707947,
+              "max": -0.35729387402534485,
+              "median": -0.6583400368690491,
+              "mean": -0.6412501182442619
+            },
+            "MNDWI": {
+              "centres": 133,
+              "valid_centres": 133,
+              "min": -0.5954825282096863,
+              "max": -0.3958044946193695,
+              "median": -0.4988582134246826,
+              "mean": -0.5044796935149601
+            },
+            "NDMI": {
+              "centres": 133,
+              "valid_centres": 133,
+              "min": -0.06014670059084892,
+              "max": 0.40110209584236145,
+              "median": 0.24270613491535187,
+              "mean": 0.21623822020128705
+            }
+          }
+        },
+        "45137A03300155": {
+          "combined": {
+            "water_m2": 0.0,
+            "ambiguous_m2": 0.0,
+            "unknown_m2": 0.0,
+            "parcel_m2": 33008.527,
+            "classified_percent": 100.0,
+            "water_percent": 0.0
+          },
+          "scl": {
+            "water_m2": 0.0,
+            "ambiguous_m2": 0.0,
+            "unknown_m2": 0.0,
+            "parcel_m2": 33008.527,
+            "classified_percent": 100.0,
+            "water_percent": 0.0
+          },
+          "mndwi20": {
+            "water_m2": 0.0,
+            "ambiguous_m2": 0.0,
+            "unknown_m2": 0.0,
+            "parcel_m2": 33008.527,
+            "classified_percent": 100.0,
+            "water_percent": 0.0
+          },
+          "ndwi": {
+            "water_m2": 0.0,
+            "ambiguous_m2": 0.0,
+            "unknown_m2": 0.0,
+            "parcel_m2": 33008.527,
+            "classified_percent": 100.0,
+            "water_percent": 0.0
+          },
+          "nearest_b11_mndwi": {
+            "water_m2": 0.0,
+            "ambiguous_m2": 0.0,
+            "unknown_m2": 0.0,
+            "parcel_m2": 33008.527,
+            "classified_percent": 100.0,
+            "water_percent": 0.0
+          },
+          "guided_ndwi": {
+            "water_m2": 0.0,
+            "ambiguous_m2": 0.0,
+            "unknown_m2": 0.0,
+            "parcel_m2": 33008.527,
+            "classified_percent": 100.0,
+            "water_percent": 0.0
+          },
+          "guided_ndwi_ndvi": {
+            "water_m2": 0.0,
+            "ambiguous_m2": 0.0,
+            "unknown_m2": 0.0,
+            "parcel_m2": 33008.527,
+            "classified_percent": 100.0,
+            "water_percent": 0.0
+          },
+          "indices": {
+            "NDVI": {
+              "centres": 330,
+              "valid_centres": 330,
+              "min": 0.13636364042758942,
+              "max": 0.8737863898277283,
+              "median": 0.7474512159824371,
+              "mean": 0.6988872074719631
+            },
+            "NDWI": {
+              "centres": 330,
+              "valid_centres": 330,
+              "min": -0.7291574478149414,
+              "max": -0.25765880942344666,
+              "median": -0.6396465599536896,
+              "mean": -0.620023934859218
+            },
+            "MNDWI": {
+              "centres": 84,
+              "valid_centres": 84,
+              "min": -0.6211550831794739,
+              "max": -0.3289395868778229,
+              "median": -0.5337612628936768,
+              "mean": -0.5272306931160745
+            },
+            "NDMI": {
+              "centres": 84,
+              "valid_centres": 84,
+              "min": -0.041885558515787125,
+              "max": 0.28770339488983154,
+              "median": 0.1640438288450241,
+              "mean": 0.15037386649055406
+            }
+          }
+        }
+      }
+    },
+    {
+      "product": "S2A_MSIL2A_20230819T110621_N0509_R137_T30TUK_20230819T152457",
+      "datetime": "2023-08-19T11:20:13.393000Z",
+      "manifest_sha256": "436a481edaf54e1c7ce00e2cf66c3c1f4c0f581a3c4e97f45fee49dca5e2b594",
+      "status": "quality_passed",
+      "experiments": {
+        "guided_ndwi": {
+          "method": "within_date_ridge_mean_preserving_detail_v1",
+          "guides": [
+            "NDWI"
+          ],
+          "coefficients": [
+            0.5530631348177322,
+            0.5029937897628244
+          ],
+          "training_blocks": 812,
+          "max_abs_reaggregation_error": 2.2351741790771484e-08,
+          "rmse_reaggregation": 9.184799542378488e-09,
+          "status": "experimental_not_operational",
+          "original_B11_resolution_m": 20,
+          "estimated_grid_m": 10
+        },
+        "guided_ndwi_ndvi": {
+          "method": "within_date_ridge_mean_preserving_detail_v1",
+          "guides": [
+            "NDWI",
+            "NDVI"
+          ],
+          "coefficients": [
+            0.47459505742852065,
+            0.1710457066271992,
+            -0.19531500135042176
+          ],
+          "training_blocks": 812,
+          "max_abs_reaggregation_error": 2.235174181852706e-08,
+          "rmse_reaggregation": 9.614807587347664e-09,
+          "status": "experimental_not_operational",
+          "original_B11_resolution_m": 20,
+          "estimated_grid_m": 10
+        }
+      },
+      "parcels": {
+        "45137A03300153": {
+          "combined": {
+            "water_m2": 0.0,
+            "ambiguous_m2": 0.0,
+            "unknown_m2": 0.0,
+            "parcel_m2": 52915.239,
+            "classified_percent": 100.0,
+            "water_percent": 0.0
+          },
+          "scl": {
+            "water_m2": 0.0,
+            "ambiguous_m2": 0.0,
+            "unknown_m2": 0.0,
+            "parcel_m2": 52915.239,
+            "classified_percent": 100.0,
+            "water_percent": 0.0
+          },
+          "mndwi20": {
+            "water_m2": 0.0,
+            "ambiguous_m2": 0.0,
+            "unknown_m2": 0.0,
+            "parcel_m2": 52915.239,
+            "classified_percent": 100.0,
+            "water_percent": 0.0
+          },
+          "ndwi": {
+            "water_m2": 0.0,
+            "ambiguous_m2": 0.0,
+            "unknown_m2": 0.0,
+            "parcel_m2": 52915.239,
+            "classified_percent": 100.0,
+            "water_percent": 0.0
+          },
+          "nearest_b11_mndwi": {
+            "water_m2": 0.0,
+            "ambiguous_m2": 0.0,
+            "unknown_m2": 0.0,
+            "parcel_m2": 52915.239,
+            "classified_percent": 100.0,
+            "water_percent": 0.0
+          },
+          "guided_ndwi": {
+            "water_m2": 0.0,
+            "ambiguous_m2": 0.0,
+            "unknown_m2": 0.0,
+            "parcel_m2": 52915.239,
+            "classified_percent": 100.0,
+            "water_percent": 0.0
+          },
+          "guided_ndwi_ndvi": {
+            "water_m2": 0.0,
+            "ambiguous_m2": 0.0,
+            "unknown_m2": 0.0,
+            "parcel_m2": 52915.239,
+            "classified_percent": 100.0,
+            "water_percent": 0.0
+          },
+          "indices": {
+            "NDVI": {
+              "centres": 525,
+              "valid_centres": 525,
+              "min": 0.16937997937202454,
+              "max": 0.9097115397453308,
+              "median": 0.8309950828552246,
+              "mean": 0.771225845615069
+            },
+            "NDWI": {
+              "centres": 525,
+              "valid_centres": 525,
+              "min": -0.7596174478530884,
+              "max": -0.3605553209781647,
+              "median": -0.672771692276001,
+              "mean": -0.6553958429609026
+            },
+            "MNDWI": {
+              "centres": 133,
+              "valid_centres": 133,
+              "min": -0.622541606426239,
+              "max": -0.391396701335907,
+              "median": -0.5106097459793091,
+              "mean": -0.5149504112121754
+            },
+            "NDMI": {
+              "centres": 133,
+              "valid_centres": 133,
+              "min": -0.06013362854719162,
+              "max": 0.42188727855682373,
+              "median": 0.2548808753490448,
+              "mean": 0.23881495046548376
+            }
+          }
+        },
+        "45137A03300155": {
+          "combined": {
+            "water_m2": 0.0,
+            "ambiguous_m2": 0.0,
+            "unknown_m2": 0.0,
+            "parcel_m2": 33008.527,
+            "classified_percent": 100.0,
+            "water_percent": 0.0
+          },
+          "scl": {
+            "water_m2": 0.0,
+            "ambiguous_m2": 0.0,
+            "unknown_m2": 0.0,
+            "parcel_m2": 33008.527,
+            "classified_percent": 100.0,
+            "water_percent": 0.0
+          },
+          "mndwi20": {
+            "water_m2": 0.0,
+            "ambiguous_m2": 0.0,
+            "unknown_m2": 0.0,
+            "parcel_m2": 33008.527,
+            "classified_percent": 100.0,
+            "water_percent": 0.0
+          },
+          "ndwi": {
+            "water_m2": 0.0,
+            "ambiguous_m2": 0.0,
+            "unknown_m2": 0.0,
+            "parcel_m2": 33008.527,
+            "classified_percent": 100.0,
+            "water_percent": 0.0
+          },
+          "nearest_b11_mndwi": {
+            "water_m2": 0.0,
+            "ambiguous_m2": 0.0,
+            "unknown_m2": 0.0,
+            "parcel_m2": 33008.527,
+            "classified_percent": 100.0,
+            "water_percent": 0.0
+          },
+          "guided_ndwi": {
+            "water_m2": 0.0,
+            "ambiguous_m2": 0.0,
+            "unknown_m2": 0.0,
+            "parcel_m2": 33008.527,
+            "classified_percent": 100.0,
+            "water_percent": 0.0
+          },
+          "guided_ndwi_ndvi": {
+            "water_m2": 0.0,
+            "ambiguous_m2": 0.0,
+            "unknown_m2": 0.0,
+            "parcel_m2": 33008.527,
+            "classified_percent": 100.0,
+            "water_percent": 0.0
+          },
+          "indices": {
+            "NDVI": {
+              "centres": 330,
+              "valid_centres": 330,
+              "min": 0.10971993207931519,
+              "max": 0.894166886806488,
+              "median": 0.7812477648258209,
+              "mean": 0.7165448413202257
+            },
+            "NDWI": {
+              "centres": 330,
+              "valid_centres": 330,
+              "min": -0.7498863339424133,
+              "max": -0.21852387487888336,
+              "median": -0.6532225608825684,
+              "mean": -0.6298773677511649
+            },
+            "MNDWI": {
+              "centres": 84,
+              "valid_centres": 84,
+              "min": -0.6476448178291321,
+              "max": -0.3104037940502167,
+              "median": -0.5021428465843201,
+              "mean": -0.4993706313627107
+            },
+            "NDMI": {
+              "centres": 84,
+              "valid_centres": 84,
+              "min": -0.03634200990200043,
+              "max": 0.3604913055896759,
+              "median": 0.23520679771900177,
+              "mean": 0.2142195492384157
+            }
+          }
+        }
+      }
+    },
+    {
+      "product": "S2A_MSIL2A_20230826T105631_N0509_R094_T30TUK_20230826T171259",
+      "datetime": "2023-08-26T11:10:16.303000Z",
+      "manifest_sha256": "38e006f1a633883258b88fa759b30db033e75014a7792fbfc7da598e8dff540f",
+      "status": "rejected_local_quality",
+      "experiments": {
+        "guided_ndwi": {
+          "status": "not_evaluable",
+          "reason": "Insufficient complete blocks for experimental reconstruction"
+        },
+        "guided_ndwi_ndvi": {
+          "status": "not_evaluable",
+          "reason": "Insufficient complete blocks for experimental reconstruction"
+        }
+      },
+      "parcels": {
+        "45137A03300153": {
+          "combined": {
+            "water_m2": 0.0,
+            "ambiguous_m2": 0.0,
+            "unknown_m2": 52915.239,
+            "parcel_m2": 52915.239,
+            "classified_percent": 0.0,
+            "water_percent": 0.0
+          },
+          "scl": {
+            "water_m2": 0.0,
+            "ambiguous_m2": 0.0,
+            "unknown_m2": 52915.239,
+            "parcel_m2": 52915.239,
+            "classified_percent": 0.0,
+            "water_percent": 0.0
+          },
+          "mndwi20": {
+            "water_m2": 0.0,
+            "ambiguous_m2": 0.0,
+            "unknown_m2": 52915.239,
+            "parcel_m2": 52915.239,
+            "classified_percent": 0.0,
+            "water_percent": 0.0
+          },
+          "ndwi": {
+            "water_m2": 0.0,
+            "ambiguous_m2": 0.0,
+            "unknown_m2": 52915.239,
+            "parcel_m2": 52915.239,
+            "classified_percent": 0.0,
+            "water_percent": 0.0
+          },
+          "nearest_b11_mndwi": {
+            "water_m2": 0.0,
+            "ambiguous_m2": 0.0,
+            "unknown_m2": 52915.239,
+            "parcel_m2": 52915.239,
+            "classified_percent": 0.0,
+            "water_percent": 0.0
+          },
+          "indices": {
+            "NDVI": {
+              "centres": 525,
+              "valid_centres": 0,
+              "min": null,
+              "max": null,
+              "median": null,
+              "mean": null
+            },
+            "NDWI": {
+              "centres": 525,
+              "valid_centres": 0,
+              "min": null,
+              "max": null,
+              "median": null,
+              "mean": null
+            },
+            "MNDWI": {
+              "centres": 133,
+              "valid_centres": 0,
+              "min": null,
+              "max": null,
+              "median": null,
+              "mean": null
+            },
+            "NDMI": {
+              "centres": 133,
+              "valid_centres": 0,
+              "min": null,
+              "max": null,
+              "median": null,
+              "mean": null
+            }
+          }
+        },
+        "45137A03300155": {
+          "combined": {
+            "water_m2": 0.0,
+            "ambiguous_m2": 0.0,
+            "unknown_m2": 33008.527,
+            "parcel_m2": 33008.527,
+            "classified_percent": 0.0,
+            "water_percent": 0.0
+          },
+          "scl": {
+            "water_m2": 0.0,
+            "ambiguous_m2": 0.0,
+            "unknown_m2": 33008.527,
+            "parcel_m2": 33008.527,
+            "classified_percent": 0.0,
+            "water_percent": 0.0
+          },
+          "mndwi20": {
+            "water_m2": 0.0,
+            "ambiguous_m2": 0.0,
+            "unknown_m2": 33008.527,
+            "parcel_m2": 33008.527,
+            "classified_percent": 0.0,
+            "water_percent": 0.0
+          },
+          "ndwi": {
+            "water_m2": 0.0,
+            "ambiguous_m2": 0.0,
+            "unknown_m2": 33008.527,
+            "parcel_m2": 33008.527,
+            "classified_percent": 0.0,
+            "water_percent": 0.0
+          },
+          "nearest_b11_mndwi": {
+            "water_m2": 0.0,
+            "ambiguous_m2": 0.0,
+            "unknown_m2": 33008.527,
+            "parcel_m2": 33008.527,
+            "classified_percent": 0.0,
+            "water_percent": 0.0
+          },
+          "indices": {
+            "NDVI": {
+              "centres": 330,
+              "valid_centres": 0,
+              "min": null,
+              "max": null,
+              "median": null,
+              "mean": null
+            },
+            "NDWI": {
+              "centres": 330,
+              "valid_centres": 0,
+              "min": null,
+              "max": null,
+              "median": null,
+              "mean": null
+            },
+            "MNDWI": {
+              "centres": 84,
+              "valid_centres": 0,
+              "min": null,
+              "max": null,
+              "median": null,
+              "mean": null
+            },
+            "NDMI": {
+              "centres": 84,
+              "valid_centres": 0,
+              "min": null,
+              "max": null,
+              "median": null,
+              "mean": null
+            }
+          }
+        }
+      }
+    },
+    {
+      "product": "S2A_MSIL2A_20230829T110621_N0509_R137_T30TUK_20230829T152901",
+      "datetime": "2023-08-29T11:20:12.852000Z",
+      "manifest_sha256": "a419e4aa5e0e0714a3333051d40cc3e9c4f122653a1161c01e0eaee2b58fbd2d",
+      "status": "rejected_local_quality",
+      "experiments": {
+        "guided_ndwi": {
+          "status": "not_evaluable",
+          "reason": "Insufficient complete blocks for experimental reconstruction"
+        },
+        "guided_ndwi_ndvi": {
+          "status": "not_evaluable",
+          "reason": "Insufficient complete blocks for experimental reconstruction"
+        }
+      },
+      "parcels": {
+        "45137A03300153": {
+          "combined": {
+            "water_m2": 0.0,
+            "ambiguous_m2": 0.0,
+            "unknown_m2": 52915.239,
+            "parcel_m2": 52915.239,
+            "classified_percent": 0.0,
+            "water_percent": 0.0
+          },
+          "scl": {
+            "water_m2": 0.0,
+            "ambiguous_m2": 0.0,
+            "unknown_m2": 52915.239,
+            "parcel_m2": 52915.239,
+            "classified_percent": 0.0,
+            "water_percent": 0.0
+          },
+          "mndwi20": {
+            "water_m2": 0.0,
+            "ambiguous_m2": 0.0,
+            "unknown_m2": 52915.239,
+            "parcel_m2": 52915.239,
+            "classified_percent": 0.0,
+            "water_percent": 0.0
+          },
+          "ndwi": {
+            "water_m2": 0.0,
+            "ambiguous_m2": 0.0,
+            "unknown_m2": 52915.239,
+            "parcel_m2": 52915.239,
+            "classified_percent": 0.0,
+            "water_percent": 0.0
+          },
+          "nearest_b11_mndwi": {
+            "water_m2": 0.0,
+            "ambiguous_m2": 0.0,
+            "unknown_m2": 52915.239,
+            "parcel_m2": 52915.239,
+            "classified_percent": 0.0,
+            "water_percent": 0.0
+          },
+          "indices": {
+            "NDVI": {
+              "centres": 525,
+              "valid_centres": 0,
+              "min": null,
+              "max": null,
+              "median": null,
+              "mean": null
+            },
+            "NDWI": {
+              "centres": 525,
+              "valid_centres": 0,
+              "min": null,
+              "max": null,
+              "median": null,
+              "mean": null
+            },
+            "MNDWI": {
+              "centres": 133,
+              "valid_centres": 0,
+              "min": null,
+              "max": null,
+              "median": null,
+              "mean": null
+            },
+            "NDMI": {
+              "centres": 133,
+              "valid_centres": 0,
+              "min": null,
+              "max": null,
+              "median": null,
+              "mean": null
+            }
+          }
+        },
+        "45137A03300155": {
+          "combined": {
+            "water_m2": 0.0,
+            "ambiguous_m2": 0.0,
+            "unknown_m2": 33008.527,
+            "parcel_m2": 33008.527,
+            "classified_percent": 0.0,
+            "water_percent": 0.0
+          },
+          "scl": {
+            "water_m2": 0.0,
+            "ambiguous_m2": 0.0,
+            "unknown_m2": 33008.527,
+            "parcel_m2": 33008.527,
+            "classified_percent": 0.0,
+            "water_percent": 0.0
+          },
+          "mndwi20": {
+            "water_m2": 0.0,
+            "ambiguous_m2": 0.0,
+            "unknown_m2": 33008.527,
+            "parcel_m2": 33008.527,
+            "classified_percent": 0.0,
+            "water_percent": 0.0
+          },
+          "ndwi": {
+            "water_m2": 0.0,
+            "ambiguous_m2": 0.0,
+            "unknown_m2": 33008.527,
+            "parcel_m2": 33008.527,
+            "classified_percent": 0.0,
+            "water_percent": 0.0
+          },
+          "nearest_b11_mndwi": {
+            "water_m2": 0.0,
+            "ambiguous_m2": 0.0,
+            "unknown_m2": 33008.527,
+            "parcel_m2": 33008.527,
+            "classified_percent": 0.0,
+            "water_percent": 0.0
+          },
+          "indices": {
+            "NDVI": {
+              "centres": 330,
+              "valid_centres": 0,
+              "min": null,
+              "max": null,
+              "median": null,
+              "mean": null
+            },
+            "NDWI": {
+              "centres": 330,
+              "valid_centres": 0,
+              "min": null,
+              "max": null,
+              "median": null,
+              "mean": null
+            },
+            "MNDWI": {
+              "centres": 84,
+              "valid_centres": 0,
+              "min": null,
+              "max": null,
+              "median": null,
+              "mean": null
+            },
+            "NDMI": {
+              "centres": 84,
+              "valid_centres": 0,
+              "min": null,
+              "max": null,
+              "median": null,
+              "mean": null
+            }
+          }
+        }
+      }
+    },
+    {
+      "product": "S2B_MSIL2A_20230801T105629_N0509_R094_T30TUK_20230801T123039",
+      "datetime": "2023-08-01T11:10:15.454000Z",
+      "manifest_sha256": "7875ca2ca1e59705c5ef20672177ee232505c55c17d3fe8ec7d3c3d2c470a2d9",
+      "status": "quality_passed",
+      "experiments": {
+        "guided_ndwi": {
+          "method": "within_date_ridge_mean_preserving_detail_v1",
+          "guides": [
+            "NDWI"
+          ],
+          "coefficients": [
+            0.6098625288338546,
+            0.5645173922229266
+          ],
+          "training_blocks": 812,
+          "max_abs_reaggregation_error": 2.9802322387695312e-08,
+          "rmse_reaggregation": 1.1034281575227302e-08,
+          "status": "experimental_not_operational",
+          "original_B11_resolution_m": 20,
+          "estimated_grid_m": 10
+        },
+        "guided_ndwi_ndvi": {
+          "method": "within_date_ridge_mean_preserving_detail_v1",
+          "guides": [
+            "NDWI",
+            "NDVI"
+          ],
+          "coefficients": [
+            0.4668405154335293,
+            -0.09626328691301975,
+            -0.41372251458192216
+          ],
+          "training_blocks": 812,
+          "max_abs_reaggregation_error": 2.235174181852706e-08,
+          "rmse_reaggregation": 1.1270286525341002e-08,
+          "status": "experimental_not_operational",
+          "original_B11_resolution_m": 20,
+          "estimated_grid_m": 10
+        }
+      },
+      "parcels": {
+        "45137A03300153": {
+          "combined": {
+            "water_m2": 0.0,
+            "ambiguous_m2": 0.0,
+            "unknown_m2": 0.0,
+            "parcel_m2": 52915.239,
+            "classified_percent": 100.0,
+            "water_percent": 0.0
+          },
+          "scl": {
+            "water_m2": 0.0,
+            "ambiguous_m2": 0.0,
+            "unknown_m2": 0.0,
+            "parcel_m2": 52915.239,
+            "classified_percent": 100.0,
+            "water_percent": 0.0
+          },
+          "mndwi20": {
+            "water_m2": 0.0,
+            "ambiguous_m2": 0.0,
+            "unknown_m2": 0.0,
+            "parcel_m2": 52915.239,
+            "classified_percent": 100.0,
+            "water_percent": 0.0
+          },
+          "ndwi": {
+            "water_m2": 0.0,
+            "ambiguous_m2": 0.0,
+            "unknown_m2": 0.0,
+            "parcel_m2": 52915.239,
+            "classified_percent": 100.0,
+            "water_percent": 0.0
+          },
+          "nearest_b11_mndwi": {
+            "water_m2": 0.0,
+            "ambiguous_m2": 0.0,
+            "unknown_m2": 0.0,
+            "parcel_m2": 52915.239,
+            "classified_percent": 100.0,
+            "water_percent": 0.0
+          },
+          "guided_ndwi": {
+            "water_m2": 0.0,
+            "ambiguous_m2": 0.0,
+            "unknown_m2": 0.0,
+            "parcel_m2": 52915.239,
+            "classified_percent": 100.0,
+            "water_percent": 0.0
+          },
+          "guided_ndwi_ndvi": {
+            "water_m2": 0.0,
+            "ambiguous_m2": 0.0,
+            "unknown_m2": 0.0,
+            "parcel_m2": 52915.239,
+            "classified_percent": 100.0,
+            "water_percent": 0.0
+          },
+          "indices": {
+            "NDVI": {
+              "centres": 525,
+              "valid_centres": 525,
+              "min": 0.17514829337596893,
+              "max": 0.8304821252822876,
+              "median": 0.6101651787757874,
+              "mean": 0.5816724791697093
+            },
+            "NDWI": {
+              "centres": 525,
+              "valid_centres": 525,
+              "min": -0.6692373752593994,
+              "max": -0.3594486713409424,
+              "median": -0.5627508759498596,
+              "mean": -0.5517150757426307
+            },
+            "MNDWI": {
+              "centres": 133,
+              "valid_centres": 133,
+              "min": -0.5803133249282837,
+              "max": -0.39429640769958496,
+              "median": -0.49956297874450684,
+              "mean": -0.4993188681459068
+            },
+            "NDMI": {
+              "centres": 133,
+              "valid_centres": 133,
+              "min": -0.09206273406744003,
+              "max": 0.30251970887184143,
+              "median": 0.0803794339299202,
+              "mean": 0.08496892778202891
+            }
+          }
+        },
+        "45137A03300155": {
+          "combined": {
+            "water_m2": 0.0,
+            "ambiguous_m2": 0.0,
+            "unknown_m2": 0.0,
+            "parcel_m2": 33008.527,
+            "classified_percent": 100.0,
+            "water_percent": 0.0
+          },
+          "scl": {
+            "water_m2": 0.0,
+            "ambiguous_m2": 0.0,
+            "unknown_m2": 0.0,
+            "parcel_m2": 33008.527,
+            "classified_percent": 100.0,
+            "water_percent": 0.0
+          },
+          "mndwi20": {
+            "water_m2": 0.0,
+            "ambiguous_m2": 0.0,
+            "unknown_m2": 0.0,
+            "parcel_m2": 33008.527,
+            "classified_percent": 100.0,
+            "water_percent": 0.0
+          },
+          "ndwi": {
+            "water_m2": 0.0,
+            "ambiguous_m2": 0.0,
+            "unknown_m2": 0.0,
+            "parcel_m2": 33008.527,
+            "classified_percent": 100.0,
+            "water_percent": 0.0
+          },
+          "nearest_b11_mndwi": {
+            "water_m2": 0.0,
+            "ambiguous_m2": 0.0,
+            "unknown_m2": 0.0,
+            "parcel_m2": 33008.527,
+            "classified_percent": 100.0,
+            "water_percent": 0.0
+          },
+          "guided_ndwi": {
+            "water_m2": 0.0,
+            "ambiguous_m2": 0.0,
+            "unknown_m2": 0.0,
+            "parcel_m2": 33008.527,
+            "classified_percent": 100.0,
+            "water_percent": 0.0
+          },
+          "guided_ndwi_ndvi": {
+            "water_m2": 0.0,
+            "ambiguous_m2": 0.0,
+            "unknown_m2": 0.0,
+            "parcel_m2": 33008.527,
+            "classified_percent": 100.0,
+            "water_percent": 0.0
+          },
+          "indices": {
+            "NDVI": {
+              "centres": 330,
+              "valid_centres": 330,
+              "min": 0.12252041697502136,
+              "max": 0.742935299873352,
+              "median": 0.500124379992485,
+              "mean": 0.49105347286571155
+            },
+            "NDWI": {
+              "centres": 330,
+              "valid_centres": 330,
+              "min": -0.6420013904571533,
+              "max": -0.22939297556877136,
+              "median": -0.5263715386390686,
+              "mean": -0.5139393939664869
+            },
+            "MNDWI": {
+              "centres": 84,
+              "valid_centres": 84,
+              "min": -0.5985864400863647,
+              "max": -0.34585675597190857,
+              "median": -0.49536389112472534,
+              "mean": -0.49145585972638356
+            },
+            "NDMI": {
+              "centres": 84,
+              "valid_centres": 84,
+              "min": -0.07971207797527313,
+              "max": 0.21471896767616272,
+              "median": 0.03837595321238041,
+              "mean": 0.04082498840926703
+            }
+          }
+        }
+      }
+    },
+    {
+      "product": "S2B_MSIL2A_20230804T110619_N0509_R137_T30TUK_20230804T124114",
+      "datetime": "2023-08-04T11:20:12.001000Z",
+      "manifest_sha256": "b3f70eb1b06c126c2195701df70b4fd392832e06f1a7942b0bdcf7a60be6e78a",
+      "status": "quality_passed",
+      "experiments": {
+        "guided_ndwi": {
+          "method": "within_date_ridge_mean_preserving_detail_v1",
+          "guides": [
+            "NDWI"
+          ],
+          "coefficients": [
+            0.5550943503961848,
+            0.5029515531865052
+          ],
+          "training_blocks": 812,
+          "max_abs_reaggregation_error": 2.235174181852706e-08,
+          "rmse_reaggregation": 1.0297172812729989e-08,
+          "status": "experimental_not_operational",
+          "original_B11_resolution_m": 20,
+          "estimated_grid_m": 10
+        },
+        "guided_ndwi_ndvi": {
+          "method": "within_date_ridge_mean_preserving_detail_v1",
+          "guides": [
+            "NDWI",
+            "NDVI"
+          ],
+          "coefficients": [
+            0.4816615861172361,
+            0.18014479257604574,
+            -0.19949598358395515
+          ],
+          "training_blocks": 812,
+          "max_abs_reaggregation_error": 2.2351741790771484e-08,
+          "rmse_reaggregation": 1.050015301003592e-08,
+          "status": "experimental_not_operational",
+          "original_B11_resolution_m": 20,
+          "estimated_grid_m": 10
+        }
+      },
+      "parcels": {
+        "45137A03300153": {
+          "combined": {
+            "water_m2": 0.0,
+            "ambiguous_m2": 0.0,
+            "unknown_m2": 0.0,
+            "parcel_m2": 52915.239,
+            "classified_percent": 100.0,
+            "water_percent": 0.0
+          },
+          "scl": {
+            "water_m2": 0.0,
+            "ambiguous_m2": 0.0,
+            "unknown_m2": 0.0,
+            "parcel_m2": 52915.239,
+            "classified_percent": 100.0,
+            "water_percent": 0.0
+          },
+          "mndwi20": {
+            "water_m2": 0.0,
+            "ambiguous_m2": 0.0,
+            "unknown_m2": 0.0,
+            "parcel_m2": 52915.239,
+            "classified_percent": 100.0,
+            "water_percent": 0.0
+          },
+          "ndwi": {
+            "water_m2": 0.0,
+            "ambiguous_m2": 0.0,
+            "unknown_m2": 0.0,
+            "parcel_m2": 52915.239,
+            "classified_percent": 100.0,
+            "water_percent": 0.0
+          },
+          "nearest_b11_mndwi": {
+            "water_m2": 0.0,
+            "ambiguous_m2": 0.0,
+            "unknown_m2": 0.0,
+            "parcel_m2": 52915.239,
+            "classified_percent": 100.0,
+            "water_percent": 0.0
+          },
+          "guided_ndwi": {
+            "water_m2": 0.0,
+            "ambiguous_m2": 0.0,
+            "unknown_m2": 0.0,
+            "parcel_m2": 52915.239,
+            "classified_percent": 100.0,
+            "water_percent": 0.0
+          },
+          "guided_ndwi_ndvi": {
+            "water_m2": 0.0,
+            "ambiguous_m2": 0.0,
+            "unknown_m2": 0.0,
+            "parcel_m2": 52915.239,
+            "classified_percent": 100.0,
+            "water_percent": 0.0
+          },
+          "indices": {
+            "NDVI": {
+              "centres": 525,
+              "valid_centres": 525,
+              "min": 0.18548119068145752,
+              "max": 0.866452157497406,
+              "median": 0.6716089844703674,
+              "mean": 0.6360028000672658
+            },
+            "NDWI": {
+              "centres": 525,
+              "valid_centres": 525,
+              "min": -0.7173717617988586,
+              "max": -0.3655542731285095,
+              "median": -0.5991799235343933,
+              "mean": -0.5870872532186054
+            },
+            "MNDWI": {
+              "centres": 133,
+              "valid_centres": 133,
+              "min": -0.6015156507492065,
+              "max": -0.36383187770843506,
+              "median": -0.5085541009902954,
+              "mean": -0.49891273128358943
+            },
+            "NDMI": {
+              "centres": 133,
+              "valid_centres": 133,
+              "min": -0.07636559009552002,
+              "max": 0.36843910813331604,
+              "median": 0.10729756951332092,
+              "mean": 0.1274171784779239
+            }
+          }
+        },
+        "45137A03300155": {
+          "combined": {
+            "water_m2": 0.0,
+            "ambiguous_m2": 0.0,
+            "unknown_m2": 0.0,
+            "parcel_m2": 33008.527,
+            "classified_percent": 100.0,
+            "water_percent": 0.0
+          },
+          "scl": {
+            "water_m2": 0.0,
+            "ambiguous_m2": 0.0,
+            "unknown_m2": 0.0,
+            "parcel_m2": 33008.527,
+            "classified_percent": 100.0,
+            "water_percent": 0.0
+          },
+          "mndwi20": {
+            "water_m2": 0.0,
+            "ambiguous_m2": 0.0,
+            "unknown_m2": 0.0,
+            "parcel_m2": 33008.527,
+            "classified_percent": 100.0,
+            "water_percent": 0.0
+          },
+          "ndwi": {
+            "water_m2": 0.0,
+            "ambiguous_m2": 0.0,
+            "unknown_m2": 0.0,
+            "parcel_m2": 33008.527,
+            "classified_percent": 100.0,
+            "water_percent": 0.0
+          },
+          "nearest_b11_mndwi": {
+            "water_m2": 0.0,
+            "ambiguous_m2": 0.0,
+            "unknown_m2": 0.0,
+            "parcel_m2": 33008.527,
+            "classified_percent": 100.0,
+            "water_percent": 0.0
+          },
+          "guided_ndwi": {
+            "water_m2": 0.0,
+            "ambiguous_m2": 0.0,
+            "unknown_m2": 0.0,
+            "parcel_m2": 33008.527,
+            "classified_percent": 100.0,
+            "water_percent": 0.0
+          },
+          "guided_ndwi_ndvi": {
+            "water_m2": 0.0,
+            "ambiguous_m2": 0.0,
+            "unknown_m2": 0.0,
+            "parcel_m2": 33008.527,
+            "classified_percent": 100.0,
+            "water_percent": 0.0
+          },
+          "indices": {
+            "NDVI": {
+              "centres": 330,
+              "valid_centres": 330,
+              "min": 0.14761720597743988,
+              "max": 0.7979962229728699,
+              "median": 0.5644494295120239,
+              "mean": 0.546646431675463
+            },
+            "NDWI": {
+              "centres": 330,
+              "valid_centres": 330,
+              "min": -0.6776149272918701,
+              "max": -0.26527124643325806,
+              "median": -0.5665020644664764,
+              "mean": -0.54801509931232
+            },
+            "MNDWI": {
+              "centres": 84,
+              "valid_centres": 84,
+              "min": -0.5986666679382324,
+              "max": -0.3560887575149536,
+              "median": -0.5187965631484985,
+              "mean": -0.5131273620894977
+            },
+            "NDMI": {
+              "centres": 84,
+              "valid_centres": 84,
+              "min": -0.07389651238918304,
+              "max": 0.23005957901477814,
+              "median": 0.03810583986341953,
+              "mean": 0.05358692199557221
+            }
+          }
+        }
+      }
+    },
+    {
+      "product": "S2B_MSIL2A_20230811T105629_N0509_R094_T30TUK_20230811T153913",
+      "datetime": "2023-08-11T11:10:15.953000Z",
+      "manifest_sha256": "31a3716f7986c408d690f723ea386767045867b3b75aa96b549a7a5b4882ca2d",
+      "status": "quality_passed",
+      "experiments": {
+        "guided_ndwi": {
+          "method": "within_date_ridge_mean_preserving_detail_v1",
+          "guides": [
+            "NDWI"
+          ],
+          "coefficients": [
+            0.6232877036805253,
+            0.5691256974104686
+          ],
+          "training_blocks": 812,
+          "max_abs_reaggregation_error": 3.725290298461914e-08,
+          "rmse_reaggregation": 1.0937828934094003e-08,
+          "status": "experimental_not_operational",
+          "original_B11_resolution_m": 20,
+          "estimated_grid_m": 10
+        },
+        "guided_ndwi_ndvi": {
+          "method": "within_date_ridge_mean_preserving_detail_v1",
+          "guides": [
+            "NDWI",
+            "NDVI"
+          ],
+          "coefficients": [
+            0.4772790963565806,
+            -0.04985834895203794,
+            -0.36047144484511995
+          ],
+          "training_blocks": 812,
+          "max_abs_reaggregation_error": 2.235174181852706e-08,
+          "rmse_reaggregation": 1.0065519725690575e-08,
+          "status": "experimental_not_operational",
+          "original_B11_resolution_m": 20,
+          "estimated_grid_m": 10
+        }
+      },
+      "parcels": {
+        "45137A03300153": {
+          "combined": {
+            "water_m2": 0.0,
+            "ambiguous_m2": 0.0,
+            "unknown_m2": 0.0,
+            "parcel_m2": 52915.239,
+            "classified_percent": 100.0,
+            "water_percent": 0.0
+          },
+          "scl": {
+            "water_m2": 0.0,
+            "ambiguous_m2": 0.0,
+            "unknown_m2": 0.0,
+            "parcel_m2": 52915.239,
+            "classified_percent": 100.0,
+            "water_percent": 0.0
+          },
+          "mndwi20": {
+            "water_m2": 0.0,
+            "ambiguous_m2": 0.0,
+            "unknown_m2": 0.0,
+            "parcel_m2": 52915.239,
+            "classified_percent": 100.0,
+            "water_percent": 0.0
+          },
+          "ndwi": {
+            "water_m2": 0.0,
+            "ambiguous_m2": 0.0,
+            "unknown_m2": 0.0,
+            "parcel_m2": 52915.239,
+            "classified_percent": 100.0,
+            "water_percent": 0.0
+          },
+          "nearest_b11_mndwi": {
+            "water_m2": 0.0,
+            "ambiguous_m2": 0.0,
+            "unknown_m2": 0.0,
+            "parcel_m2": 52915.239,
+            "classified_percent": 100.0,
+            "water_percent": 0.0
+          },
+          "guided_ndwi": {
+            "water_m2": 0.0,
+            "ambiguous_m2": 0.0,
+            "unknown_m2": 0.0,
+            "parcel_m2": 52915.239,
+            "classified_percent": 100.0,
+            "water_percent": 0.0
+          },
+          "guided_ndwi_ndvi": {
+            "water_m2": 0.0,
+            "ambiguous_m2": 0.0,
+            "unknown_m2": 0.0,
+            "parcel_m2": 52915.239,
+            "classified_percent": 100.0,
+            "water_percent": 0.0
+          },
+          "indices": {
+            "NDVI": {
+              "centres": 525,
+              "valid_centres": 525,
+              "min": 0.18622449040412903,
+              "max": 0.9008746147155762,
+              "median": 0.8023797273635864,
+              "mean": 0.7419029531308583
+            },
+            "NDWI": {
+              "centres": 525,
+              "valid_centres": 525,
+              "min": -0.7246175408363342,
+              "max": -0.3711758255958557,
+              "median": -0.6508127450942993,
+              "mean": -0.631777031535194
+            },
+            "MNDWI": {
+              "centres": 133,
+              "valid_centres": 133,
+              "min": -0.589855968952179,
+              "max": -0.39286062121391296,
+              "median": -0.4954407215118408,
+              "mean": -0.5028459024160428
+            },
+            "NDMI": {
+              "centres": 133,
+              "valid_centres": 133,
+              "min": -0.06459330022335052,
+              "max": 0.38577955961227417,
+              "median": 0.211534321308136,
+              "mean": 0.19307705654265514
+            }
+          }
+        },
+        "45137A03300155": {
+          "combined": {
+            "water_m2": 0.0,
+            "ambiguous_m2": 0.0,
+            "unknown_m2": 0.0,
+            "parcel_m2": 33008.527,
+            "classified_percent": 100.0,
+            "water_percent": 0.0
+          },
+          "scl": {
+            "water_m2": 0.0,
+            "ambiguous_m2": 0.0,
+            "unknown_m2": 0.0,
+            "parcel_m2": 33008.527,
+            "classified_percent": 100.0,
+            "water_percent": 0.0
+          },
+          "mndwi20": {
+            "water_m2": 0.0,
+            "ambiguous_m2": 0.0,
+            "unknown_m2": 0.0,
+            "parcel_m2": 33008.527,
+            "classified_percent": 100.0,
+            "water_percent": 0.0
+          },
+          "ndwi": {
+            "water_m2": 0.0,
+            "ambiguous_m2": 0.0,
+            "unknown_m2": 0.0,
+            "parcel_m2": 33008.527,
+            "classified_percent": 100.0,
+            "water_percent": 0.0
+          },
+          "nearest_b11_mndwi": {
+            "water_m2": 0.0,
+            "ambiguous_m2": 0.0,
+            "unknown_m2": 0.0,
+            "parcel_m2": 33008.527,
+            "classified_percent": 100.0,
+            "water_percent": 0.0
+          },
+          "guided_ndwi": {
+            "water_m2": 0.0,
+            "ambiguous_m2": 0.0,
+            "unknown_m2": 0.0,
+            "parcel_m2": 33008.527,
+            "classified_percent": 100.0,
+            "water_percent": 0.0
+          },
+          "guided_ndwi_ndvi": {
+            "water_m2": 0.0,
+            "ambiguous_m2": 0.0,
+            "unknown_m2": 0.0,
+            "parcel_m2": 33008.527,
+            "classified_percent": 100.0,
+            "water_percent": 0.0
+          },
+          "indices": {
+            "NDVI": {
+              "centres": 330,
+              "valid_centres": 330,
+              "min": 0.1441887617111206,
+              "max": 0.8699835538864136,
+              "median": 0.7124524712562561,
+              "mean": 0.6650012339606429
+            },
+            "NDWI": {
+              "centres": 330,
+              "valid_centres": 330,
+              "min": -0.7306689620018005,
+              "max": -0.2581678330898285,
+              "median": -0.6203352510929108,
+              "mean": -0.6011688342600158
+            },
+            "MNDWI": {
+              "centres": 84,
+              "valid_centres": 84,
+              "min": -0.6304112672805786,
+              "max": -0.34582850337028503,
+              "median": -0.5319614410400391,
+              "mean": -0.5142874572248686
+            },
+            "NDMI": {
+              "centres": 84,
+              "valid_centres": 84,
+              "min": -0.0664123073220253,
+              "max": 0.2948605418205261,
+              "median": 0.12134189158678055,
+              "mean": 0.12765156820283405
+            }
+          }
+        }
+      }
+    },
+    {
+      "product": "S2B_MSIL2A_20230814T110629_N0509_R137_T30TUK_20230814T143411",
+      "datetime": "2023-08-14T11:20:12.903000Z",
+      "manifest_sha256": "e0bb91a5e791adafc75e8767e347afacd2fc2967069766c0e0f8741439ab8f29",
+      "status": "quality_passed",
+      "experiments": {
+        "guided_ndwi": {
+          "method": "within_date_ridge_mean_preserving_detail_v1",
+          "guides": [
+            "NDWI"
+          ],
+          "coefficients": [
+            0.584436337571208,
+            0.5657672064738617
+          ],
+          "training_blocks": 812,
+          "max_abs_reaggregation_error": 2.2351741790771484e-08,
+          "rmse_reaggregation": 9.110064374194735e-09,
+          "status": "experimental_not_operational",
+          "original_B11_resolution_m": 20,
+          "estimated_grid_m": 10
+        },
+        "guided_ndwi_ndvi": {
+          "method": "within_date_ridge_mean_preserving_detail_v1",
+          "guides": [
+            "NDWI",
+            "NDVI"
+          ],
+          "coefficients": [
+            0.48818868193833315,
+            0.17059638008777137,
+            -0.22714249146983265
+          ],
+          "training_blocks": 812,
+          "max_abs_reaggregation_error": 2.60770320892334e-08,
+          "rmse_reaggregation": 9.605026046301626e-09,
+          "status": "experimental_not_operational",
+          "original_B11_resolution_m": 20,
+          "estimated_grid_m": 10
+        }
+      },
+      "parcels": {
+        "45137A03300153": {
+          "combined": {
+            "water_m2": 0.0,
+            "ambiguous_m2": 0.0,
+            "unknown_m2": 0.0,
+            "parcel_m2": 52915.239,
+            "classified_percent": 100.0,
+            "water_percent": 0.0
+          },
+          "scl": {
+            "water_m2": 0.0,
+            "ambiguous_m2": 0.0,
+            "unknown_m2": 0.0,
+            "parcel_m2": 52915.239,
+            "classified_percent": 100.0,
+            "water_percent": 0.0
+          },
+          "mndwi20": {
+            "water_m2": 0.0,
+            "ambiguous_m2": 0.0,
+            "unknown_m2": 0.0,
+            "parcel_m2": 52915.239,
+            "classified_percent": 100.0,
+            "water_percent": 0.0
+          },
+          "ndwi": {
+            "water_m2": 0.0,
+            "ambiguous_m2": 0.0,
+            "unknown_m2": 0.0,
+            "parcel_m2": 52915.239,
+            "classified_percent": 100.0,
+            "water_percent": 0.0
+          },
+          "nearest_b11_mndwi": {
+            "water_m2": 0.0,
+            "ambiguous_m2": 0.0,
+            "unknown_m2": 0.0,
+            "parcel_m2": 52915.239,
+            "classified_percent": 100.0,
+            "water_percent": 0.0
+          },
+          "guided_ndwi": {
+            "water_m2": 0.0,
+            "ambiguous_m2": 0.0,
+            "unknown_m2": 0.0,
+            "parcel_m2": 52915.239,
+            "classified_percent": 100.0,
+            "water_percent": 0.0
+          },
+          "guided_ndwi_ndvi": {
+            "water_m2": 0.0,
+            "ambiguous_m2": 0.0,
+            "unknown_m2": 0.0,
+            "parcel_m2": 52915.239,
+            "classified_percent": 100.0,
+            "water_percent": 0.0
+          },
+          "indices": {
+            "NDVI": {
+              "centres": 525,
+              "valid_centres": 525,
+              "min": 0.18672476708889008,
+              "max": 0.8893616795539856,
+              "median": 0.8031545877456665,
+              "mean": 0.7417986851646786
+            },
+            "NDWI": {
+              "centres": 525,
+              "valid_centres": 525,
+              "min": -0.7293384075164795,
+              "max": -0.3731575012207031,
+              "median": -0.6537678241729736,
+              "mean": -0.6358797329948062
+            },
+            "MNDWI": {
+              "centres": 133,
+              "valid_centres": 133,
+              "min": -0.5581151843070984,
+              "max": -0.3892002999782562,
+              "median": -0.47212669253349304,
+              "mean": -0.47645267911423417
+            },
+            "NDMI": {
+              "centres": 133,
+              "valid_centres": 133,
+              "min": -0.06377313286066055,
+              "max": 0.4269610047340393,
+              "median": 0.26244235038757324,
+              "mean": 0.23459971617010975
+            }
+          }
+        },
+        "45137A03300155": {
+          "combined": {
+            "water_m2": 0.0,
+            "ambiguous_m2": 0.0,
+            "unknown_m2": 0.0,
+            "parcel_m2": 33008.527,
+            "classified_percent": 100.0,
+            "water_percent": 0.0
+          },
+          "scl": {
+            "water_m2": 0.0,
+            "ambiguous_m2": 0.0,
+            "unknown_m2": 0.0,
+            "parcel_m2": 33008.527,
+            "classified_percent": 100.0,
+            "water_percent": 0.0
+          },
+          "mndwi20": {
+            "water_m2": 0.0,
+            "ambiguous_m2": 0.0,
+            "unknown_m2": 0.0,
+            "parcel_m2": 33008.527,
+            "classified_percent": 100.0,
+            "water_percent": 0.0
+          },
+          "ndwi": {
+            "water_m2": 0.0,
+            "ambiguous_m2": 0.0,
+            "unknown_m2": 0.0,
+            "parcel_m2": 33008.527,
+            "classified_percent": 100.0,
+            "water_percent": 0.0
+          },
+          "nearest_b11_mndwi": {
+            "water_m2": 0.0,
+            "ambiguous_m2": 0.0,
+            "unknown_m2": 0.0,
+            "parcel_m2": 33008.527,
+            "classified_percent": 100.0,
+            "water_percent": 0.0
+          },
+          "guided_ndwi": {
+            "water_m2": 0.0,
+            "ambiguous_m2": 0.0,
+            "unknown_m2": 0.0,
+            "parcel_m2": 33008.527,
+            "classified_percent": 100.0,
+            "water_percent": 0.0
+          },
+          "guided_ndwi_ndvi": {
+            "water_m2": 0.0,
+            "ambiguous_m2": 0.0,
+            "unknown_m2": 0.0,
+            "parcel_m2": 33008.527,
+            "classified_percent": 100.0,
+            "water_percent": 0.0
+          },
+          "indices": {
+            "NDVI": {
+              "centres": 330,
+              "valid_centres": 330,
+              "min": 0.13380937278270721,
+              "max": 0.8594265580177307,
+              "median": 0.7236154973506927,
+              "mean": 0.6707146475712459
+            },
+            "NDWI": {
+              "centres": 330,
+              "valid_centres": 330,
+              "min": -0.7105509042739868,
+              "max": -0.2421768754720688,
+              "median": -0.6237107217311859,
+              "mean": -0.6049234135132847
+            },
+            "MNDWI": {
+              "centres": 84,
+              "valid_centres": 84,
+              "min": -0.5956265926361084,
+              "max": -0.33467409014701843,
+              "median": -0.48668378591537476,
+              "mean": -0.48165506266412283
+            },
+            "NDMI": {
+              "centres": 84,
+              "valid_centres": 84,
+              "min": -0.04362816736102104,
+              "max": 0.33802056312561035,
+              "median": 0.1955687701702118,
+              "mean": 0.17711453528941742
+            }
+          }
+        }
+      }
+    },
+    {
+      "product": "S2B_MSIL2A_20230821T105629_N0509_R094_T30TUK_20230821T140250",
+      "datetime": "2023-08-21T11:10:15.166000Z",
+      "manifest_sha256": "41a04832e8ce9ff520934c4c42ae3376ff56085a0005ef29849db2cacb762b2d",
+      "status": "quality_passed",
+      "experiments": {
+        "guided_ndwi": {
+          "method": "within_date_ridge_mean_preserving_detail_v1",
+          "guides": [
+            "NDWI"
+          ],
+          "coefficients": [
+            0.612545898925373,
+            0.5482095928405236
+          ],
+          "training_blocks": 812,
+          "max_abs_reaggregation_error": 2.9802322387695312e-08,
+          "rmse_reaggregation": 1.0556158552088514e-08,
+          "status": "experimental_not_operational",
+          "original_B11_resolution_m": 20,
+          "estimated_grid_m": 10
+        },
+        "guided_ndwi_ndvi": {
+          "method": "within_date_ridge_mean_preserving_detail_v1",
+          "guides": [
+            "NDWI",
+            "NDVI"
+          ],
+          "coefficients": [
+            0.5038538560094866,
+            0.09355886178311035,
+            -0.25776027857161393
+          ],
+          "training_blocks": 812,
+          "max_abs_reaggregation_error": 2.2351741790771484e-08,
+          "rmse_reaggregation": 9.82492968288068e-09,
+          "status": "experimental_not_operational",
+          "original_B11_resolution_m": 20,
+          "estimated_grid_m": 10
+        }
+      },
+      "parcels": {
+        "45137A03300153": {
+          "combined": {
+            "water_m2": 0.0,
+            "ambiguous_m2": 0.0,
+            "unknown_m2": 0.0,
+            "parcel_m2": 52915.239,
+            "classified_percent": 100.0,
+            "water_percent": 0.0
+          },
+          "scl": {
+            "water_m2": 0.0,
+            "ambiguous_m2": 0.0,
+            "unknown_m2": 0.0,
+            "parcel_m2": 52915.239,
+            "classified_percent": 100.0,
+            "water_percent": 0.0
+          },
+          "mndwi20": {
+            "water_m2": 0.0,
+            "ambiguous_m2": 0.0,
+            "unknown_m2": 0.0,
+            "parcel_m2": 52915.239,
+            "classified_percent": 100.0,
+            "water_percent": 0.0
+          },
+          "ndwi": {
+            "water_m2": 0.0,
+            "ambiguous_m2": 0.0,
+            "unknown_m2": 0.0,
+            "parcel_m2": 52915.239,
+            "classified_percent": 100.0,
+            "water_percent": 0.0
+          },
+          "nearest_b11_mndwi": {
+            "water_m2": 0.0,
+            "ambiguous_m2": 0.0,
+            "unknown_m2": 0.0,
+            "parcel_m2": 52915.239,
+            "classified_percent": 100.0,
+            "water_percent": 0.0
+          },
+          "guided_ndwi": {
+            "water_m2": 0.0,
+            "ambiguous_m2": 0.0,
+            "unknown_m2": 0.0,
+            "parcel_m2": 52915.239,
+            "classified_percent": 100.0,
+            "water_percent": 0.0
+          },
+          "guided_ndwi_ndvi": {
+            "water_m2": 0.0,
+            "ambiguous_m2": 0.0,
+            "unknown_m2": 0.0,
+            "parcel_m2": 52915.239,
+            "classified_percent": 100.0,
+            "water_percent": 0.0
+          },
+          "indices": {
+            "NDVI": {
+              "centres": 525,
+              "valid_centres": 525,
+              "min": 0.1767614334821701,
+              "max": 0.9234352707862854,
+              "median": 0.8573692440986633,
+              "mean": 0.7935796100468863
+            },
+            "NDWI": {
+              "centres": 525,
+              "valid_centres": 525,
+              "min": -0.7531573176383972,
+              "max": -0.3482517600059509,
+              "median": -0.679624080657959,
+              "mean": -0.6584001786368234
+            },
+            "MNDWI": {
+              "centres": 133,
+              "valid_centres": 133,
+              "min": -0.6482315063476562,
+              "max": -0.3887138366699219,
+              "median": -0.512607753276825,
+              "mean": -0.5252655836424434
+            },
+            "NDMI": {
+              "centres": 133,
+              "valid_centres": 133,
+              "min": -0.06350162625312805,
+              "max": 0.42152857780456543,
+              "median": 0.2393132448196411,
+              "mean": 0.22494182406742602
+            }
+          }
+        },
+        "45137A03300155": {
+          "combined": {
+            "water_m2": 0.0,
+            "ambiguous_m2": 0.0,
+            "unknown_m2": 0.0,
+            "parcel_m2": 33008.527,
+            "classified_percent": 100.0,
+            "water_percent": 0.0
+          },
+          "scl": {
+            "water_m2": 0.0,
+            "ambiguous_m2": 0.0,
+            "unknown_m2": 0.0,
+            "parcel_m2": 33008.527,
+            "classified_percent": 100.0,
+            "water_percent": 0.0
+          },
+          "mndwi20": {
+            "water_m2": 0.0,
+            "ambiguous_m2": 0.0,
+            "unknown_m2": 0.0,
+            "parcel_m2": 33008.527,
+            "classified_percent": 100.0,
+            "water_percent": 0.0
+          },
+          "ndwi": {
+            "water_m2": 0.0,
+            "ambiguous_m2": 0.0,
+            "unknown_m2": 0.0,
+            "parcel_m2": 33008.527,
+            "classified_percent": 100.0,
+            "water_percent": 0.0
+          },
+          "nearest_b11_mndwi": {
+            "water_m2": 0.0,
+            "ambiguous_m2": 0.0,
+            "unknown_m2": 0.0,
+            "parcel_m2": 33008.527,
+            "classified_percent": 100.0,
+            "water_percent": 0.0
+          },
+          "guided_ndwi": {
+            "water_m2": 0.0,
+            "ambiguous_m2": 0.0,
+            "unknown_m2": 0.0,
+            "parcel_m2": 33008.527,
+            "classified_percent": 100.0,
+            "water_percent": 0.0
+          },
+          "guided_ndwi_ndvi": {
+            "water_m2": 0.0,
+            "ambiguous_m2": 0.0,
+            "unknown_m2": 0.0,
+            "parcel_m2": 33008.527,
+            "classified_percent": 100.0,
+            "water_percent": 0.0
+          },
+          "indices": {
+            "NDVI": {
+              "centres": 330,
+              "valid_centres": 330,
+              "min": 0.14374999701976776,
+              "max": 0.908713698387146,
+              "median": 0.8136757016181946,
+              "mean": 0.7540501390442703
+            },
+            "NDWI": {
+              "centres": 330,
+              "valid_centres": 330,
+              "min": -0.7560462951660156,
+              "max": -0.25187230110168457,
+              "median": -0.661324679851532,
+              "mean": -0.6414210751201167
+            },
+            "MNDWI": {
+              "centres": 84,
+              "valid_centres": 84,
+              "min": -0.6696340441703796,
+              "max": -0.343485027551651,
+              "median": -0.5215781331062317,
+              "mean": -0.5215855613350868
+            },
+            "NDMI": {
+              "centres": 84,
+              "valid_centres": 84,
+              "min": -0.037211883813142776,
+              "max": 0.33070865273475647,
+              "median": 0.21728342026472092,
+              "mean": 0.19748540740623693
+            }
+          }
+        }
+      }
+    },
+    {
+      "product": "S2B_MSIL2A_20230824T110619_N0509_R137_T30TUK_20230824T172746",
+      "datetime": "2023-08-24T11:20:11.337000Z",
+      "manifest_sha256": "fc3393a8579772041688336ab5b2101d668ebce12d3e6cd93627cbfcc478a5e8",
+      "status": "quality_passed",
+      "experiments": {
+        "guided_ndwi": {
+          "method": "within_date_ridge_mean_preserving_detail_v1",
+          "guides": [
+            "NDWI"
+          ],
+          "coefficients": [
+            0.5730049350533112,
+            0.5271603276008905
+          ],
+          "training_blocks": 812,
+          "max_abs_reaggregation_error": 2.2351741790771484e-08,
+          "rmse_reaggregation": 8.866679747638038e-09,
+          "status": "experimental_not_operational",
+          "original_B11_resolution_m": 20,
+          "estimated_grid_m": 10
+        },
+        "guided_ndwi_ndvi": {
+          "method": "within_date_ridge_mean_preserving_detail_v1",
+          "guides": [
+            "NDWI",
+            "NDVI"
+          ],
+          "coefficients": [
+            0.4942036173330079,
+            0.2091933341937566,
+            -0.1836315335423097
+          ],
+          "training_blocks": 812,
+          "max_abs_reaggregation_error": 2.235174181852706e-08,
+          "rmse_reaggregation": 9.352597568930641e-09,
+          "status": "experimental_not_operational",
+          "original_B11_resolution_m": 20,
+          "estimated_grid_m": 10
+        }
+      },
+      "parcels": {
+        "45137A03300153": {
+          "combined": {
+            "water_m2": 0.0,
+            "ambiguous_m2": 0.0,
+            "unknown_m2": 0.0,
+            "parcel_m2": 52915.239,
+            "classified_percent": 100.0,
+            "water_percent": 0.0
+          },
+          "scl": {
+            "water_m2": 0.0,
+            "ambiguous_m2": 0.0,
+            "unknown_m2": 0.0,
+            "parcel_m2": 52915.239,
+            "classified_percent": 100.0,
+            "water_percent": 0.0
+          },
+          "mndwi20": {
+            "water_m2": 0.0,
+            "ambiguous_m2": 0.0,
+            "unknown_m2": 0.0,
+            "parcel_m2": 52915.239,
+            "classified_percent": 100.0,
+            "water_percent": 0.0
+          },
+          "ndwi": {
+            "water_m2": 0.0,
+            "ambiguous_m2": 0.0,
+            "unknown_m2": 0.0,
+            "parcel_m2": 52915.239,
+            "classified_percent": 100.0,
+            "water_percent": 0.0
+          },
+          "nearest_b11_mndwi": {
+            "water_m2": 0.0,
+            "ambiguous_m2": 0.0,
+            "unknown_m2": 0.0,
+            "parcel_m2": 52915.239,
+            "classified_percent": 100.0,
+            "water_percent": 0.0
+          },
+          "guided_ndwi": {
+            "water_m2": 0.0,
+            "ambiguous_m2": 0.0,
+            "unknown_m2": 0.0,
+            "parcel_m2": 52915.239,
+            "classified_percent": 100.0,
+            "water_percent": 0.0
+          },
+          "guided_ndwi_ndvi": {
+            "water_m2": 0.0,
+            "ambiguous_m2": 0.0,
+            "unknown_m2": 0.0,
+            "parcel_m2": 52915.239,
+            "classified_percent": 100.0,
+            "water_percent": 0.0
+          },
+          "indices": {
+            "NDVI": {
+              "centres": 525,
+              "valid_centres": 525,
+              "min": 0.19140625,
+              "max": 0.9102333784103394,
+              "median": 0.8428077101707458,
+              "mean": 0.7866327421438126
+            },
+            "NDWI": {
+              "centres": 525,
+              "valid_centres": 525,
+              "min": -0.7635135054588318,
+              "max": -0.3777777850627899,
+              "median": -0.6950088739395142,
+              "mean": -0.6757466738564627
+            },
+            "MNDWI": {
+              "centres": 133,
+              "valid_centres": 133,
+              "min": -0.6114782094955444,
+              "max": -0.4016380310058594,
+              "median": -0.5005156397819519,
+              "mean": -0.5063286461776361
+            },
+            "NDMI": {
+              "centres": 133,
+              "valid_centres": 133,
+              "min": -0.05871511250734329,
+              "max": 0.44292962551116943,
+              "median": 0.3005247116088867,
+              "mean": 0.27096372879901554
+            }
+          }
+        },
+        "45137A03300155": {
+          "combined": {
+            "water_m2": 0.0,
+            "ambiguous_m2": 0.0,
+            "unknown_m2": 0.0,
+            "parcel_m2": 33008.527,
+            "classified_percent": 100.0,
+            "water_percent": 0.0
+          },
+          "scl": {
+            "water_m2": 0.0,
+            "ambiguous_m2": 0.0,
+            "unknown_m2": 0.0,
+            "parcel_m2": 33008.527,
+            "classified_percent": 100.0,
+            "water_percent": 0.0
+          },
+          "mndwi20": {
+            "water_m2": 0.0,
+            "ambiguous_m2": 0.0,
+            "unknown_m2": 0.0,
+            "parcel_m2": 33008.527,
+            "classified_percent": 100.0,
+            "water_percent": 0.0
+          },
+          "ndwi": {
+            "water_m2": 0.0,
+            "ambiguous_m2": 0.0,
+            "unknown_m2": 0.0,
+            "parcel_m2": 33008.527,
+            "classified_percent": 100.0,
+            "water_percent": 0.0
+          },
+          "nearest_b11_mndwi": {
+            "water_m2": 0.0,
+            "ambiguous_m2": 0.0,
+            "unknown_m2": 0.0,
+            "parcel_m2": 33008.527,
+            "classified_percent": 100.0,
+            "water_percent": 0.0
+          },
+          "guided_ndwi": {
+            "water_m2": 0.0,
+            "ambiguous_m2": 0.0,
+            "unknown_m2": 0.0,
+            "parcel_m2": 33008.527,
+            "classified_percent": 100.0,
+            "water_percent": 0.0
+          },
+          "guided_ndwi_ndvi": {
+            "water_m2": 0.0,
+            "ambiguous_m2": 0.0,
+            "unknown_m2": 0.0,
+            "parcel_m2": 33008.527,
+            "classified_percent": 100.0,
+            "water_percent": 0.0
+          },
+          "indices": {
+            "NDVI": {
+              "centres": 330,
+              "valid_centres": 330,
+              "min": 0.1668984740972519,
+              "max": 0.9138131737709045,
+              "median": 0.8163188099861145,
+              "mean": 0.7546179978684946
+            },
+            "NDWI": {
+              "centres": 330,
+              "valid_centres": 330,
+              "min": -0.7676420211791992,
+              "max": -0.2922602891921997,
+              "median": -0.677567720413208,
+              "mean": -0.6559106646162091
+            },
+            "MNDWI": {
+              "centres": 84,
+              "valid_centres": 84,
+              "min": -0.6307973265647888,
+              "max": -0.3456980884075165,
+              "median": -0.476472407579422,
+              "mean": -0.47889340739874614
+            },
+            "NDMI": {
+              "centres": 84,
+              "valid_centres": 84,
+              "min": -0.02995908632874489,
+              "max": 0.4353432059288025,
+              "median": 0.3052982687950134,
+              "mean": 0.2678400162008724
+            }
+          }
+        }
+      }
+    },
+    {
+      "product": "S2B_MSIL2A_20230831T105629_N0509_R094_T30TUK_20230831T140122",
+      "datetime": "2023-08-31T11:10:15.139000Z",
+      "manifest_sha256": "1740aa724353a0764674ea6f872a5d90d10418b0904cb2f162e4a5f8f6541894",
+      "status": "quality_passed",
+      "experiments": {
+        "guided_ndwi": {
+          "method": "within_date_ridge_mean_preserving_detail_v1",
+          "guides": [
+            "NDWI"
+          ],
+          "coefficients": [
+            0.649765344776235,
+            0.5945980409121796
+          ],
+          "training_blocks": 812,
+          "max_abs_reaggregation_error": 2.9802322387695312e-08,
+          "rmse_reaggregation": 1.0543198254681533e-08,
+          "status": "experimental_not_operational",
+          "original_B11_resolution_m": 20,
+          "estimated_grid_m": 10
+        },
+        "guided_ndwi_ndvi": {
+          "method": "within_date_ridge_mean_preserving_detail_v1",
+          "guides": [
+            "NDWI",
+            "NDVI"
+          ],
+          "coefficients": [
+            0.5249574631946778,
+            0.06682682520095214,
+            -0.3120179679783299
+          ],
+          "training_blocks": 812,
+          "max_abs_reaggregation_error": 2.2351741790771484e-08,
+          "rmse_reaggregation": 9.883897133496945e-09,
+          "status": "experimental_not_operational",
+          "original_B11_resolution_m": 20,
+          "estimated_grid_m": 10
+        }
+      },
+      "parcels": {
+        "45137A03300153": {
+          "combined": {
+            "water_m2": 0.0,
+            "ambiguous_m2": 0.0,
+            "unknown_m2": 0.0,
+            "parcel_m2": 52915.239,
+            "classified_percent": 100.0,
+            "water_percent": 0.0
+          },
+          "scl": {
+            "water_m2": 0.0,
+            "ambiguous_m2": 0.0,
+            "unknown_m2": 0.0,
+            "parcel_m2": 52915.239,
+            "classified_percent": 100.0,
+            "water_percent": 0.0
+          },
+          "mndwi20": {
+            "water_m2": 0.0,
+            "ambiguous_m2": 0.0,
+            "unknown_m2": 0.0,
+            "parcel_m2": 52915.239,
+            "classified_percent": 100.0,
+            "water_percent": 0.0
+          },
+          "ndwi": {
+            "water_m2": 0.0,
+            "ambiguous_m2": 0.0,
+            "unknown_m2": 0.0,
+            "parcel_m2": 52915.239,
+            "classified_percent": 100.0,
+            "water_percent": 0.0
+          },
+          "nearest_b11_mndwi": {
+            "water_m2": 0.0,
+            "ambiguous_m2": 0.0,
+            "unknown_m2": 0.0,
+            "parcel_m2": 52915.239,
+            "classified_percent": 100.0,
+            "water_percent": 0.0
+          },
+          "guided_ndwi": {
+            "water_m2": 0.0,
+            "ambiguous_m2": 0.0,
+            "unknown_m2": 0.0,
+            "parcel_m2": 52915.239,
+            "classified_percent": 100.0,
+            "water_percent": 0.0
+          },
+          "guided_ndwi_ndvi": {
+            "water_m2": 0.0,
+            "ambiguous_m2": 0.0,
+            "unknown_m2": 0.0,
+            "parcel_m2": 52915.239,
+            "classified_percent": 100.0,
+            "water_percent": 0.0
+          },
+          "indices": {
+            "NDVI": {
+              "centres": 525,
+              "valid_centres": 525,
+              "min": 0.19806763529777527,
+              "max": 0.8749022483825684,
+              "median": 0.8067000508308411,
+              "mean": 0.7570211324521473
+            },
+            "NDWI": {
+              "centres": 525,
+              "valid_centres": 525,
+              "min": -0.7636973261833191,
+              "max": -0.3762485980987549,
+              "median": -0.682758629322052,
+              "mean": -0.6667887519654774
+            },
+            "MNDWI": {
+              "centres": 133,
+              "valid_centres": 133,
+              "min": -0.6111014485359192,
+              "max": -0.3896544873714447,
+              "median": -0.48985275626182556,
+              "mean": -0.49143685994291664
+            },
+            "NDMI": {
+              "centres": 133,
+              "valid_centres": 133,
+              "min": -0.05587758123874664,
+              "max": 0.4155518412590027,
+              "median": 0.31270408630371094,
+              "mean": 0.2733354162760919
+            }
+          }
+        },
+        "45137A03300155": {
+          "combined": {
+            "water_m2": 0.0,
+            "ambiguous_m2": 0.0,
+            "unknown_m2": 0.0,
+            "parcel_m2": 33008.527,
+            "classified_percent": 100.0,
+            "water_percent": 0.0
+          },
+          "scl": {
+            "water_m2": 0.0,
+            "ambiguous_m2": 0.0,
+            "unknown_m2": 0.0,
+            "parcel_m2": 33008.527,
+            "classified_percent": 100.0,
+            "water_percent": 0.0
+          },
+          "mndwi20": {
+            "water_m2": 0.0,
+            "ambiguous_m2": 0.0,
+            "unknown_m2": 0.0,
+            "parcel_m2": 33008.527,
+            "classified_percent": 100.0,
+            "water_percent": 0.0
+          },
+          "ndwi": {
+            "water_m2": 0.0,
+            "ambiguous_m2": 0.0,
+            "unknown_m2": 0.0,
+            "parcel_m2": 33008.527,
+            "classified_percent": 100.0,
+            "water_percent": 0.0
+          },
+          "nearest_b11_mndwi": {
+            "water_m2": 0.0,
+            "ambiguous_m2": 0.0,
+            "unknown_m2": 0.0,
+            "parcel_m2": 33008.527,
+            "classified_percent": 100.0,
+            "water_percent": 0.0
+          },
+          "guided_ndwi": {
+            "water_m2": 0.0,
+            "ambiguous_m2": 0.0,
+            "unknown_m2": 0.0,
+            "parcel_m2": 33008.527,
+            "classified_percent": 100.0,
+            "water_percent": 0.0
+          },
+          "guided_ndwi_ndvi": {
+            "water_m2": 0.0,
+            "ambiguous_m2": 0.0,
+            "unknown_m2": 0.0,
+            "parcel_m2": 33008.527,
+            "classified_percent": 100.0,
+            "water_percent": 0.0
+          },
+          "indices": {
+            "NDVI": {
+              "centres": 330,
+              "valid_centres": 330,
+              "min": 0.17667844891548157,
+              "max": 0.8520653247833252,
+              "median": 0.7777771353721619,
+              "mean": 0.72920095599962
+            },
+            "NDWI": {
+              "centres": 330,
+              "valid_centres": 330,
+              "min": -0.7566765546798706,
+              "max": -0.2869565188884735,
+              "median": -0.6616732478141785,
+              "mean": -0.6421780908649618
+            },
+            "MNDWI": {
+              "centres": 84,
+              "valid_centres": 84,
+              "min": -0.5724644064903259,
+              "max": -0.35488268733024597,
+              "median": -0.47426289319992065,
+              "mean": -0.47242937946603414
+            },
+            "NDMI": {
+              "centres": 84,
+              "valid_centres": 84,
+              "min": -0.03494060039520264,
+              "max": 0.3802647292613983,
+              "median": 0.28861548006534576,
+              "mean": 0.25262974857884857
+            }
+          }
+        }
+      }
+    }
+  ]
+}
