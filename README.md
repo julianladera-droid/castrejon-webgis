@@ -388,9 +388,11 @@ Pruebas de publicación: `python scripts/test_sentinel_web.py` (GDAL/NumPy) y
 `.github/workflows/sentinel.yml` busca productos **Sentinel-2 L2A ya disponibles**
 en Copernicus **cada tres días de febrero a septiembre**, ambos inclusive,
 contando desde el 1 de febrero sin reiniciar la cuenta al cambiar de mes.
-En **enero, octubre, noviembre y diciembre se ejecuta el día 15**.
+De **octubre a enero se ejecuta cada 15 días**, contando desde el 1 de octubre
+sin reiniciar al cambiar de mes ni de año (1, 16 y 31 de octubre; 15 y 30 de
+noviembre; 15 y 30 de diciembre; 14 y 29 de enero).
 Hora: 05:30 UTC (07:30 en Madrid en verano, 06:30 en invierno).
-GitHub comprueba el calendario diariamente durante la temporada, pero los días
+GitHub comprueba el calendario diariamente todo el año, pero los días
 intermedios no consulta ni descarga nada de Copernicus. También permite ejecución
 manual en Actions. No depende de una sesión de navegador.
 Busca en los últimos 30 días una adquisición con cobertura completa del rectángulo

@@ -2,9 +2,8 @@ name: Sentinel L2A automatic download
 
 on:
   schedule:
-    # Daily calendar check in season; only due dates contact Copernicus.
-    - cron: '30 5 * 2-9 *'
-    - cron: '30 5 15 1,10-12 *'
+    # Daily calendar check; only due dates contact Copernicus.
+    - cron: '30 5 * * *'
   workflow_dispatch:
 
 permissions:

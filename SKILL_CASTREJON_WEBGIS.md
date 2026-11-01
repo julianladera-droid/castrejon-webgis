@@ -1,5 +1,5 @@
 # SKILL · Castrejón WebGIS — Contrato de arquitectura y evolución
-Version: 0.1.31
+Version: 0.1.32
 Fecha base: 2026-09-30
 Estado: ACTIVO · se actualiza tras cada ciclo de pruebas
 
@@ -442,6 +442,14 @@ Formato de cada cambio:
 No borrar una regla por comodidad. Si una regla cambia, conservar el motivo en el historial.
 
 ## 12. Registro de cambios
+### 0.1.32 — 2026-11-01 · Sentinel cada 15 días fuera de temporada
+- Fallo/reproducción: después del 15 de octubre no se consultaban imágenes hasta el 15 de noviembre.
+- Causa: calendario mensual fuera de temporada; el usuario solicita intervalos de 15 días.
+- Corrección: comprobar diariamente a las 05:30 UTC y consultar Copernicus cada 15 días de octubre a enero, contando desde el 1 de octubre del mismo ciclo, sin reiniciar al cambiar de mes o año. Febrero a septiembre conserva los tres días desde el 1 de febrero. La ejecución manual sigue disponible.
+- Regresión: recorrer ciclos completos, incluidos enero, fines de mes y años bisiestos; verificar intervalos exactos y concordancia del cron diario.
+- Archivos: scripts/sentinel_schedule.py, scripts/test_sentinel_schedule.py, .github/workflows/sentinel.yml y README.md.
+- Compatibilidad: no cambia la selección, calidad, credenciales, productos ni publicación de imágenes.
+
 ### 0.1.31 — 2026-10-30 · Revisión de ubicación antes de publicar
 - Fallo/reproducción: un punto peninsular alejado superaba los límites -10/5 y 35/45; editar los campos podía conservar el GPS anterior.
 - Causa: validación regional demasiado amplia, sin revisión espacial ni sincronización de entradas pendientes.
