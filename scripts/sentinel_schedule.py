@@ -7,7 +7,8 @@ from zoneinfo import ZoneInfo
 def is_due(day: date) -> bool:
     if 2 <= day.month <= 9:
         return (day - date(day.year, 2, 1)).days % 3 == 0
-    return day.day == 15
+    cycle_year = day.year - 1 if day.month == 1 else day.year
+    return (day - date(cycle_year, 10, 1)).days % 15 == 0
 
 
 if __name__ == '__main__':
