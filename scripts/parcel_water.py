@@ -1,44 +1,44 @@
-"""Exploratory new surface water, not confirmed soil waterlogging.
-
-All area calculations intersect native 20 m cells with metric parcel geometries.
-Fractional borders improve geometric accounting, not physical sensor resolution.
-"""
+"""Current optical surface water and optional transitions, with exact metric areas."""
 import hashlib
 import json
 import numpy as np
 from osgeo import gdal, ogr, osr
 from parcel_grid import require_same_grid
+from sentinel_contract import WATER_METHOD
 
-METHOD = 'scl_new_surface_water_v1'
+METHOD = WATER_METHOD
 MIN_VALID_PERCENT = 80
+COLUMNS = ['water_m2', 'ambiguous_m2', 'unknown_m2', 'evaluated_m2', 'parcel_m2',
+           'appeared_m2', 'both_observations_m2', 'disappeared_m2', 'common_evaluated_m2']
 
 
-def classify(a, b):
-    """0: evaluated non-new water; 1: new water; 2: water both dates; 3: unknown."""
-    valid = np.isin(a, [4, 5, 6]) & np.isin(b, [4, 5, 6])
-    result = np.full(a.shape, 3, dtype=np.uint8)
-    result[valid] = 0
-    result[(b == 6) & np.isin(a, [4, 5])] = 1
-    result[(a == 6) & (b == 6)] = 2
-    return result
+def transitions(a, b):
+    """0 unchanged dry, 1 appearance, 2 both, 3 disappearance, 4 incomparable."""
+    common = np.isin(a, [0, 1]) & np.isin(b, [0, 1])
+    values = np.full(b.shape, 4, dtype=np.uint8)
+    values[common] = 0
+    values[common & (a == 0) & (b == 1)] = 1
+    values[common & (a == 1) & (b == 1)] = 2
+    values[common & (a == 1) & (b == 0)] = 3
+    return values
 
 
-def regions(a, b):
-    require_same_grid(a, b)
-    if (a.GetGeoTransform()[1:3] != (20, 0) or a.GetGeoTransform()[4:] != (0, -20)):
-        raise ValueError('Expected native 20m SCL grid')
-    arrays = [ds.ReadAsArray() for ds in (a, b)]
-    if any(not np.all(np.isin(v, [-9999, *range(12)])) for v in arrays):
-        raise ValueError('Invalid scene classification')
-    values = classify(*arrays)
-    ds = gdal.GetDriverByName('MEM').Create('', a.RasterXSize, a.RasterYSize, 2, gdal.GDT_Byte)
-    ds.SetProjection(a.GetProjection()); ds.SetGeoTransform(a.GetGeoTransform())
+def regions(reference, values=None):
+    """Polygonize full cells, including unknown; all clipping happens in EPSG:25830."""
+    gt = reference.GetGeoTransform()
+    if (reference.GetSpatialRef().GetAuthorityCode(None) != '25830' or
+            gt[1] not in (10, 20) or (gt[2], gt[4], gt[5]) != (0, 0, -gt[1])):
+        raise ValueError('Expected original metric grid')
+    values = reference.ReadAsArray() if values is None else values
+    if values.shape != (reference.RasterYSize, reference.RasterXSize) or not np.all(np.isin(values, range(5))):
+        raise ValueError('Invalid water classes')
+    ds = gdal.GetDriverByName('MEM').Create('', reference.RasterXSize, reference.RasterYSize, 1, gdal.GDT_Byte)
+    ds.SetProjection(reference.GetProjection()); ds.SetGeoTransform(gt)
     ds.GetRasterBand(1).WriteArray(values)
-    ds.GetRasterBand(2).WriteArray(values != 3)
     vector = ogr.GetDriverByName('Memory').CreateDataSource('')
-    layer = vector.CreateLayer('regions', a.GetSpatialRef(), ogr.wkbPolygon)
+    layer = vector.CreateLayer('regions', reference.GetSpatialRef(), ogr.wkbPolygon)
     layer.CreateField(ogr.FieldDefn('class', ogr.OFTInteger))
-    gdal.Polygonize(ds.GetRasterBand(1), ds.GetRasterBand(2), layer, 0, [])
+    gdal.Polygonize(ds.GetRasterBand(1), None, layer, 0, [])
     return vector
 
 
@@ -62,8 +62,7 @@ def parcel_areas(layer, geometry):
     total = parcel.GetArea()
     if total <= 0:
         raise ValueError('Empty parcel area')
-    areas = [0., 0., 0.]
-    new_geometries = []
+    areas, shapes = [0.] * 5, []
     layer.SetSpatialFilter(parcel); layer.ResetReading()
     for feature in layer:
         intersection = polygon_parts(parcel.Intersection(feature.GetGeometryRef()))
@@ -72,24 +71,41 @@ def parcel_areas(layer, geometry):
             continue
         kind = feature.GetField('class')
         areas[kind] += area
-        if kind == 1:
-            new_geometries.append(intersection)
+        if kind in (1, 2, 3):
+            shapes.append((kind, intersection))
     layer.SetSpatialFilter(None)
-    known = sum(areas)
-    if known > total + .01:
+    if sum(areas) > total + .01:
         raise ValueError('Overlapping classified regions')
-    return [areas[1], areas[2], min(known, total), total], new_geometries
+    missing = max(0., total - sum(areas))
+    if missing > .001:
+        xmin, xmax, ymin, ymax = layer.GetExtent()
+        extent = ogr.CreateGeometryFromWkt(f'POLYGON(({xmin} {ymin},{xmax} {ymin},{xmax} {ymax},{xmin} {ymax},{xmin} {ymin}))')
+        outside = polygon_parts(parcel.Difference(extent))
+        if outside.GetArea() > .001:
+            shapes.append((3, outside))
+    return areas, total, missing, shapes
 
 
-def build_water(before, after, entries, master_path, destination, pair_id):
-    a, b = (gdal.Open(str(folder / 'SCL.tif')) for folder in (before, after))
-    vector = regions(a, b)
+def build_water(after, entry, master_path, destination, before=None, previous=None):
+    current = gdal.Open(str(after/'WATER.tif'))
+    if not np.all(np.isin(current.ReadAsArray(), range(4))):
+        raise ValueError('Invalid current water classes')
+    vector = regions(current)
+    change = None
+    if before is not None and previous is not None:
+        old = gdal.Open(str(before/'WATER.tif'))
+        if previous['datetime'] >= entry['datetime']:
+            raise ValueError('Water reference must precede observation')
+        try:
+            require_same_grid(old, current)
+        except ValueError:
+            previous = None
+        else:
+            change = regions(current, transitions(old.ReadAsArray(), current.ReadAsArray()))
     master_bytes = master_path.read_bytes()
     master = json.loads(master_bytes)
-    if master['crs'] != 'EPSG:25830' or master['web_sha256'] != entries[0]['parcel_indices']['parcel_web_sha256']:
+    if master['crs'] != 'EPSG:25830' or master['web_sha256'] != entry['parcel_indices']['parcel_web_sha256']:
         raise ValueError('Water parcel provenance mismatch')
-    if entries[0]['datetime'] >= entries[1]['datetime']:
-        raise ValueError('Water assessment requires chronological dates')
     source = osr.SpatialReference(); source.ImportFromEPSG(25830)
     target = osr.SpatialReference(); target.ImportFromEPSG(4326)
     for crs in (source, target): crs.SetAxisMappingStrategy(osr.OAMS_TRADITIONAL_GIS_ORDER)
@@ -97,27 +113,38 @@ def build_water(before, after, entries, master_path, destination, pair_id):
     table, features = {}, []
     for feature in master['features']:
         ref = feature['refcat']
-        row, shapes = parcel_areas(vector.GetLayer(), feature['geometry'])
-        table[ref] = [round(value, 3) for value in row]
-        for shape in shapes:
+        areas, total, missing, shapes = parcel_areas(vector.GetLayer(), feature['geometry'])
+        row = [areas[1], areas[2], areas[3] + missing, areas[0] + areas[1], total]
+        if change is not None:
+            temporal, _, _, _ = parcel_areas(change.GetLayer(), feature['geometry'])
+            row += [temporal[1], temporal[2], temporal[3], sum(temporal[:4])]
+        else:
+            row += [None] * 4
+        table[ref] = [round(v, 3) if v is not None else None for v in row]
+        for kind, shape in shapes:
+            # GEOS can produce sub-mm² numerical slivers along shared edges.
+            # Keep exact area accounting above, but never emit a category rounded
+            # to zero in the compact table (the client checks this invariant).
+            if table[ref][kind-1] <= 0:
+                continue
             shape.Transform(transform)
-            features.append({'type': 'Feature', 'properties': {'refcat': ref},
+            features.append({'type': 'Feature', 'properties': {'refcat': ref, 'class': kind},
                              'geometry': json.loads(shape.ExportToJson())})
-    data = {'version': 1, 'method': METHOD, 'status': 'exploratory', 'resolution_m': 20,
-        'min_valid_percent': MIN_VALID_PERCENT, 'area_method': 'fractional_cell_intersection_25830',
-        'a': {k: entries[0][k] for k in ('id', 'datetime')},
-        'b': {k: entries[1][k] for k in ('id', 'datetime')},
-        'scl_sha256': [e['quality_mask']['sha256'] for e in entries],
+    data = {'version': 2, 'method': METHOD, 'status': 'exploratory', 'resolution_m': 10,
+        'support_resolution_m': 20, 'min_valid_percent': MIN_VALID_PERCENT,
+        'area_method': 'fractional_cell_intersection_25830',
+        'observation': {k: entry[k] for k in ('id', 'datetime')},
+        'previous': {k: previous[k] for k in ('id', 'datetime')} if change is not None else None,
+        'source_sha256': entry['water_raster_sha256'],
+        'previous_sha256': previous['water_raster_sha256'] if change is not None else None,
         'parcel_web_sha256': master['web_sha256'],
-        'master_sha256': hashlib.sha256(master_bytes).hexdigest(),
-        'columns': ['new_water_m2', 'water_both_dates_m2', 'evaluated_m2', 'parcel_m2'],
-        'parcels': table}
+        'master_sha256': hashlib.sha256(master_bytes).hexdigest(), 'columns': COLUMNS, 'parcels': table}
     descriptor = {'method': METHOD, 'parcel_web_sha256': master['web_sha256']}
     for key, filename, payload in [('table', 'parcel-water.json', data),
             ('zones', 'water-zones.geojson', {'type': 'FeatureCollection', 'features': features})]:
         content = (json.dumps(payload, separators=(',', ':'), allow_nan=False) + '\n').encode()
-        (destination / filename).write_bytes(content)
-        descriptor[key] = {'path': f'sentinel/{pair_id}/{filename}',
+        (destination/filename).write_bytes(content)
+        descriptor[key] = {'path': f"sentinel/{entry['id']}/{filename}",
                            'sha256': hashlib.sha256(content).hexdigest()}
-    print(f'Water estimate: {len(table)} parcels, {len(features)} clipped new-water polygons')
+    print(f"Water {entry['datetime']}: {len(table)} parcels, {len(features)} polygons")
     return descriptor

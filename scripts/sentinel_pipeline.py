@@ -17,10 +17,14 @@ from urllib.request import urlopen
 
 import numpy as np
 from osgeo import gdal, ogr
+from parcel_grid import require_same_grid, require_nested_grid, mean_2x2, repeat_2x2
+from spectral_quality import normalized_difference, quality_counts, MIN_SUM
+from sentinel_contract import PRODUCT_VERSION, RADIOMETRY, WATER_METHOD, INDEX_RESOLUTIONS, RAW_BANDS
+from water_detection import detect, PARAMETERS, QUALITY_BITS
 
 ROOT = Path(__file__).resolve().parents[1]
 ENDPOINT = 'https://stac.dataspace.copernicus.eu/v1/search'
-BANDS = {'B04_10m': 10, 'B08_10m': 10, 'B8A_20m': 20, 'B11_20m': 20, 'SCL_20m': 20}
+BANDS = RAW_BANDS
 
 
 def aligned_bounds(bounds, resolution):
@@ -51,19 +55,16 @@ def indices(red, nir, narrow, swir, scl10, scl20):
     # Conservative quality mask; retain vegetation, bare/nonvegetated ground and water.
     valid10 = np.isin(scl10, [4, 5, 6]) & np.isfinite(red) & np.isfinite(nir)
     valid20 = np.isin(scl20, [4, 5, 6]) & np.isfinite(narrow) & np.isfinite(swir)
-    def ratio(numerator, denominator, valid):
-        result = np.full(numerator.shape, -9999, dtype=np.float32)
-        np.divide(numerator, denominator, out=result,
-                  where=valid & np.isfinite(denominator) & (np.abs(denominator) > 1e-8))
-        return result
-    return {'NDVI': ratio(nir-red, nir+red, valid10),
-            'EVI2': ratio(2.5*(nir-red), nir+2.4*red+1, valid10),
-            'NDMI': ratio(narrow-swir, narrow+swir, valid20)}
+    evi = np.full(red.shape, -9999, dtype=np.float32)
+    np.divide(2.5*(nir-red), nir+2.4*red+1, out=evi,
+              where=valid10 & (red >= 0) & (nir >= 0) & (red+nir > MIN_SUM))
+    return {'NDVI': normalized_difference(nir, red, valid10), 'EVI2': evi,
+            'NDMI': normalized_difference(narrow, swir, valid20)}
 
 
-def fetch_catalogue(bbox, end):
+def fetch_catalogue(bbox, end, start=None):
     query = {'collections': 'sentinel-2-l2a', 'bbox': ','.join(map(str, bbox)),
-             'datetime': f'{(end-timedelta(days=30)).isoformat()}/{end.isoformat()}', 'limit': 100}
+             'datetime': f'{(start or end-timedelta(days=30)).isoformat()}/{end.isoformat()}', 'limit': 100}
     url = ENDPOINT + '?' + urlencode(query)
     features = []
     for _ in range(10):
@@ -84,7 +85,7 @@ def fetch_catalogue(bbox, end):
 
 def crop(asset, bounds, resolution):
     href = asset['href']
-    if not href.startswith('s3://eodata/Sentinel-2/MSI/L2A/') or '..' in href:
+    if not re.match(r'^s3://eodata/Sentinel-2/MSI/L2A(?:_N0500)?/', href) or '..' in href:
         raise ValueError('Unexpected S3 asset location')
     path = '/vsis3/' + href.removeprefix('s3://')
     ds = gdal.Warp('', path, format='MEM', dstSRS='EPSG:25830',
@@ -99,9 +100,16 @@ def crop(asset, bounds, resolution):
 def reflectance(ds, asset):
     if 'raster:scale' not in asset or 'raster:offset' not in asset:
         raise ValueError('Missing reflectance scale/offset; no assumed conversion')
-    dn = ds.ReadAsArray()
-    return np.where(dn == -9999, np.nan,
-                    dn*float(asset['raster:scale'])+float(asset['raster:offset']))
+    # GDAL ReadAsArray returns DN, it does not apply band scale/offset.
+    dn = ds.ReadAsArray().astype(np.float64)
+    valid = np.isfinite(dn) & (dn != -9999) & (dn != asset.get('nodata', 0))
+    nodata = ds.GetRasterBand(1).GetNoDataValue()
+    if nodata is not None:
+        valid &= dn != nodata
+    scale, offset = float(asset['raster:scale']), float(asset['raster:offset'])
+    if not np.isfinite(scale) or scale <= 0 or not np.isfinite(offset):
+        raise ValueError('Invalid asset scale/offset')
+    return np.where(valid, dn*scale+offset, np.nan)
 
 
 def write_raster(path, array, reference, name, item_id):
@@ -118,11 +126,81 @@ def write_raster(path, array, reference, name, item_id):
     ds = None
 
 
+def process_rasters(rasters, item, aoi, output, query, source_audit=None):
+    """Same calculation for fresh downloads and preserved, identified DN crops."""
+    output.mkdir(parents=True, exist_ok=True)
+    fine, coarse = rasters['B03_10m'], rasters['B11_20m']
+    for name in ('B04_10m', 'B08_10m'):
+        require_same_grid(fine, rasters[name])
+    for name in ('B8A_20m', 'SCL_20m'):
+        require_same_grid(coarse, rasters[name])
+    require_nested_grid(fine, coarse)
+    scl20 = rasters['SCL_20m'].ReadAsArray()
+    if not np.all(np.isin(scl20, [-9999, *range(12)])):
+        raise ValueError('Invalid SCL classes')
+    scl10 = repeat_2x2(scl20)
+    rho = {name: reflectance(ds, item['assets'][name]) for name, ds in rasters.items()
+           if not name.startswith('SCL')}
+    green, red, nir, narrow, swir = [rho[n] for n in ('B03_10m', 'B04_10m', 'B08_10m', 'B8A_20m', 'B11_20m')]
+    green20 = mean_2x2(green)
+    outputs = indices(red, nir, narrow, swir, scl10, scl20)
+    outputs['NDWI'] = normalized_difference(green, nir, np.isin(scl10, [4, 5, 6]))
+    outputs['MNDWI'] = normalized_difference(green20, swir, np.isin(scl20, [4, 5, 6]))
+    water, quality = detect(green, nir, repeat_2x2(swir), outputs['NDWI'],
+                            repeat_2x2(outputs['MNDWI']), outputs['NDVI'], scl10)
+    manifest = {'version': PRODUCT_VERSION, 'radiometry': RADIOMETRY,
+        'status': 'processing', 'query': query, 'source_item': item, 'aoi': aoi,
+        'quality_policy': 'SCL 4,5,6; >=80% valid rectangle per index; parcel coverage independent',
+        'indices': {}, 'raw_bands': {}, 'diagnostics': {},
+        'aggregation': 'B03 arithmetic area mean of four exactly nested 10m cells; all four required',
+        'water': {'method': WATER_METHOD, 'parameters': PARAMETERS, 'quality_bits': QUALITY_BITS,
+                  'classes': {'0': 'no_detection', '1': 'water', '2': 'ambiguous', '3': 'not_evaluable'}},
+        'source_audit': source_audit,
+        'note': 'Exploratory surface water; neither depth nor volume; NDMI is not soil moisture'}
+    for name, ds in rasters.items():
+        path = output / f'raw_{name}.tif'
+        # Preserve DN without overwriting a source dataset opened from this same path.
+        if Path(ds.GetDescription()).resolve() != path.resolve():
+            write_raster(path, ds.ReadAsArray(), ds, 'raw_' + name, item['id'])
+        asset = item['assets'][name]
+        manifest['raw_bands'][name] = {'sha256': hashlib.sha256(path.read_bytes()).hexdigest(),
+            'asset_href': asset['href'], 'source_checksum': asset.get('file:checksum'),
+            'scale': asset.get('raster:scale'), 'offset': asset.get('raster:offset'),
+            'nodata': asset.get('nodata', 0), 'resolution_m': BANDS[name]}
+        if name in rho:
+            valid = np.isfinite(rho[name])
+            manifest['raw_bands'][name]['negative_count'] = int((rho[name][valid] < 0).sum())
+    pairs = {'NDVI': (nir, red, scl10), 'NDMI': (narrow, swir, scl20),
+             'NDWI': (green, nir, scl10), 'MNDWI': (green20, swir, scl20)}
+    for name, (a, b, scl) in pairs.items():
+        manifest['diagnostics'][name] = quality_counts(a, b, np.isin(scl, [4, 5, 6]))
+    for name, array in outputs.items():
+        valid = np.isfinite(array) & (array != -9999)
+        path = output / f'{name}.tif'
+        write_raster(path, array, coarse if INDEX_RESOLUTIONS[name] == 20 else fine, name, item['id'])
+        manifest['indices'][name] = {'valid_percent_rectangle': float(valid.mean()*100),
+            'resolution_m': INDEX_RESOLUTIONS[name],
+            'mean_rectangle': float(array[valid].mean()) if valid.any() else None,
+            'sha256': hashlib.sha256(path.read_bytes()).hexdigest()}
+    for name, array, ref in [('SCL', scl20, coarse), ('WATER', water, fine), ('WATER_QUALITY', quality, fine)]:
+        path = output / f'{name}.tif'
+        write_raster(path, array, ref, name, item['id'])
+        manifest['water'][name.lower() + '_sha256'] = hashlib.sha256(path.read_bytes()).hexdigest()
+    manifest['water']['classified_percent_rectangle'] = float(np.isin(water, [0, 1]).mean()*100)
+    good = all(x['valid_percent_rectangle'] >= 80 for x in manifest['indices'].values())
+    manifest['status'] = 'quality_passed' if good else 'rejected_local_quality'
+    (output/'manifest.json').write_text(json.dumps(manifest, indent=2, allow_nan=False)+'\n', encoding='utf-8')
+    return manifest
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--catalogue-only', action='store_true')
     parser.add_argument('--catalogue-file', type=Path, help='Offline catalogue fixture')
     parser.add_argument('--end', help='ISO UTC end time; default current UTC')
+    parser.add_argument('--date', help='Exact observation day YYYY-MM-DD, never silently substitute another day')
+    parser.add_argument('--item-id', help='Exact product identifier within the requested catalogue')
+    parser.add_argument('--raw-input', type=Path, help='Preserved DN crops with SOURCE_ITEM metadata')
     parser.add_argument('--output', type=Path, default=ROOT/'sentinel-output')
     args = parser.parse_args()
     gdal.UseExceptions()
@@ -130,11 +208,19 @@ def main():
     end = datetime.fromisoformat(args.end.replace('Z', '+00:00')) if args.end else datetime.now(timezone.utc)
     if end.tzinfo is None:
         raise ValueError('--end requires timezone')
+    start = None
+    if args.date:
+        start = datetime.strptime(args.date, '%Y-%m-%d').replace(tzinfo=timezone.utc)
+        end = start + timedelta(days=1) - timedelta(microseconds=1)
     if args.catalogue_file:
         features = json.loads(args.catalogue_file.read_text(encoding='utf-8-sig'))['features']
         query = {'offline_fixture': args.catalogue_file.name}
     else:
-        features, query = fetch_catalogue(aoi['catalog_bbox']['bounds'], end)
+        features, query = fetch_catalogue(aoi['catalog_bbox']['bounds'], end, start)
+    if args.date:
+        features = [f for f in features if f['properties']['datetime'][:10] == args.date]
+    if args.item_id:
+        features = [f for f in features if f['id'] == args.item_id]
     item = select_scene(features, aoi['catalog_bbox']['bounds'])
     if not re.fullmatch(r'[A-Za-z0-9_-]+', item['id']):
         raise ValueError('Invalid item identifier')
@@ -151,7 +237,7 @@ def main():
             with open(os.environ['GITHUB_OUTPUT'], 'a', encoding='utf-8') as stream:
                 stream.write(f"item={item['id']}\n")
         return
-    for source, target in [('CDSE_S3_ACCESS_KEY', 'AWS_ACCESS_KEY_ID'), ('CDSE_S3_SECRET_KEY', 'AWS_SECRET_ACCESS_KEY')]:
+    for source, target in ([] if args.raw_input else [('CDSE_S3_ACCESS_KEY', 'AWS_ACCESS_KEY_ID'), ('CDSE_S3_SECRET_KEY', 'AWS_SECRET_ACCESS_KEY')]):
         value = os.environ.get(source)
         if not value:
             raise ValueError(f'Missing GitHub secret/environment variable {source}')
@@ -161,33 +247,18 @@ def main():
                        'GDAL_HTTP_MAX_RETRY': '3', 'GDAL_HTTP_RETRY_DELAY': '30',
                        'GDAL_HTTP_TIMEOUT': '120'}.items():
         gdal.SetConfigOption(key, value)
-    bounds = aoi['processing_aoi']['bounds']
-    rasters = {key: crop(item['assets'][key], bounds, res) for key, res in BANDS.items()}
-    # Reuse the downloaded classification instead of requesting S3 a second time.
-    scl10 = gdal.Warp('', rasters['SCL_20m'], format='MEM',
-        outputBounds=aligned_bounds(bounds, 10), xRes=10, yRes=10,
-        resampleAlg='near', srcNodata=-9999, dstNodata=-9999).ReadAsArray()
-    scl20 = rasters['SCL_20m'].ReadAsArray()
-    values = [reflectance(rasters[k], item['assets'][k]) for k in list(BANDS)[:4]]
-    outputs = indices(*values, scl10, scl20)
-    for name, array in outputs.items():
-        valid = array != -9999
-        manifest['indices'][name] = {'valid_percent_rectangle': float(valid.mean()*100),
-            'resolution_m': 20 if name == 'NDMI' else 10,
-            'mean_rectangle': float(array[valid].mean()) if valid.any() else None}
-    good = all(x['valid_percent_rectangle'] >= 80 for x in manifest['indices'].values())
-    manifest['status'] = 'quality_passed' if good else 'rejected_local_quality'
-    report.write_text(json.dumps(manifest, indent=2)+'\n', encoding='utf-8')
-    if not good:
-        raise ValueError('Local quality below 80%; indices not released')
-    for name, array in outputs.items():
-        ref = rasters['B8A_20m' if name == 'NDMI' else 'B04_10m']
-        path = args.output/f'{name}.tif'
-        write_raster(path, array, ref, name, item['id'])
-        manifest['indices'][name]['sha256'] = hashlib.sha256(path.read_bytes()).hexdigest()
-    write_raster(args.output/'SCL.tif', scl20, rasters['SCL_20m'], 'SCL', item['id'])
-    report.write_text(json.dumps(manifest, indent=2)+'\n', encoding='utf-8')
-    print('Completed: NDVI/EVI2 10 m; NDMI/SCL 20 m; EPSG:25830')
+    # A common 20m-aligned extent gives exact 2x2 nesting even at AOI boundaries.
+    bounds = aligned_bounds(aoi['processing_aoi']['bounds'], 20)
+    if args.raw_input:
+        rasters = {key: gdal.Open(str(args.raw_input/f'raw_{key}.tif')) for key in BANDS}
+        if any(not ds or ds.GetMetadataItem('SOURCE_ITEM') != item['id'] for ds in rasters.values()):
+            raise ValueError('Preserved DN identity mismatch')
+    else:
+        rasters = {key: crop(item['assets'][key], bounds, res) for key, res in BANDS.items()}
+    manifest = process_rasters(rasters, item, {**aoi['processing_aoi'], 'bounds': bounds}, args.output, query)
+    if manifest['status'] != 'quality_passed':
+        raise ValueError('Local quality below 80%; preserved for diagnosis, not publication')
+    print('Completed v2: NDVI/EVI2/NDWI/water 10 m; NDMI/MNDWI/SCL 20 m; EPSG:25830')
 
 
 if __name__ == '__main__':

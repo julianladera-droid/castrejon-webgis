@@ -204,7 +204,7 @@ fechas; pueden diferir de las medias individuales. Se exige 80% de cobertura com
 La diferencia está en unidades del índice, no en porcentaje, y se calcula antes de
 redondear. Nodata y cobertura insuficiente se muestran como ausencia de datos, nunca cero.
 Se conservan las rejillas originales EPSG:25830 (10 m NDVI/EVI2, 20 m NDMI); una pareja
-desalineada impide publicar. No se remuestrean los datos para calcular cambios.
+desalineada se omite, conservando los estados individuales. No se remuestrean los datos para calcular cambios.
 
 `scripts/parcel_grid.py` centraliza muestreo, máscaras parcelarias y validez;
 `scripts/parcel_comparison.py` genera una tabla compacta con procedencia y hashes.
@@ -215,60 +215,66 @@ se oculta la pareja; desactivar/reactivar reintenta. Si falla la tabla, volver a
 pulsar la parcela reintenta sin mostrar valores anteriores.
 
 Pages recupera productos propios validados, verifica el SHA-256 del ZIP y evita
-fechas duplicadas. Requiere dos adquisiciones no caducadas; si faltan, conserva el
-sitio publicado. No es todavía un archivo histórico permanente: la retención de
+fechas duplicadas. Una adquisición compatible basta para el estado actual; con dos fechas se añade
+comparación. Sin productos compatibles se conserva el sitio publicado. No es todavía un archivo histórico permanente: la retención de
 90 días se aplica sólo a los nuevos artefactos.
 
-Base para la siguiente fase: SCL de 20 m conservado junto a índices, fechas y hashes.
-[NDMI indica contenido de agua en la vegetación](https://www.usgs.gov/landsat-missions/normalized-difference-moisture-index);
-[SCL clasifica la escena](https://sentiwiki.copernicus.eu/web/s2-processing), incluida agua,
-pero ninguno confirma por sí solo encharcamiento. La siguiente implementación deberá
-validar una regla con bandas/índices de agua y observación de campo, distinguir agua
-persistente y nubes/sombras, informar superficie desconocida y tratar fraccionalmente
-los píxeles de borde al calcular porcentaje por superficie métrica de parcela.
-Los centros de píxel actuales no equivalen al área catastral exacta. La primera estimación exploratoria de agua nueva se describe a continuación.
+SCL a 20 m se conserva junto con los índices, fechas y hashes. NDWI a 10 m y
+MNDWI a 20 m también admiten comparación visual con la misma escala; la tabla
+parcelaria del comparador conserva NDVI/EVI2/NDMI. El estado de agua de B se
+calcula independientemente de la cobertura de A. Los centros de píxel del
+comparador no equivalen al área exacta usada en las superficies de agua.
 
 Pruebas: `node scripts/test-comparison.cjs`, `python scripts/test_collect_sentinel_products.py`
 y, con GDAL/NumPy, `python scripts/test_parcel_comparison.py`.
 
-## Agua superficial nueva: posible encharcamiento
+## Posible encharcamiento: agua de cada adquisición
 
-La capa **Posible encharcamiento**, activada inicialmente, dibuja en azul el agua
-superficial nueva dentro de las parcelas. Usa la fecha seleccionada como B y la
-anterior disponible como A. Con comparación activa, corresponde a B sobre todo el
-mapa; no sigue el separador. La ficha muestra porcentaje sobre la parcela completa,
-superficie en m², fechas, agua en ambas imágenes y superficie sin evaluar.
-Ocultar la capa mantiene los datos de la ficha; seleccionar una fecha sin referencia
-anterior retira los resultados anteriores.
+La capa abre la adquisición más reciente por fecha de observación y muestra toda
+el agua superficial estimada, incluida la observada anteriormente. Funciona sin
+referencia anterior. La fecha y el método se mantienen al consultar el histórico.
+En comparación A/B, la capa describe B sobre todo el mapa.
 
-Método exploratorio `scl_new_surface_water_v1`, sin validación de campo para estas
-fechas: SCL B=6 y A=4/5. A=B=6 es agua en ambas imágenes y se contabiliza aparte,
-sin llamarla permanente. Sólo SCL 4,5,6 en ambas fechas permite evaluar el cambio;
-las demás clases, nodata y exterior del raster son desconocidos. No se infiere
-agua por NDMI. Puede incluir variaciones de cauces/balsas y omitir agua oculta por
-vegetación o zonas pequeñas. No detecta toda saturación del suelo ni confirma daños.
-El usuario conoce casos de otras fechas, pendientes de incorporar para contrastar
-este criterio y decidir si añadir bandas de agua, radar o una máscara agrícola.
+Método exploratorio `optical_surface_water_v2`: NDWI nativo B03/B08 a 10 m,
+MNDWI B03/B11 a 20 m (B03 agregado por media de cuatro celdas), reflectancias y
+SCL. NDVI es auxiliar; no se exige NDVI negativo ni SCL=6. Regla, parámetros,
+diagnóstico radiométrico y limitaciones en [docs/water-assessment.md](docs/water-assessment.md).
+Los umbrales son hipótesis, no una probabilidad calibrada.
 
-`scripts/parcel_water.py` poligoniza las celdas originales a 20 m EPSG:25830 y las
-interseca con cada geometría maestra, conservando bordes, huecos y fragmentos.
-El denominador es el área total del recorte parcelario, nunca sólo la parte válida.
-Este tratamiento geométrico no proporciona resolución física subpíxel. Con menos
-del 80% de área evaluable, el resultado es «No concluyente» y se distingue el agua
-observada de lo desconocido. Cero no implica ausencia confirmada de encharcamiento.
+Azul representa agua estimada, ámbar señal ambigua y gris datos no evaluables.
+Nubes, sombras, nodata, reflectancias no interpretables y baja señal no se
+convierten en agua ni en seco. Los índices inválidos quedan transparentes y los
+DN originales se conservan en los artefactos con escala/offset y hashes.
 
-Pages genera `parcel-water.json` y `water-zones.geojson` por pareja, con hashes,
-fechas, método, procedencia SCL y vínculo al parcelario. Los resultados actuales
-ocupan 42,6 kB y 16,3 kB: 51 fragmentos de agua nueva en 18 parcelas, de 919; seis
-parcelas no alcanzan la cobertura mínima. El navegador descarga sólo esos resultados,
-los verifica y reutiliza durante la sesión; sin TIFF ni GIS en el dispositivo.
-Errores de red/integridad no se representan como cero y permiten reintentar.
+Las superficies se obtienen por intersección de celdas con el maestro EPSG:25830,
+incluidos bordes, huecos y multipolígonos. El porcentaje divide por toda el área
+de la parcela recortada. Menos del 80% clasificable produce «No concluyente»;
+se muestran aparte agua observada, ambigüedad y superficie desconocida.
+Las transiciones informan aparición, agua en ambas observaciones y desaparición
+sobre superficie común clasificable; no demuestran continuidad ni profundidad.
 
-Pruebas: `python scripts/test_parcel_water.py` con GDAL/NumPy y
-`node scripts/test-water.cjs`, junto con las regresiones del comparador y las fichas.
-La definición oficial de SCL está en [Copernicus SentiWiki](https://sentiwiki.copernicus.eu/web/s2-processing);
-la regla temporal y sus porcentajes son estimaciones de este proyecto, no un
-producto de inundación validado por Copernicus.
+`parcel-water.json` y `water-zones.geojson` son por adquisición, esquema 2 y con
+hashes. El navegador sólo consume resultados ligeros y verifica identidad,
+fecha, método y parcelario; conserva cachés, cancelación lógica y reintentos.
+El colector revisa las últimas 100 ejecuciones correctas de main, ignora productos
+antiguos incompatibles y el constructor ordena por observación, no por ejecución.
+No se mezclan artefactos v1/v2. La retención de 90 días no es un archivo permanente.
+
+Se contrastaron los productos exactos del 14/10 y 31/10/2026 y 13 adquisiciones
+de agosto de 2023 para 45137A03300153/155. **El método sigue omitiendo agua bajo
+vegetación comunicada por el usuario y no recupera como agua estimada la parcela
+45137A00900001 el 31/10.** Se registra la discrepancia sin excepciones por parcela.
+El afinado B11 a 10 m queda como experimento separado, no operativo.
+
+Para migrar, ejecutar Sentinel manualmente con `date` e `item_id` exactos del
+14/10 y 31/10 (identificadores en el informe). La primera publicación exige al
+menos un artefacto v2 correcto de main; no relajar el gate para usar uno antiguo.
+La PR no implica despliegue ni validación agronómica completa.
+
+Pruebas: suites `test_sentinel`, `test_sentinel_web`, `test_water_detection`,
+`test_parcel_water`, `test_collect_sentinel_products` con GDAL/NumPy, y
+`node scripts/test-water.cjs`, junto con comparador, fichas y gate cartográfico.
+El job geoespacial se ejecuta también en PR.
 
 ## Perímetro y área Sentinel (M4)
 
@@ -349,10 +355,10 @@ de `index.html`. El flujo Pages publica estos cambios junto con los índices Sen
 
 ## Índices en el visor (M4)
 
-En «Capas del mapa → Sentinel», elegir NDVI, EVI2 o NDMI. «Sin índice» permite
+En «Capas del mapa → Sentinel», elegir NDVI, EVI2, NDMI, NDWI o MNDWI. «Sin índice» permite
 volver a la cartografía habitual. Se ofrece la última adquisición válida, su fecha
 real, antigüedad y porcentaje válido del rectángulo; no se presenta como imagen
-en tiempo real. El selector admite sólo fechas publicadas (actualmente una).
+en tiempo real. El selector admite sólo las fechas compatibles publicadas.
 La opacidad controla la superposición y la leyenda se oculta al llegar a cero.
 Las zonas sin calidad suficiente son transparentes.
 
@@ -406,12 +412,13 @@ La reflectancia usa escala y offset de cada asset STAC, excluyendo nodata.
 La máscara conservadora admite SCL 4, 5 y 6; excluye sombras, nubes, nieve,
 datos inválidos y clases ambiguas. No aplica una máscara de usos del suelo.
 
-Salidas GeoTIFF EPSG:25830: NDVI/EVI2 a 10 m, NDMI y SCL a 20 m, más manifiesto
+Salidas GeoTIFF EPSG:25830: NDVI/EVI2/NDWI y agua/calidad a 10 m; NDMI/MNDWI/SCL
+a 20 m, DN originales y manifiesto
 con procedencia, consulta, porcentaje válido y hashes. NDMI no es humedad del
 suelo medida. Las estadísticas corresponden al rectángulo, no al perímetro.
 Las nuevas ejecuciones conservan artefactos 90 días; no constituye un archivo histórico
 permanente. Una caché por adquisición, código y AOI evita reprocesar mientras
-esté disponible. Tras una ejecución correcta, Pages valida y publica las dos adquisiciones distintas más recientes disponibles automáticamente.
+esté disponible. Tras una ejecución correcta, Pages valida y publica las adquisiciones compatibles disponibles, ordenadas por observación.
 Las bandas se leen secuencialmente, sin ejecuciones simultáneas. La clasificación
 SCL se reutiliza localmente para ambas resoluciones; los reintentos de transferencia
 son limitados y esperan 30 segundos para no insistir continuamente ante errores.

@@ -1,0 +1,494 @@
+[
+  {
+    "version": 2,
+    "radiometry": "asset_scale_offset_nonnegative_sum_gt_0.01_v1",
+    "aoi": {
+      "crs": "EPSG:25830",
+      "bounds": [
+        373380.0,
+        4406440.0,
+        388260.0,
+        4412860.0
+      ]
+    },
+    "raw_bands": {
+      "B03_10m": {
+        "sha256": "0e32aeebf1ce7df818292c7854c6362df13de6b569832264ac8d249f8f4377ff",
+        "asset_href": "https://sentinel-s2-l2a.s3.eu-central-1.amazonaws.com/tiles/30/T/UK/2023/8/16/0/R10m/B03.jp2",
+        "source_checksum": null,
+        "scale": 0.0001,
+        "offset": -0.1,
+        "nodata": 0,
+        "resolution_m": 10,
+        "negative_count": 329
+      },
+      "B04_10m": {
+        "sha256": "009693100049d94dc23b0877c4575ae20d7d09bda87ade9d2fbbbd3455d99f31",
+        "asset_href": "https://sentinel-s2-l2a.s3.eu-central-1.amazonaws.com/tiles/30/T/UK/2023/8/16/0/R10m/B04.jp2",
+        "source_checksum": null,
+        "scale": 0.0001,
+        "offset": -0.1,
+        "nodata": 0,
+        "resolution_m": 10,
+        "negative_count": 6128
+      },
+      "B08_10m": {
+        "sha256": "193ed202e5711a3f143d32c536c0b85b4e5611f51c33d0906d27b49a2dc837e1",
+        "asset_href": "https://sentinel-s2-l2a.s3.eu-central-1.amazonaws.com/tiles/30/T/UK/2023/8/16/0/R10m/B08.jp2",
+        "source_checksum": null,
+        "scale": 0.0001,
+        "offset": -0.1,
+        "nodata": 0,
+        "resolution_m": 10,
+        "negative_count": 7354
+      },
+      "B8A_20m": {
+        "sha256": "6f137cd9ee0e79e14b2aa5197693784d7885fdae50b5ec759077004dcdd9d19f",
+        "asset_href": "https://sentinel-s2-l2a.s3.eu-central-1.amazonaws.com/tiles/30/T/UK/2023/8/16/0/R20m/B8A.jp2",
+        "source_checksum": null,
+        "scale": 0.0001,
+        "offset": -0.1,
+        "nodata": 0,
+        "resolution_m": 20,
+        "negative_count": 1414
+      },
+      "B11_20m": {
+        "sha256": "b3e8ffec6374195bf3e7da34c6563621a15b1ff49034e4fe7acfbf746c509930",
+        "asset_href": "https://sentinel-s2-l2a.s3.eu-central-1.amazonaws.com/tiles/30/T/UK/2023/8/16/0/R20m/B11.jp2",
+        "source_checksum": null,
+        "scale": 0.0001,
+        "offset": -0.1,
+        "nodata": 0,
+        "resolution_m": 20,
+        "negative_count": 0
+      },
+      "SCL_20m": {
+        "sha256": "b08da4183ffd286031eaf2fc83e2a53aec86abb54509e000c292deeb10da0d41",
+        "asset_href": "https://sentinel-s2-l2a.s3.eu-central-1.amazonaws.com/tiles/30/T/UK/2023/8/16/0/R20m/SCL.jp2",
+        "source_checksum": null,
+        "scale": 1,
+        "offset": 0,
+        "nodata": 0,
+        "resolution_m": 20
+      }
+    },
+    "indices": {
+      "NDVI": {
+        "valid_percent_rectangle": 98.23824238769973,
+        "resolution_m": 10,
+        "mean_rectangle": 0.2624877095222473,
+        "sha256": "455b7a6d4fd8412c4bc5f795f6f8aba3146c11d104325f650197fcf33c15465d"
+      },
+      "EVI2": {
+        "valid_percent_rectangle": 98.23824238769973,
+        "resolution_m": 10,
+        "mean_rectangle": 0.18484723567962646,
+        "sha256": "4590ab901b7fa74dbdb69e883388c143c49a497637882947043663f09858784b"
+      },
+      "NDMI": {
+        "valid_percent_rectangle": 98.71914045489567,
+        "resolution_m": 20,
+        "mean_rectangle": -0.07628938555717468,
+        "sha256": "9a99b5784cf7eb27a19fc94a6b2d4e1b7c5e0470f7b7e94365326fa524492dc3"
+      },
+      "NDWI": {
+        "valid_percent_rectangle": 98.39798345224936,
+        "resolution_m": 10,
+        "mean_rectangle": -0.38171541690826416,
+        "sha256": "17cd853777224892d013848b89e67cb63b2c6796e53a7a0b7f866c1c1aa844f7"
+      },
+      "MNDWI": {
+        "valid_percent_rectangle": 98.82340133319934,
+        "resolution_m": 20,
+        "mean_rectangle": -0.46943578124046326,
+        "sha256": "314c326ebc0e8adcb285c7f9ee5d3b9a0ecf0035c00d57bb11fba0e3a1b6d81b"
+      }
+    },
+    "water": {
+      "method": "optical_surface_water_v2",
+      "parameters": {
+        "ndwi_min": 0.0,
+        "mndwi_min": 0.0,
+        "nir_max": 0.15,
+        "dark_nir_max": 0.06,
+        "dark_swir_max": 0.08,
+        "dark_ndvi_max": 0.4,
+        "normalized_sum_min": 0.01
+      },
+      "quality_bits": {
+        "scl_excluded": 1,
+        "missing_green_nir": 2,
+        "negative_green_nir": 4,
+        "low_green_nir_sum": 8,
+        "mndwi_unavailable": 16,
+        "ambiguous": 32
+      },
+      "classes": {
+        "0": "no_detection",
+        "1": "water",
+        "2": "ambiguous",
+        "3": "not_evaluable"
+      },
+      "scl_sha256": "b501b9bace1b9f93ae0ff7b5861988fe60560c490cb417dacbcb7dbb80ad578f",
+      "water_sha256": "6f2c59cb080612db5564f19f17293bebe0d488a0f7c6c2430eb07fe93c3e3e6e",
+      "water_quality_sha256": "9b6090123730fe7635049cc4db2eac6d52ed67ffb2bcc66f16b2b10c64851fc3",
+      "classified_percent_rectangle": 98.05986835493921
+    },
+    "diagnostics": {
+      "NDVI": {
+        "quality_excluded": 6700,
+        "missing": 2165,
+        "negative_reflectance": 8976,
+        "low_sum": 9634
+      },
+      "NDMI": {
+        "quality_excluded": 1675,
+        "missing": 0,
+        "negative_reflectance": 1414,
+        "low_sum": 502
+      },
+      "NDWI": {
+        "quality_excluded": 6700,
+        "missing": 2151,
+        "negative_reflectance": 7401,
+        "low_sum": 4324
+      },
+      "MNDWI": {
+        "quality_excluded": 1675,
+        "missing": 1064,
+        "negative_reflectance": 77,
+        "low_sum": 54
+      }
+    },
+    "id": "S2A_MSIL2A_20230816T105631_N0509_R094_T30TUK_20230816T171602",
+    "datetime": "2023-08-16T10:56:31.024Z"
+  },
+  {
+    "version": 2,
+    "radiometry": "asset_scale_offset_nonnegative_sum_gt_0.01_v1",
+    "aoi": {
+      "crs": "EPSG:25830",
+      "bounds": [
+        373380.0,
+        4406440.0,
+        388260.0,
+        4412860.0
+      ]
+    },
+    "raw_bands": {
+      "B03_10m": {
+        "sha256": "5ccdfd65f18be2182b9847afd312e9a5da1964d4fefb8527871679d3cf446870",
+        "asset_href": "s3://eodata/Sentinel-2/MSI/L2A/2026/10/14/S2A_MSIL2A_20261014T110941_N0513_R137_T30TUK_20261014T173008.SAFE/GRANULE/L2A_T30TUK_A059079_20261014T111753/IMG_DATA/R10m/T30TUK_20261014T110941_B03_10m.jp2",
+        "source_checksum": "1620bf4768a9e7184fe6278f76c84b1395c1bb6f1a117be607dacf6302979e4c263d",
+        "scale": 0.0001,
+        "offset": -0.1,
+        "nodata": 0,
+        "resolution_m": 10,
+        "negative_count": 803
+      },
+      "B04_10m": {
+        "sha256": "8ea00ce4393026b0e6c5ee2b48a9b4a4264987b6f2cb6af393efbf21e959bb28",
+        "asset_href": "s3://eodata/Sentinel-2/MSI/L2A/2026/10/14/S2A_MSIL2A_20261014T110941_N0513_R137_T30TUK_20261014T173008.SAFE/GRANULE/L2A_T30TUK_A059079_20261014T111753/IMG_DATA/R10m/T30TUK_20261014T110941_B04_10m.jp2",
+        "source_checksum": "1620b69b3aedb53702b24573541a6a2186171bdf4e9ba4aadd5bb5f875242e06e09d",
+        "scale": 0.0001,
+        "offset": -0.1,
+        "nodata": 0,
+        "resolution_m": 10,
+        "negative_count": 2370
+      },
+      "B08_10m": {
+        "sha256": "542d2945d9aad2df14550ff16b465165e62097c1729625b0a9cec7833dc959a9",
+        "asset_href": "s3://eodata/Sentinel-2/MSI/L2A/2026/10/14/S2A_MSIL2A_20261014T110941_N0513_R137_T30TUK_20261014T173008.SAFE/GRANULE/L2A_T30TUK_A059079_20261014T111753/IMG_DATA/R10m/T30TUK_20261014T110941_B08_10m.jp2",
+        "source_checksum": "16202fb1dcc0c8ac3682241c2aebd14b91f70250f7023718111606f4c53e425c8b33",
+        "scale": 0.0001,
+        "offset": -0.1,
+        "nodata": 0,
+        "resolution_m": 10,
+        "negative_count": 1377
+      },
+      "B8A_20m": {
+        "sha256": "e1560b1a2924db3c60039971dba38df6774351a29dbcadb7c85ec938bdc6ec7e",
+        "asset_href": "s3://eodata/Sentinel-2/MSI/L2A/2026/10/14/S2A_MSIL2A_20261014T110941_N0513_R137_T30TUK_20261014T173008.SAFE/GRANULE/L2A_T30TUK_A059079_20261014T111753/IMG_DATA/R20m/T30TUK_20261014T110941_B8A_20m.jp2",
+        "source_checksum": "1620150b7ee5b736218170745924325e4aaa02082d7708433d181a311c934fc606e2",
+        "scale": 0.0001,
+        "offset": -0.1,
+        "nodata": 0,
+        "resolution_m": 20,
+        "negative_count": 768
+      },
+      "B11_20m": {
+        "sha256": "d1e83f69b58b29604560f3fdc6504b1479645a0f648361508fb9caa54c414c95",
+        "asset_href": "s3://eodata/Sentinel-2/MSI/L2A/2026/10/14/S2A_MSIL2A_20261014T110941_N0513_R137_T30TUK_20261014T173008.SAFE/GRANULE/L2A_T30TUK_A059079_20261014T111753/IMG_DATA/R20m/T30TUK_20261014T110941_B11_20m.jp2",
+        "source_checksum": "16203d1a7c65168c126eaef75a419838d1a17d60a261078ac4aa4c6abb39efd81f6e",
+        "scale": 0.0001,
+        "offset": -0.1,
+        "nodata": 0,
+        "resolution_m": 20,
+        "negative_count": 0
+      },
+      "SCL_20m": {
+        "sha256": "de118682e5a3224211076406e091f9600399a40acc101c969368f80368165b4a",
+        "asset_href": "s3://eodata/Sentinel-2/MSI/L2A/2026/10/14/S2A_MSIL2A_20261014T110941_N0513_R137_T30TUK_20261014T173008.SAFE/GRANULE/L2A_T30TUK_A059079_20261014T111753/IMG_DATA/R20m/T30TUK_20261014T110941_SCL_20m.jp2",
+        "source_checksum": "16208e7fa299ae8b813043afa214552fd70d0a332274a980c7d4176b4d3d8226fb04",
+        "scale": null,
+        "offset": null,
+        "nodata": 0,
+        "resolution_m": 20
+      }
+    },
+    "indices": {
+      "NDVI": {
+        "valid_percent_rectangle": 99.19093139717951,
+        "resolution_m": 10,
+        "mean_rectangle": 0.30100858211517334,
+        "sha256": "f506e8944909dc0565caf0f29cbf90f640e9b0ba9888b864d10a43bb7a18a1a1"
+      },
+      "EVI2": {
+        "valid_percent_rectangle": 99.19093139717951,
+        "resolution_m": 10,
+        "mean_rectangle": 0.1650504171848297,
+        "sha256": "ec99ea41fea02a408220498784d885164a9d463abf1a0a7738ad16f856aff8a1"
+      },
+      "NDMI": {
+        "valid_percent_rectangle": 99.66711888252438,
+        "resolution_m": 20,
+        "mean_rectangle": -0.09610342234373093,
+        "sha256": "c5a7a25086f92c57aaced52dc8bb39a782bfb47ff05f18290e18a38e9e29f0e7"
+      },
+      "NDWI": {
+        "valid_percent_rectangle": 99.38322781629986,
+        "resolution_m": 10,
+        "mean_rectangle": -0.4118696451187134,
+        "sha256": "e3cdc3a0bf6b06af7cf92c533bbaec390e2433156a4c1aa96fe0c8d8fe923e78"
+      },
+      "MNDWI": {
+        "valid_percent_rectangle": 99.4837202291227,
+        "resolution_m": 20,
+        "mean_rectangle": -0.5232662558555603,
+        "sha256": "b0491462a9c43ef963fc0152cbf3401ddfb3d54d5c42f807dc0da85e0fdf61ec"
+      }
+    },
+    "water": {
+      "method": "optical_surface_water_v2",
+      "parameters": {
+        "ndwi_min": 0.0,
+        "mndwi_min": 0.0,
+        "nir_max": 0.15,
+        "dark_nir_max": 0.06,
+        "dark_swir_max": 0.08,
+        "dark_ndvi_max": 0.4,
+        "normalized_sum_min": 0.01
+      },
+      "quality_bits": {
+        "scl_excluded": 1,
+        "missing_green_nir": 2,
+        "negative_green_nir": 4,
+        "low_green_nir_sum": 8,
+        "mndwi_unavailable": 16,
+        "ambiguous": 32
+      },
+      "classes": {
+        "0": "no_detection",
+        "1": "water",
+        "2": "ambiguous",
+        "3": "not_evaluable"
+      },
+      "scl_sha256": "3af197b417a855e30352d429e4408699734a9e46cecf050a7f54b219a4a1a567",
+      "water_sha256": "050db5c433307bbba9ee51516fbe0270409d30994e0323d8a869e80342b59764",
+      "water_quality_sha256": "01a77b5bcab7c3a8de177a098ac6edee2c9890309f9f166318e7b37c263f8855",
+      "classified_percent_rectangle": 98.65643737647808
+    },
+    "diagnostics": {
+      "NDVI": {
+        "quality_excluded": 24,
+        "missing": 2142,
+        "negative_reflectance": 3156,
+        "low_sum": 5173
+      },
+      "NDMI": {
+        "quality_excluded": 6,
+        "missing": 0,
+        "negative_reflectance": 768,
+        "low_sum": 221
+      },
+      "NDWI": {
+        "quality_excluded": 24,
+        "missing": 2137,
+        "negative_reflectance": 2047,
+        "low_sum": 3067
+      },
+      "MNDWI": {
+        "quality_excluded": 6,
+        "missing": 1067,
+        "negative_reflectance": 160,
+        "low_sum": 15
+      }
+    },
+    "id": "S2A_MSIL2A_20261014T110941_N0513_R137_T30TUK_20261014T173008",
+    "datetime": "2026-10-14T11:09:41.024000Z"
+  },
+  {
+    "version": 2,
+    "radiometry": "asset_scale_offset_nonnegative_sum_gt_0.01_v1",
+    "aoi": {
+      "crs": "EPSG:25830",
+      "bounds": [
+        373380.0,
+        4406440.0,
+        388260.0,
+        4412860.0
+      ]
+    },
+    "raw_bands": {
+      "B03_10m": {
+        "sha256": "656f9dd8e149146120b1dc8e6bb10f8996da6c6d791e0268703e036da6ce54f7",
+        "asset_href": "s3://eodata/Sentinel-2/MSI/L2A/2026/10/31/S2A_MSIL2A_20261031T110121_N0513_R094_T30TUK_20261031T173605.SAFE/GRANULE/L2A_T30TUK_A059322_20261031T110430/IMG_DATA/R10m/T30TUK_20261031T110121_B03_10m.jp2",
+        "source_checksum": "1620f7197ad2fff5668c5dbc799246f2496e4de40ae0a5e1cc805b1892d60b9a082e",
+        "scale": 0.0001,
+        "offset": -0.1,
+        "nodata": 0,
+        "resolution_m": 10,
+        "negative_count": 0
+      },
+      "B04_10m": {
+        "sha256": "c23d8271028bb57ebcf9817795a8a33669e7d25c9662b59c898289cae45ed705",
+        "asset_href": "s3://eodata/Sentinel-2/MSI/L2A/2026/10/31/S2A_MSIL2A_20261031T110121_N0513_R094_T30TUK_20261031T173605.SAFE/GRANULE/L2A_T30TUK_A059322_20261031T110430/IMG_DATA/R10m/T30TUK_20261031T110121_B04_10m.jp2",
+        "source_checksum": "16209d987e64f4447abe3a44af9da6d3f373a51bf2365f775c5b8f9b56802dfc8d80",
+        "scale": 0.0001,
+        "offset": -0.1,
+        "nodata": 0,
+        "resolution_m": 10,
+        "negative_count": 0
+      },
+      "B08_10m": {
+        "sha256": "ebc16823cf9707c045b43b649d576e8d69fb7dfc2fc39b7ab3419e8f0ccd37fa",
+        "asset_href": "s3://eodata/Sentinel-2/MSI/L2A/2026/10/31/S2A_MSIL2A_20261031T110121_N0513_R094_T30TUK_20261031T173605.SAFE/GRANULE/L2A_T30TUK_A059322_20261031T110430/IMG_DATA/R10m/T30TUK_20261031T110121_B08_10m.jp2",
+        "source_checksum": "16203d6926c641bdf147b9a65fdfd1d6e6e8b9ec0d1a0861f2ebe0c44b1ec2dbd512",
+        "scale": 0.0001,
+        "offset": -0.1,
+        "nodata": 0,
+        "resolution_m": 10,
+        "negative_count": 0
+      },
+      "B8A_20m": {
+        "sha256": "2f39dd2cba8d8c225fa735d6457ca466ed485273e3396f3148d2e2df0d2a2d61",
+        "asset_href": "s3://eodata/Sentinel-2/MSI/L2A/2026/10/31/S2A_MSIL2A_20261031T110121_N0513_R094_T30TUK_20261031T173605.SAFE/GRANULE/L2A_T30TUK_A059322_20261031T110430/IMG_DATA/R20m/T30TUK_20261031T110121_B8A_20m.jp2",
+        "source_checksum": "1620d3848fb229220fe321a781df93be3638c17dd3a50ef10923151944ff8f46e229",
+        "scale": 0.0001,
+        "offset": -0.1,
+        "nodata": 0,
+        "resolution_m": 20,
+        "negative_count": 1
+      },
+      "B11_20m": {
+        "sha256": "a8d51935029b4e6a3e6a355c9198772e81bba1bc3b47180497986286df9f889c",
+        "asset_href": "s3://eodata/Sentinel-2/MSI/L2A/2026/10/31/S2A_MSIL2A_20261031T110121_N0513_R094_T30TUK_20261031T173605.SAFE/GRANULE/L2A_T30TUK_A059322_20261031T110430/IMG_DATA/R20m/T30TUK_20261031T110121_B11_20m.jp2",
+        "source_checksum": "16200eb55f1e6c23421acf7f90a12ddd469cda0ac2e0c9ec8e493f444e416eb9f1aa",
+        "scale": 0.0001,
+        "offset": -0.1,
+        "nodata": 0,
+        "resolution_m": 20,
+        "negative_count": 0
+      },
+      "SCL_20m": {
+        "sha256": "e47e3c52be42718f262c8011e38210551492ba255a6ff313c0c8ae8fec848b79",
+        "asset_href": "s3://eodata/Sentinel-2/MSI/L2A/2026/10/31/S2A_MSIL2A_20261031T110121_N0513_R094_T30TUK_20261031T173605.SAFE/GRANULE/L2A_T30TUK_A059322_20261031T110430/IMG_DATA/R20m/T30TUK_20261031T110121_SCL_20m.jp2",
+        "source_checksum": "16203b5226bb7c53302617ae460ece8876e1a37ef3c93c31132cc5abf21e72759a69",
+        "scale": null,
+        "offset": null,
+        "nodata": 0,
+        "resolution_m": 20
+      }
+    },
+    "indices": {
+      "NDVI": {
+        "valid_percent_rectangle": 99.77713713864603,
+        "resolution_m": 10,
+        "mean_rectangle": 0.3346041142940521,
+        "sha256": "ef7c86f7e584456d45986997fa8a83fca74a76c1693f3102260b7a5823909c26"
+      },
+      "EVI2": {
+        "valid_percent_rectangle": 99.77713713864603,
+        "resolution_m": 10,
+        "mean_rectangle": 0.19596178829669952,
+        "sha256": "942c620eabe72a845882cf8ec1aafa0b8daf0d835b2a637b60c6bd3e0afa8800"
+      },
+      "NDMI": {
+        "valid_percent_rectangle": 99.99958128161323,
+        "resolution_m": 20,
+        "mean_rectangle": -0.06463585793972015,
+        "sha256": "6d4f2f726018c44b2816302a52c99c1d2350c73b4a0bf972fb0b380080e4e044"
+      },
+      "NDWI": {
+        "valid_percent_rectangle": 99.77713713864603,
+        "resolution_m": 10,
+        "mean_rectangle": -0.41302287578582764,
+        "sha256": "3c371d36a0965c872841b89600793a061a13ff787c3c78aef3608e77c1cf443c"
+      },
+      "MNDWI": {
+        "valid_percent_rectangle": 99.55448363648544,
+        "resolution_m": 20,
+        "mean_rectangle": -0.4865238070487976,
+        "sha256": "684f5903706da209687b2e149956ba3a856d6ede9e72e0e254441482c012cae6"
+      }
+    },
+    "water": {
+      "method": "optical_surface_water_v2",
+      "parameters": {
+        "ndwi_min": 0.0,
+        "mndwi_min": 0.0,
+        "nir_max": 0.15,
+        "dark_nir_max": 0.06,
+        "dark_swir_max": 0.08,
+        "dark_ndvi_max": 0.4,
+        "normalized_sum_min": 0.01
+      },
+      "quality_bits": {
+        "scl_excluded": 1,
+        "missing_green_nir": 2,
+        "negative_green_nir": 4,
+        "low_green_nir_sum": 8,
+        "mndwi_unavailable": 16,
+        "ambiguous": 32
+      },
+      "classes": {
+        "0": "no_detection",
+        "1": "water",
+        "2": "ambiguous",
+        "3": "not_evaluable"
+      },
+      "scl_sha256": "2c4822f37cb670498a308899cddc40677a98c612f817ad476b0064dab1c548f0",
+      "water_sha256": "a665d8f6ff6f3c9184c648258c4f1a274d9d9171c2a4d471a1de8d92c0b1b01e",
+      "water_quality_sha256": "a73c7894073dfee88ada68cd52770e72d2553fa0d58fcc5f6245e515830c1579",
+      "classified_percent_rectangle": 98.82287793521589
+    },
+    "diagnostics": {
+      "NDVI": {
+        "quality_excluded": 0,
+        "missing": 2129,
+        "negative_reflectance": 0,
+        "low_sum": 0
+      },
+      "NDMI": {
+        "quality_excluded": 0,
+        "missing": 0,
+        "negative_reflectance": 1,
+        "low_sum": 0
+      },
+      "NDWI": {
+        "quality_excluded": 0,
+        "missing": 2129,
+        "negative_reflectance": 0,
+        "low_sum": 0
+      },
+      "MNDWI": {
+        "quality_excluded": 0,
+        "missing": 1064,
+        "negative_reflectance": 0,
+        "low_sum": 0
+      }
+    },
+    "id": "S2A_MSIL2A_20261031T110121_N0513_R094_T30TUK_20261031T173605",
+    "datetime": "2026-10-31T11:01:21.024000Z"
+  }
+]

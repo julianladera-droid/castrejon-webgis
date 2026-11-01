@@ -1,5 +1,5 @@
 # SKILL · Castrejón WebGIS — Contrato de arquitectura y evolución
-Version: 0.1.32
+Version: 0.1.33
 Fecha base: 2026-09-30
 Estado: ACTIVO · se actualiza tras cada ciclo de pruebas
 
@@ -442,6 +442,20 @@ Formato de cada cambio:
 No borrar una regla por comodidad. Si una regla cambia, conservar el motivo en el historial.
 
 ## 12. Registro de cambios
+### 0.1.33 — 2026-11-01 · Agua de cada adquisición y referencias de campo
+- Contraste final: añadido 45137A03300155 y localización sur de 00153 según aclaración del usuario; 13 adquisiciones de agosto, RGB y productos exactos de octubre. El método no recupera agua bajo vegetación ni la 00001 del 31/10; limitaciones registradas sin excepciones por referencia.
+- Regresión observada en navegador: un fragmento geométrico de área <0,0005 m² se redondeaba a cero en tabla pero se exportaba al mapa. Se mantienen las áreas exactas y se omiten sólo categorías cuya superficie publicada es cero; prueba específica de coherencia de zonas/tabla.
+- Fallo/reproducción: el criterio 0.1.29 omite agua presente en A y B, y no calcula B sin una referencia válida. El usuario confirma presencia en 45137A00900001/00059 el 14 y 31/10/2026 y episodios en 45137A03300153 durante agosto de 2023, con comprobación solicitada el 16/08/2023. Son referencias parcelarias, sin contornos ni verdad por píxel; el descenso desde el 10/10 no inventa una adquisición ese día.
+- Causa: se confundía cambio temporal con estado actual; SCL de 20 m puede omitir agua residual. Los cocientes con reflectancias negativas o denominadores pequeños requieren diagnóstico, sin asumir conversión errónea ni recortar índices inválidos.
+- Corrección prevista: agua superficial ESTIMADA por adquisición, NDWI nativo B03/B08 a 10 m y MNDWI B03/B11 a 20 m (media espacial de B03 sobre la rejilla B11). Rejillas EPSG:25830 comprobadas, escala/offset por asset una sola vez, DN y reflectancias originales conservados. NDVI auxiliar; ni SCL=6 ni NDVI negativo obligatorios. Método exploratorio versionado con umbrales explícitos, no probabilidad calibrada.
+- Estado actual independiente de A; temporal describe aparición, agua en ambas observaciones y desaparición sólo sobre áreas comunes evaluables. No demuestra continuidad. Porcentaje principal = agua de B / superficie completa del maestro; cobertura evaluable de B >=80%, en caso contrario «No concluyente». Ambigüedad separada de nubes/sombras/nodata/baja señal/falta de cobertura.
+- Última adquisición por fecha de observación al abrir; consulta histórica conserva fecha, método y calidad. Superficies por intersección exacta de celdas con maestro 25830, incluidos bordes, huecos y multipolígonos. Nunca GIS pesado en navegador.
+- Compatibilidad: productos/método/esquema y claves de caché nuevos; artefactos antiguos no se mezclan con los nuevos. Una sola adquisición compatible basta para publicar estado actual; el comparador se habilita si hay pareja. No cambiar calendario ni servicios del mapa.
+- Experimento separado: reconstrucción de B11 en rejilla 10 m guiada por información de su propia adquisición, preservando la media original a 20 m; no operacionalizar sin evidencia independiente de mejora. SCL sólo vecino más próximo. Resolución de rejilla no garantiza detectar charcos de 100 m² ni permite medir profundidad/volumen.
+- Regresiones requeridas: agua previa/actual sin A válida, candidatos sobre suelo, nubes/sombras/nodata/baja señal/cocientes, alineación y áreas, artefactos/cachés, cambio de fecha/parcela, respuestas tardías/errores y fecha/método/calidad visibles. Contrastes reproducibles y limitaciones documentados en docs/water-assessment.md; ejecución real se registrará al cerrar el ciclo.
+- Archivos: pipeline, constructor web, colector, análisis parcelario, pruebas, workflows, visor y documentación.
+- Cierre local: 53 pruebas Python con GDAL, nueve suites de interfaz, gate y política de localización; catálogo real de 919 parcelas y tres fechas; Chromium en escritorio, 390×844 y 320×568. Resultados reproducibles en docs/water-evidence; la PR conserva pendientes la validación agronómica y la prueba posterior a un eventual despliegue.
+
 ### 0.1.32 — 2026-11-01 · Sentinel cada 15 días fuera de temporada
 - Fallo/reproducción: después del 15 de octubre no se consultaban imágenes hasta el 15 de noviembre.
 - Causa: calendario mensual fuera de temporada; el usuario solicita intervalos de 15 días.

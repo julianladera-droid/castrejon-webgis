@@ -19,6 +19,18 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  geospatial:
+    name: Geospatial regressions including PRs
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y python3-gdal python3-numpy
+          /usr/bin/python3 -m unittest discover -s scripts -p 'test_*.py'
   gate:
     if: github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success'
     name: WebGIS offline gate
@@ -78,7 +90,7 @@ jobs:
           retention-days: 14
 
   deploy:
-    needs: [gate, wordpress]
+    needs: [gate, wordpress, geospatial]
     if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
     permissions:
       contents: read
@@ -97,7 +109,7 @@ jobs:
           persist-credentials: false
       - name: Setup Pages
         uses: actions/configure-pages@v5
-      - name: Collect two distinct validated Sentinel acquisitions
+      - name: Collect compatible Sentinel acquisitions by observation date
         env:
           GITHUB_TOKEN: ${{ github.token }}
         run: python3 scripts/collect_sentinel_products.py

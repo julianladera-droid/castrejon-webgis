@@ -31,7 +31,7 @@ class SentinelTests(unittest.TestCase):
         out = indices(zero, zero, zero, zero, quality, quality)
         self.assertEqual(out['NDVI'][0, 0], -9999)
         self.assertEqual(out['NDMI'][0, 0], -9999)
-        self.assertEqual(out['EVI2'][0, 0], 0)
+        self.assertEqual(out['EVI2'][0, 0], -9999)
 
     def test_selection_requires_full_coverage_and_quality(self):
         def item(name, date, cloud, extent=2):

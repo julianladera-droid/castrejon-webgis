@@ -13,6 +13,8 @@ from parcel_ndvi import build_parcel_indices
 from parcel_comparison import build_comparison
 from parcel_grid import require_same_grid
 from parcel_water import build_water
+from sentinel_contract import compatible, INDEX_RESOLUTIONS, RAW_BANDS
+from water_detection import PARAMETERS, QUALITY_BITS
 
 PALETTES = {
     'NDVI': {'label': 'NDVI · vigor vegetal', 'range': [-1, 1],
@@ -21,6 +23,10 @@ PALETTES = {
              'colors': ['#fff7bc', '#fec44f', '#78c679', '#238443', '#004529']},
     'NDMI': {'label': 'NDMI · humedad de la vegetación', 'range': [-1, 1],
              'colors': ['#8c510a', '#dfc27d', '#f5f5f5', '#80cdc1', '#01665e']},
+    'NDWI': {'label': 'NDWI · señal de agua superficial', 'range': [-1, 1],
+             'colors': ['#8c510a', '#dfc27d', '#f5f5f5', '#80cdc1', '#01665e']},
+    'MNDWI': {'label': 'MNDWI · apoyo de 20 m', 'range': [-1, 1],
+              'colors': ['#8c510a', '#dfc27d', '#f5f5f5', '#80cdc1', '#01665e']},
 }
 
 
@@ -28,6 +34,9 @@ def colorize(values, valid, spec):
     """Fixed scales; invalid values stay fully transparent, never zero-filled."""
     colors = np.array([[int(c[i:i+2], 16) for i in (1, 3, 5)] for c in spec['colors']])
     lo, hi = spec['range']
+    valid = valid & np.isfinite(values)
+    if spec['range'] == [-1, 1]:
+        valid &= (values >= -1) & (values <= 1)
     position = np.clip((np.where(valid, values, lo)-lo)/(hi-lo), 0, 1)
     channels = [np.interp(position, np.linspace(0, 1, len(colors)), colors[:, i])
                 for i in range(3)]
@@ -38,6 +47,10 @@ def validate_product(folder):
     manifest = json.loads((folder/'manifest.json').read_text(encoding='utf-8'))
     if manifest.get('status') != 'quality_passed':
         raise ValueError('Product has not passed quality checks')
+    if not compatible(manifest):
+        raise ValueError('Incompatible product schema/radiometry/water method; reprocess original bands')
+    if manifest['water'].get('parameters') != PARAMETERS or manifest['water'].get('quality_bits') != QUALITY_BITS:
+        raise ValueError('Incompatible detection parameters')
     item = manifest['source_item']
     if not re.fullmatch(r'[A-Za-z0-9_-]{1,150}', item['id']):
         raise ValueError('Invalid product identifier')
@@ -54,7 +67,7 @@ def validate_product(folder):
         if hashlib.sha256(path.read_bytes()).hexdigest() != info['sha256']:
             raise ValueError('Product checksum mismatch')
         ds = gdal.Open(str(path))
-        res = 20 if name == 'NDMI' else 10
+        res = INDEX_RESOLUTIONS[name]
         expected = [np.floor(bounds[0]/res)*res, res, 0,
                     np.ceil(bounds[3]/res)*res, 0, -res]
         if (ds.RasterCount != 1 or ds.GetSpatialRef().GetAuthorityCode(None) != '25830'
@@ -65,10 +78,31 @@ def validate_product(folder):
             raise ValueError('Unexpected technical raster grid')
         array = ds.ReadAsArray()
         valid = np.isfinite(array) & (array != -9999)
+        if name != 'EVI2' and np.any(valid & ((array < -1) | (array > 1))):
+            raise ValueError('Uninterpretable normalized ratio')
+        if ds.GetMetadataItem('SOURCE_ITEM') != item['id']:
+            raise ValueError('Raster acquisition identity mismatch')
         percent = float(valid.mean()*100)
         if percent < 80 or abs(percent-info['valid_percent_rectangle']) > .001:
             raise ValueError('Product quality mismatch')
         rasters[name] = ds
+    from parcel_grid import require_nested_grid
+    require_same_grid(rasters['NDVI'], rasters['NDWI'])
+    require_same_grid(rasters['NDMI'], rasters['MNDWI'])
+    require_nested_grid(rasters['NDWI'], rasters['MNDWI'])
+    for name, classes, ref in [('SCL', [-9999, *range(12)], 'MNDWI'),
+                                ('WATER', range(4), 'NDWI'), ('WATER_QUALITY', range(64), 'NDWI')]:
+        path = folder/f'{name}.tif'
+        if hashlib.sha256(path.read_bytes()).hexdigest() != manifest['water'][name.lower()+'_sha256']:
+            raise ValueError('Water checksum mismatch')
+        ds = gdal.Open(str(path))
+        require_same_grid(ds, rasters[ref])
+        if ds.GetMetadataItem('SOURCE_ITEM') != item['id'] or not np.all(np.isin(ds.ReadAsArray(), classes)):
+            raise ValueError('Invalid water classification or provenance')
+    for name in RAW_BANDS:
+        path = folder/f'raw_{name}.tif'
+        if hashlib.sha256(path.read_bytes()).hexdigest() != manifest['raw_bands'][name]['sha256']:
+            raise ValueError('Original DN checksum mismatch')
     return manifest, rasters
 
 
@@ -79,6 +113,7 @@ def build(folder, output, master_path=None, web_folder=None):
     acquisition = {'id': item['id'], 'datetime': item['properties']['datetime'],
                    'indices': {}, 'source': 'Copernicus Sentinel-2 L2A',
                    'quality_scope': 'rectángulo envolvente', 'kind': 'ESTIMADO'}
+    acquisition['water_raster_sha256'] = manifest['water']['water_sha256']
     destination = output/item['id']
     destination.mkdir(parents=True, exist_ok=True)
     if (folder/'SCL.tif').exists():
@@ -117,10 +152,11 @@ def build(folder, output, master_path=None, web_folder=None):
             'path': f"sentinel/{item['id']}/parcel-indices.json",
             'sha256': hashlib.sha256(payload).hexdigest(),
             'parcel_web_sha256': stats['parcel_web_sha256']}
+        acquisition['water'] = build_water(folder, acquisition, master_path, destination)
     # Public provenance is deliberately minimal: no full provider catalogue or credentials.
-    catalog = {'version': 1, 'acquisitions': [acquisition]}
+    catalog = {'version': 2, 'acquisitions': [acquisition], 'comparisons': []}
     (output/'catalog.json').write_text(json.dumps(catalog, indent=2)+'\n', encoding='utf-8')
-    print(f"Prepared {item['id']}: three overlays and technical GeoTIFF downloads")
+    print(f"Prepared {item['id']}: five overlays, current water and GeoTIFF downloads")
     return catalog
 
 
@@ -128,31 +164,41 @@ def build_collection(folders, output, master_path, web_folder):
     products = [validate_product(folder) for folder in folders]
     unique = {}
     for folder, product in zip(folders, products):
-        day = product[0]['source_item']['properties']['datetime'][:10]
-        unique[day] = (folder, product)
-    if len(unique) < 2:
-        raise ValueError('Two distinct acquisition dates required')
-    selected = [unique[day] for day in sorted(unique)[-2:]]
+        item = product[0]['source_item']
+        day = item['properties']['datetime'][:10]
+        old = unique.get(day)
+        old_item = old[1][0]['source_item'] if old else None
+        if old_item is None or (item['properties']['datetime'], item['id']) > (old_item['properties']['datetime'], old_item['id']):
+            unique[day] = (folder, product)
+    if not unique:
+        raise ValueError('At least one compatible acquisition required')
+    selected = [unique[day] for day in sorted(unique)]
     entries = []
     for folder, _ in selected:
         if not (folder/'SCL.tif').exists():
             raise ValueError('Preserve original SCL for subsequent analyses')
         entries.extend(build(folder, output, master_path, web_folder)['acquisitions'])
     web_hash = entries[0]['parcel_indices']['parcel_web_sha256']
-    table = build_comparison(selected[0][1], selected[1][1], master_path, web_hash)
-    pair_id = 'comparison-' + hashlib.sha256((table['a']['id']+'|'+table['b']['id']).encode()).hexdigest()[:24]
-    destination = output/pair_id
-    destination.mkdir(parents=True, exist_ok=True)
-    payload = (json.dumps(table, separators=(',', ':'), allow_nan=False)+'\n').encode()
-    (destination/'parcel-comparison.json').write_bytes(payload)
-    catalog = {'version': 1, 'acquisitions': entries[::-1], 'comparisons': [{
-        'id': pair_id, 'a': table['a']['id'], 'b': table['b']['id'],
-        'path': f'sentinel/{pair_id}/parcel-comparison.json',
-        'sha256': hashlib.sha256(payload).hexdigest(), 'parcel_web_sha256': web_hash}]}
-    catalog['comparisons'][0]['water'] = build_water(selected[0][0], selected[1][0], entries,
-        master_path, destination, pair_id)
+    catalog = {'version': 2, 'acquisitions': entries[::-1], 'comparisons': []}
+    for i in range(1, len(entries)):
+        a, b = entries[i-1], entries[i]
+        b['water'] = build_water(selected[i][0], b, master_path, output/b['id'], selected[i-1][0], a)
+        try:
+            for name in ('NDVI', 'EVI2', 'NDMI'):
+                require_same_grid(selected[i-1][1][1][name], selected[i][1][1][name])
+        except ValueError:
+            continue
+        table = build_comparison(selected[i-1][1], selected[i][1], master_path, web_hash)
+        pair_id = 'comparison-' + hashlib.sha256((a['id']+'|'+b['id']).encode()).hexdigest()[:24]
+        destination = output/pair_id
+        destination.mkdir(parents=True, exist_ok=True)
+        payload = (json.dumps(table, separators=(',', ':'), allow_nan=False)+'\n').encode()
+        (destination/'parcel-comparison.json').write_bytes(payload)
+        catalog['comparisons'].append({'id': pair_id, 'a': a['id'], 'b': b['id'],
+            'path': f'sentinel/{pair_id}/parcel-comparison.json',
+            'sha256': hashlib.sha256(payload).hexdigest(), 'parcel_web_sha256': web_hash})
     (output/'catalog.json').write_text(json.dumps(catalog, indent=2)+'\n', encoding='utf-8')
-    print(f'Paired comparison: {len(table["parcels"])} parcels, {len(payload)} bytes')
+    print(f'Published {len(entries)} observations and {len(catalog["comparisons"])} comparisons')
     return catalog
 
 
