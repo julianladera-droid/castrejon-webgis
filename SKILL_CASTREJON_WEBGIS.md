@@ -1,5 +1,5 @@
 # SKILL · Castrejón WebGIS — Contrato de arquitectura y evolución
-Version: 0.1.35
+Version: 0.1.36
 Fecha base: 2026-09-30
 Estado: ACTIVO · se actualiza tras cada ciclo de pruebas
 
@@ -785,3 +785,9 @@ Se considera regresión cualquier cambio que haga funcionar una capa localmente 
 - Comparar N0509/N0510 por separado, políticas de agregación y firmas observadas/estimadas. Mantener reconstrucciones congeladas al ensayar detectores.
 - Casos anteriores son desarrollo. Nuevas zonas automáticas son propuestas, nunca verdad independiente. Sin reservas independientes etiquetadas, no declarar exactitud.
 - Regresiones: preservación numérica previa, identidad SAFE, negativos/nodata separados, máscaras y soportes comunes. Sin SAR, nuevo reconstruidor, integración operativa, fusión ni despliegue.
+
+### 0.1.36 — 2026-11-02 · Aproximación operativa para visitas de campo
+- Autorización: el usuario solicita integrar los ajustes y desplegar; sustituye la restricción anterior de sólo estudio para esta entrega.
+- Conservar detecciones base y añadir candidatos H1 con B11 guiada por NDWI+NDVI, en clase separada 4. Señales guiadas restantes: ambiguas; inválidos siguen no evaluables. Sin promover automáticamente candidatos a agua confirmada.
+- Contrato v3: método versionado, nueva clase residual y migración reproducible de artefactos v2 desde DN originales, conservando fechas y SAFE. Reprocesar las adquisiciones publicadas antes del despliegue.
+- Regresiones: conservación de detecciones base, máscaras, fallback por falta de guías, áreas y colores de clase 4, cambio temporal sólo sobre clases 0/1, migración y compatibilidad frontend/datos. Verificación local, CI, navegador y publicación.

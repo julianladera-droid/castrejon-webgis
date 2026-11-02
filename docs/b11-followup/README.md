@@ -1,5 +1,7 @@
 # Continuación acotada: producto publicado, calidad, firmas y detector
 
+Actualización posterior: la integración autorizada para orientar visitas de campo se documenta en [guía operativa](../water-field-guide.md). Los resultados y las conclusiones siguientes conservan el alcance del estudio original.
+
 02/11/2026 · rama `codex/estudio-b11-ciclos-0-3` · PR #7 en borrador.
 Base revisada: `48a78e88c956727853b87bf51261ba104a2804f8`; al empezar no había
 cambios posteriores en la rama remota. No se modifica el método operativo, el

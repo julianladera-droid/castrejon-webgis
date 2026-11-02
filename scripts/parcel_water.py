@@ -9,7 +9,7 @@ from sentinel_contract import WATER_METHOD
 METHOD = WATER_METHOD
 MIN_VALID_PERCENT = 80
 COLUMNS = ['water_m2', 'ambiguous_m2', 'unknown_m2', 'evaluated_m2', 'parcel_m2',
-           'appeared_m2', 'both_observations_m2', 'disappeared_m2', 'common_evaluated_m2']
+           'appeared_m2', 'both_observations_m2', 'disappeared_m2', 'common_evaluated_m2', 'residual_m2']
 
 
 def transitions(a, b):
@@ -71,7 +71,7 @@ def parcel_areas(layer, geometry):
             continue
         kind = feature.GetField('class')
         areas[kind] += area
-        if kind in (1, 2, 3):
+        if kind in (1, 2, 3, 4):
             shapes.append((kind, intersection))
     layer.SetSpatialFilter(None)
     if sum(areas) > total + .01:
@@ -88,7 +88,7 @@ def parcel_areas(layer, geometry):
 
 def build_water(after, entry, master_path, destination, before=None, previous=None):
     current = gdal.Open(str(after/'WATER.tif'))
-    if not np.all(np.isin(current.ReadAsArray(), range(4))):
+    if not np.all(np.isin(current.ReadAsArray(), range(5))):
         raise ValueError('Invalid current water classes')
     vector = regions(current)
     change = None
@@ -120,17 +120,18 @@ def build_water(after, entry, master_path, destination, before=None, previous=No
             row += [temporal[1], temporal[2], temporal[3], sum(temporal[:4])]
         else:
             row += [None] * 4
+        row += [areas[4]]
         table[ref] = [round(v, 3) if v is not None else None for v in row]
         for kind, shape in shapes:
             # GEOS can produce sub-mm² numerical slivers along shared edges.
             # Keep exact area accounting above, but never emit a category rounded
             # to zero in the compact table (the client checks this invariant).
-            if table[ref][kind-1] <= 0:
+            if table[ref][9 if kind==4 else kind-1] <= 0:
                 continue
             shape.Transform(transform)
             features.append({'type': 'Feature', 'properties': {'refcat': ref, 'class': kind},
                              'geometry': json.loads(shape.ExportToJson())})
-    data = {'version': 2, 'method': METHOD, 'status': 'exploratory', 'resolution_m': 10,
+    data = {'version': 3, 'method': METHOD, 'status': 'field_visit_estimate', 'resolution_m': 10,
         'support_resolution_m': 20, 'min_valid_percent': MIN_VALID_PERCENT,
         'area_method': 'fractional_cell_intersection_25830',
         'observation': {k: entry[k] for k in ('id', 'datetime')},

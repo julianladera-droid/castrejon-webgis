@@ -14,7 +14,7 @@ from parcel_comparison import build_comparison
 from parcel_grid import require_same_grid
 from parcel_water import build_water
 from sentinel_contract import compatible, INDEX_RESOLUTIONS, RAW_BANDS
-from water_detection import PARAMETERS, QUALITY_BITS
+from field_water import PARAMETERS, QUALITY_BITS
 
 PALETTES = {
     'NDVI': {'label': 'NDVI · vigor vegetal', 'range': [-1, 1],
@@ -91,7 +91,7 @@ def validate_product(folder):
     require_same_grid(rasters['NDMI'], rasters['MNDWI'])
     require_nested_grid(rasters['NDWI'], rasters['MNDWI'])
     for name, classes, ref in [('SCL', [-9999, *range(12)], 'MNDWI'),
-                                ('WATER', range(4), 'NDWI'), ('WATER_QUALITY', range(64), 'NDWI')]:
+                                ('WATER', range(5), 'NDWI'), ('WATER_QUALITY', range(128), 'NDWI')]:
         path = folder/f'{name}.tif'
         if hashlib.sha256(path.read_bytes()).hexdigest() != manifest['water'][name.lower()+'_sha256']:
             raise ValueError('Water checksum mismatch')

@@ -42,7 +42,7 @@ def study(raw_folder, output, master, refs):
     source_audit['alignment'] = 'common 20m extent; any unavailable marginal cells padded nodata'
     destination = output/item['id']
     manifest = process_rasters(rasters, item, {'crs': 'EPSG:25830', 'bounds': bounds}, destination,
-        {'study': 'preserved_original_jp2_dn', 'original_product': item['id']}, source_audit)
+        {'study': 'preserved_original_jp2_dn', 'original_product': item['id']}, source_audit, legacy_water=True)
     fine = rasters['B03_10m']
     ndwi = gdal.Open(str(destination/'NDWI.tif')).ReadAsArray()
     ndvi = gdal.Open(str(destination/'NDVI.tif')).ReadAsArray()

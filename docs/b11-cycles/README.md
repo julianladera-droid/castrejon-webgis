@@ -1,5 +1,7 @@
 # B11 guiada, ciclos 0–3 — entrega para revisión
 
+Actualización posterior: la integración autorizada para orientar visitas de campo se documenta en [guía operativa](../water-field-guide.md). Los resultados y las conclusiones siguientes conservan el alcance del estudio original.
+
 Estudio del 02/11/2026 sobre `bb863cc82990de6d85a07994609de16b2ef10ec5`, en
 `codex/estudio-b11-ciclos-0-3`. Se comprobó `origin/main`: no había cambios
 posteriores al iniciar el bloque. No modifica el detector operativo, el visor,

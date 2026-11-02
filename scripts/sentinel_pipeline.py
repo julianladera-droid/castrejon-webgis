@@ -21,6 +21,7 @@ from parcel_grid import require_same_grid, require_nested_grid, mean_2x2, repeat
 from spectral_quality import normalized_difference, quality_counts, MIN_SUM
 from sentinel_contract import PRODUCT_VERSION, RADIOMETRY, WATER_METHOD, INDEX_RESOLUTIONS, RAW_BANDS
 from water_detection import detect, PARAMETERS, QUALITY_BITS
+from field_water import assess, PARAMETERS as FIELD_PARAMETERS, QUALITY_BITS as FIELD_BITS
 
 ROOT = Path(__file__).resolve().parents[1]
 ENDPOINT = 'https://stac.dataspace.copernicus.eu/v1/search'
@@ -126,7 +127,7 @@ def write_raster(path, array, reference, name, item_id):
     ds = None
 
 
-def process_rasters(rasters, item, aoi, output, query, source_audit=None):
+def process_rasters(rasters, item, aoi, output, query, source_audit=None, legacy_water=False):
     """Same calculation for fresh downloads and preserved, identified DN crops."""
     output.mkdir(parents=True, exist_ok=True)
     fine, coarse = rasters['B03_10m'], rasters['B11_20m']
@@ -148,13 +149,18 @@ def process_rasters(rasters, item, aoi, output, query, source_audit=None):
     outputs['MNDWI'] = normalized_difference(green20, swir, np.isin(scl20, [4, 5, 6]))
     water, quality = detect(green, nir, repeat_2x2(swir), outputs['NDWI'],
                             repeat_2x2(outputs['MNDWI']), outputs['NDVI'], scl10)
-    manifest = {'version': PRODUCT_VERSION, 'radiometry': RADIOMETRY,
+    guidance = None
+    if not legacy_water:
+        water, quality, guidance = assess(green, nir, swir, outputs['NDWI'], outputs['MNDWI'], outputs['NDVI'], scl20, narrow)
+    manifest = {'version': 2 if legacy_water else PRODUCT_VERSION, 'radiometry': RADIOMETRY,
         'status': 'processing', 'query': query, 'source_item': item, 'aoi': aoi,
         'quality_policy': 'SCL 4,5,6; >=80% valid rectangle per index; parcel coverage independent',
         'indices': {}, 'raw_bands': {}, 'diagnostics': {},
         'aggregation': 'B03 arithmetic area mean of four exactly nested 10m cells; all four required',
-        'water': {'method': WATER_METHOD, 'parameters': PARAMETERS, 'quality_bits': QUALITY_BITS,
-                  'classes': {'0': 'no_detection', '1': 'water', '2': 'ambiguous', '3': 'not_evaluable'}},
+        'water': {'method': 'optical_surface_water_v2' if legacy_water else WATER_METHOD,
+                  'parameters': PARAMETERS if legacy_water else FIELD_PARAMETERS,
+                  'quality_bits': QUALITY_BITS if legacy_water else FIELD_BITS, 'guidance': guidance,
+                  'classes': {'0': 'no_detection', '1': 'water', '2': 'ambiguous', '3': 'not_evaluable', **({} if legacy_water else {'4':'residual_candidate'})}},
         'source_audit': source_audit,
         'note': 'Exploratory surface water; neither depth nor volume; NDMI is not soil moisture'}
     for name, ds in rasters.items():
@@ -258,7 +264,7 @@ def main():
     manifest = process_rasters(rasters, item, {**aoi['processing_aoi'], 'bounds': bounds}, args.output, query)
     if manifest['status'] != 'quality_passed':
         raise ValueError('Local quality below 80%; preserved for diagnosis, not publication')
-    print('Completed v2: NDVI/EVI2/NDWI/water 10 m; NDMI/MNDWI/SCL 20 m; EPSG:25830')
+    print('Completed v3: NDVI/EVI2/NDWI/water 10 m; NDMI/MNDWI/SCL 20 m; EPSG:25830')
 
 
 if __name__ == '__main__':
