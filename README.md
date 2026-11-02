@@ -590,3 +590,7 @@ Prueba manual de seguridad:
    `ovc.catastro.meh.es`.
 5. Si vuelve a aparecer el aviso, guardar captura del permiso y de la petición que
    coincide en ese instante; no conceder el permiso para diagnosticarla.
+
+## Estudio B11: ciclos 0–3
+
+Inventario, auditoría, comparación A–E y prueba reducida 40→20 m en [docs/b11-cycles/README.md](docs/b11-cycles/README.md). Investigación aislada del detector operativo, pendiente de revisión; no implica despliegue.

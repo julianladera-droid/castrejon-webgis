@@ -1,5 +1,5 @@
 # SKILL · Castrejón WebGIS — Contrato de arquitectura y evolución
-Version: 0.1.33
+Version: 0.1.34
 Fecha base: 2026-09-30
 Estado: ACTIVO · se actualiza tras cada ciclo de pruebas
 
@@ -771,3 +771,11 @@ Se considera regresión cualquier cambio que haga funcionar una capa localmente 
 - Motivo: los WMS no se visualizaron de forma fiable al ejecutar el visor dentro del contexto de WordPress.
 - Solución: repositorio canónico `castrejon-webgis` + GitHub Pages; WordPress sólo enlaza.
 - M0.2 se prepara como `index.html` estático y se añade workflow reproducible de Pages.
+
+### 0.1.34 — 2026-11-02 · Estudio B11, ciclos 0–3
+- Estudio aislado: inventario zona/adquisición, auditoría por motivo, comparadores A–E y ensayo reducido 40→20. Sin cambiar método operativo, main ni despliegue.
+- Causa: evaluar ganancias del reescalado y confusiones con edificios/paneles, sin confundir presencia parcelaria con verdad espacial ni omisiones de agosto con inutilidad general.
+- Protocolo previo: calidad 0,01 fija en comparaciones; sensibilidad separada 0/0,005/0,01/0,02. Detector MNDWI>0 común B–E y detector operativo como contraste adicional; soporte propio y común.
+- Ensayo reducido: media de área 2×2 como filtro box, no MTF instrumental calibrada; guías calculadas después de agregar reflectancias. Reserva de zonas completas y halo de 80 m fuera del ajuste, sin usar B11 nativa de evaluación en coeficientes.
+- Regresiones: exclusión de nodata/negativos, bloques completos, ausencia de fuga entre ajuste y evaluación, conservación, áreas exactas y reproducción determinista. Ganancias del estudio previo ya exploradas se consideran selección, no validación independiente.
+- Referencias ampliadas durante el estudio: 13 parcelas y cuatro contextos, tres adquisiciones; construcciones/paneles fechados el 31/10, agua inválida localizada en 00059 el 16/08 y comienzo del riego el 30/07 sin inferir persistencia. No se ajustan umbrales a las referencias nuevas.

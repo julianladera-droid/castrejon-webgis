@@ -1,0 +1,249 @@
+{
+  "date": "2026-11-02",
+  "python_tests_passed": 59,
+  "node_regression_scripts_passed": 9,
+  "location_policy": "passed using Python UTF-8 mode",
+  "repository_gate": "passed",
+  "diff_whitespace": "passed",
+  "repeat_command": "python scripts/b11_cycles.py artifacts/water-review/products artifacts/b11-repeat",
+  "byte_identical_outputs": 58,
+  "outputs": [
+    {
+      "file": "45137A00700014-2023-08-16.jpg",
+      "sha256": "be807e1a1b4e325f4c4096268ef2dec7d5f0efa6f6cb1a93430576382f45f6b1"
+    },
+    {
+      "file": "45137A00700014-2026-10-14.jpg",
+      "sha256": "7f1283c4710c7bf9b9639ee4c22353edd507e8dbd02c9db99a60402f46e465a1"
+    },
+    {
+      "file": "45137A00700014-2026-10-31.jpg",
+      "sha256": "9df25660c9a1917a166d44644d4fc6925f1d82b65765da8edde960fa7b0cdb22"
+    },
+    {
+      "file": "45137A00800001-2023-08-16.jpg",
+      "sha256": "eacb4339cabc6c87bb7008590e0234666673e0f5ea7cb982f67d91b4a3cb5615"
+    },
+    {
+      "file": "45137A00800001-2026-10-14.jpg",
+      "sha256": "b3674c9645b3764d52df7cfce2ef1b7fb1f46a9dc10914ea8acf96a81d5fe687"
+    },
+    {
+      "file": "45137A00800001-2026-10-31.jpg",
+      "sha256": "5c3d3059e827953de9d6d86e93264e6b97b60b3469e92e7575009f3db1f85a87"
+    },
+    {
+      "file": "45137A00900001-2023-08-16.jpg",
+      "sha256": "1f53aa185518db8363c733d30bcceff661576601484d158c53b0286e6485e685"
+    },
+    {
+      "file": "45137A00900001-2026-10-14.jpg",
+      "sha256": "25d51a5ad804233eaf9345fe03ddff25896c6751dded89dd63208967c8ae0155"
+    },
+    {
+      "file": "45137A00900001-2026-10-31.jpg",
+      "sha256": "dcdca8f007eea97077ee5efcb765d4bcf5155f5e585c73e309787afe977a9f34"
+    },
+    {
+      "file": "45137A00900013-2023-08-16.jpg",
+      "sha256": "f06942a3d9a6ca198ac5eacd07580d3dc2d43f6d4e22fe7995aca9ea4a029a1e"
+    },
+    {
+      "file": "45137A00900013-2026-10-14.jpg",
+      "sha256": "32bec0d48c21bb4460a8e6158962ae37683ed50322c0ffece7f551936971fd47"
+    },
+    {
+      "file": "45137A00900013-2026-10-31.jpg",
+      "sha256": "2f8dbbbcc16995f4a6a9e31cf5b9e24eeb7e4f7ce91e158d7ab440c91d887b9e"
+    },
+    {
+      "file": "45137A00900059-2023-08-16.jpg",
+      "sha256": "da126d31cf2b65db7536051c08c10d77a63456a4f88b44dc378b3571ba079eac"
+    },
+    {
+      "file": "45137A00900059-2026-10-14.jpg",
+      "sha256": "711c0b3d1c4c90da9c218aed0b2310554795604880dd958b9f77843dcc1e2e0a"
+    },
+    {
+      "file": "45137A00900059-2026-10-31.jpg",
+      "sha256": "40e47bdacbcbe7795fd3a3f8a818c3f8df93e0d06394c35f726208f6cbf2eee2"
+    },
+    {
+      "file": "45137A01000045-2023-08-16.jpg",
+      "sha256": "fba85dc3031d0976199541d8f35b4f6a0b10c81ffddd3ea3fd11c40bce7f9ae5"
+    },
+    {
+      "file": "45137A01000045-2026-10-14.jpg",
+      "sha256": "1a6f407ccd787d99b601a63fbd429888912547f261a22da723a7101a33071a2d"
+    },
+    {
+      "file": "45137A01000045-2026-10-31.jpg",
+      "sha256": "32f7f0e72adb756a14b9920ee92a886d1bb5096caa9940094d72f9b8c60f61d3"
+    },
+    {
+      "file": "45137A01200001-2023-08-16.jpg",
+      "sha256": "66a20b2a6afbb2bf5b3735d72ba2795773eb510a252169b47db5814e993d3499"
+    },
+    {
+      "file": "45137A01200001-2026-10-14.jpg",
+      "sha256": "891d9249990d51352d4068e7606edd5c2cfca5400a12c0681ac1891ce533f3a7"
+    },
+    {
+      "file": "45137A01200001-2026-10-31.jpg",
+      "sha256": "7e19f110750f613ae70f33e43848898bcd73e51b04d795409f45fa4df97b46da"
+    },
+    {
+      "file": "45137A01200080-2023-08-16.jpg",
+      "sha256": "fbab0bc93d555f9b20cb899da863d4eb813b9cc6d689d6c6392268b1fe77639d"
+    },
+    {
+      "file": "45137A01200080-2026-10-14.jpg",
+      "sha256": "19c3411af4e3807c935d8e072b5402421db647ed3472548b1155fbafc691ec77"
+    },
+    {
+      "file": "45137A01200080-2026-10-31.jpg",
+      "sha256": "36b7f7a0c056a216fa70c833d740cc5955c2a6d7a3f4407efd7364b68cdca50d"
+    },
+    {
+      "file": "45137A01200109-2023-08-16.jpg",
+      "sha256": "4faa4a5d9797810c0d341cc04dcad83a761dc2117a7c14d2c66f5d2c09d699e8"
+    },
+    {
+      "file": "45137A01200109-2026-10-14.jpg",
+      "sha256": "24d98a1fc96de0e449a5a39a974ffc904f48b637635a07656cd2261bcc2aab19"
+    },
+    {
+      "file": "45137A01200109-2026-10-31.jpg",
+      "sha256": "e5fe177dbbd2f497f7d970851b384c56dd5e35a003d8420cd74438115f027ad4"
+    },
+    {
+      "file": "45137A03300074-2023-08-16.jpg",
+      "sha256": "170d1c1f7f325b2bb8bfe981948640dcb6f12e8d9beb9d91bc1f31d58b7862f3"
+    },
+    {
+      "file": "45137A03300074-2026-10-14.jpg",
+      "sha256": "07820f70113176803800b3fce6b6616eb15808e42e3431f46f64a46d1ce3d10e"
+    },
+    {
+      "file": "45137A03300074-2026-10-31.jpg",
+      "sha256": "127de15df59da2ea45e297920216da620f2ce5b119205bafb11f5cce8abc9ab8"
+    },
+    {
+      "file": "45137A03300153-2023-08-16.jpg",
+      "sha256": "7f28f7d23279143fedb1eb458e7cb4d73a16c9251e76780aedc87698b8d373a6"
+    },
+    {
+      "file": "45137A03300153-2026-10-14.jpg",
+      "sha256": "5728254b7776e59e7ce60f40e1e3b78093b4322d1ecab1f0995a6a9df690573e"
+    },
+    {
+      "file": "45137A03300153-2026-10-31.jpg",
+      "sha256": "7dcd7ec5e75990be728b6701a2208a609c8218fd1bfdb4129c21bdf25c3091b9"
+    },
+    {
+      "file": "45137A03300155-2023-08-16.jpg",
+      "sha256": "eca3a5449de7ef93b81373a3430acb4a8aa43d48e62dccb707859071435173be"
+    },
+    {
+      "file": "45137A03300155-2026-10-14.jpg",
+      "sha256": "9bbd018858b02b844ca502934012304235bd0250854eab9c9df72a4ef218442d"
+    },
+    {
+      "file": "45137A03300155-2026-10-31.jpg",
+      "sha256": "b6b4f9f619debd3b82c6b0a93a46896e87520e82684a4996c487544f5db4e2ef"
+    },
+    {
+      "file": "45137A04000023-2023-08-16.jpg",
+      "sha256": "497eda1c117b2e643308af2ec5c789041212adf4682e3570a085cc1320c9a454"
+    },
+    {
+      "file": "45137A04000023-2026-10-14.jpg",
+      "sha256": "e824b0ab0123e73911c977e9b53f0751ec525a96f3576e7f23e5bab7f9221bb1"
+    },
+    {
+      "file": "45137A04000023-2026-10-31.jpg",
+      "sha256": "dca1c3dbc6925d37fbb4bbc631f3b56e3c529e9751f6ed7c85afbc006d37323b"
+    },
+    {
+      "file": "comparison.csv",
+      "sha256": "f7b8fb9f686661932dd606dfd0b5a78218980165b8016c2085e629377244178c"
+    },
+    {
+      "file": "east_bare_soil-2023-08-16.jpg",
+      "sha256": "7778f054a158af40a19edf9284bf31bf0aa8fef68eb65550638f46b6ac601754"
+    },
+    {
+      "file": "east_bare_soil-2026-10-14.jpg",
+      "sha256": "4d6d84a85cbea2fb8492f3d1bfac2c41e7afe08c8c5a654c82b0160ca27564f4"
+    },
+    {
+      "file": "east_bare_soil-2026-10-31.jpg",
+      "sha256": "4f5bce5b55f48ac73007fbfbf4c6a08298023c54af67b36fb094d3e4e38311fa"
+    },
+    {
+      "file": "frozen.json",
+      "sha256": "b64791df41696b5fae06c33602f0565871cf3c820adba1d5f37c8672ee60c9df"
+    },
+    {
+      "file": "inventory.json",
+      "sha256": "ed3ca5a41dc263228fcf33cf0831d6e3f56c7385be6eb37668913ad86682b871"
+    },
+    {
+      "file": "north_dense_crop-2023-08-16.jpg",
+      "sha256": "3dc36883e8a02041ba0f90322e74e26091bd8a636e828b52c3dce7914606a267"
+    },
+    {
+      "file": "north_dense_crop-2026-10-14.jpg",
+      "sha256": "a93c8e04ad7ec641ac74d26db73c7324e488eb7077a128a37b858990260990b5"
+    },
+    {
+      "file": "north_dense_crop-2026-10-31.jpg",
+      "sha256": "5f7c35e0fa731950c1da4c863a4341b80df426e8a9f4538f1c93b76668040a72"
+    },
+    {
+      "file": "northwest_roof_context-2023-08-16.jpg",
+      "sha256": "f17280fa85d251ec66f27dc91a18374667426519dd1dc1f4ce825cdf06b220a3"
+    },
+    {
+      "file": "northwest_roof_context-2026-10-14.jpg",
+      "sha256": "cc089010d5cf35a9ebbf56763b1932c3e13507b6bb4d1f623c29b95369c46618"
+    },
+    {
+      "file": "northwest_roof_context-2026-10-31.jpg",
+      "sha256": "04b10aaaa67767f81bb79c73f50beee607b9cf24c2ceef5cbdfd351eab31fc22"
+    },
+    {
+      "file": "protocol.json",
+      "sha256": "3b1c290d98cb169fcd90b773c3474d38a9b40a2ac47ad639baf4aaec260d0096"
+    },
+    {
+      "file": "quality.json",
+      "sha256": "4a8c653e1a8e394755b606272fc5ec8abfc31d0291295a4eda98c5dea1f89f21"
+    },
+    {
+      "file": "reconstruction.csv",
+      "sha256": "0b2cc420f6b16b40420a7e40a8874d711329c7248714198ff4c916861db40a34"
+    },
+    {
+      "file": "reconstruction.json",
+      "sha256": "18be1b06699d3c39400ec8fbce33cad3cf8e03b7626f6af238f13ec152a06867"
+    },
+    {
+      "file": "west_dark_context-2023-08-16.jpg",
+      "sha256": "aafdde06050bc61fb92e28e5d935151e10ab70281096ead6a3a61bd030174dfa"
+    },
+    {
+      "file": "west_dark_context-2026-10-14.jpg",
+      "sha256": "6f69b43526a091a77fa999d9a49734532c7a1346bcf7ca247cb5a5fddb7b77cf"
+    },
+    {
+      "file": "west_dark_context-2026-10-31.jpg",
+      "sha256": "8c1ccc50216b1eaef87bb0fe540f730aab32f1526b0a2ff91dbb08e72a8a8e81"
+    }
+  ],
+  "limitations": [
+    "No live viewer change or deployment",
+    "Sen2Res feasibility assessed; module unavailable, no numerical benchmark",
+    "No independent water contours; no F1/IoU or validated water area"
+  ]
+}
