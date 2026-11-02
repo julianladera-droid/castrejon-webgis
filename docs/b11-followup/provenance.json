@@ -1,0 +1,30 @@
+{
+  "checked_date": "2026-11-02",
+  "product": "S2A_MSIL2A_20230816T105631_N0510_R094_T30TUK_20241021T044404",
+  "observation": "2023-08-16T10:56:31.024000Z",
+  "artifact_id": 13091783958,
+  "run_id": 41327640780,
+  "archive_sha256": "846c1dc70834cfc18a1c8e1266703aca89c9b89ce2513ba3d8b1d15b2a244055",
+  "catalog_url": "https://julianladera-droid.github.io/castrejon-webgis/sentinel/catalog.json",
+  "catalog_sha256": "e3cddfbee1055a5dc627b2820f0c2e7ca784788e188f30f944f7668a3b7b6eda",
+  "ndwi_sha256": "9e6f92ee515b18eebf8631bed81c08a6c904cb862bd7a16e1b0cf45742eb5bf4",
+  "mndwi_sha256": "14ccee62d068aaa4a8ac3049f356d5503361933385febf1668a980a5e71c9f82",
+  "published_hashes_match": true,
+  "B02": "absent in artifact; credentials unavailable; not replaced with another SAFE",
+  "previous_results_preserved": 58,
+  "new_detector_scope": "hypotheses for development only; no independently labelled holdout available",
+  "parameters": {
+    "H1": "current OR new residual class where valid NDWI<=0, MNDWI>0, 0<=SWIR<=.08, NIR<=.15, 0<=B8A<=.15",
+    "H2": "H1, promote residual to estimated water only if NIR<=.06, SWIR<=.05, B8A<=.08",
+    "quality_floors": [
+      0.01,
+      0,
+      0.005,
+      0.02
+    ],
+    "reduced_reservation_m": 80,
+    "full_reconstruction": "global per acquisition; fixed during detector trial"
+  },
+  "parcel_master_sha256": "be7c39285c5d1a010aa6180e431679c316a7bb070ee042ae19e0295c25873850",
+  "parcel_boundary_vintage": "Not declared in master; historical correspondence unverified"
+}

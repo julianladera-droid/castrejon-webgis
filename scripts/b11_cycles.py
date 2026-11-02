@@ -88,9 +88,9 @@ def inventory(root, products):
                 'uncertainty':'No water contour; undated context does not label this acquisition',
                 'reference_notes':reference.get('notes','Exploratory RGB context, not a confirmed negative control'),
                 'role':reference.get('role','selection_already_explored'),
-                'reconstruction_role':'held_out_zone_plus_80m_buffer'})
+                'experiment_roles':{'full_20_to_10': 'global_unsupervised_scene_fit; no spatial holdout', 'reduced_40_to_20': 'whole zone plus 80m excluded from coefficient fit', 'detector_followup': 'development_already_inspected; independent labelled evaluation pending'}})
     pending=references['pending']
-    return {'version':2,'master_sha256':digest(root/'data/parcel-master.json'),
+    return {'version':3,'master_sha256':digest(root/'data/parcel-master.json'),
             'references_sha256':digest(root/'docs/b11-cycles/references.json'),'cases':cases,'pending':pending,
             'trend':'User reports less water 10–31 October; no 10 October acquisition or area/volume trend inferred.'}
 
@@ -211,7 +211,7 @@ def run(folder, cases, output):
     frozen={'product':item['id'],'baseline':item['id'].split('_')[3], 'datetime':item['properties']['datetime'],
         'manifest_sha256':digest(folder/'manifest.json'),'raw_bands':manifest['raw_bands'],
         'grid10':fine.GetGeoTransform(),'grid20':coarse.GetGeoTransform(),'size10':[fine.RasterXSize,fine.RasterYSize],
-        'reduced_fit':fits,'guidance':metadata,'diagnostics':artifacts,'stability':stability,
+        'fit_scope':{'full_20_to_10': 'global_unsupervised_scene_fit; no spatial holdout', 'reduced_40_to_20': 'whole zone plus 80m excluded from coefficient fit', 'detector_followup': 'development_already_inspected; independent labelled evaluation pending'},'reduced_fit':fits,'guidance':metadata,'diagnostics':artifacts,'stability':stability,
         'reduced_model':'2x2 area box, no calibrated instrument MTF; crop last row/column if odd; 80m holdout buffer'}
     return rows,audit,reconstruction,frozen
 

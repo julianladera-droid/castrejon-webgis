@@ -20,8 +20,12 @@ Las geometrías y su hash proceden del maestro, sin dibujar contornos de agua.
 
 Las cuatro parcelas iniciales ya se habían explorado: se consideran selección,
 no validación independiente. Las nueve referencias nuevas se incorporaron tras
-fijar los parámetros; no se reajustaron umbrales para conseguir aciertos. En la
-reconstrucción se reserva la unión de **todas** las zonas, más 80 m, en cada fecha.
+fijar los parámetros; no se reajustaron umbrales para conseguir aciertos. Sólo en el **ensayo reducido 40→20 m** se reserva la unión de todas las zonas,
+más 80 m, en cada fecha. Las reconstrucciones completas D/E de **20→10 m** usan
+`guided_b11`, ajustado globalmente por adquisición sin excluir esas zonas.
+El ajuste sin etiquetas por escena no implica por sí mismo fuga de etiquetas,
+pero tampoco constituye validación espacial fuera del ajuste. Los RMSE reducidos
+y los candidatos recuperados a 10 m son resultados distintos.
 El conjunto de entrenamiento final cambia al incorporar esas zonas, siguiendo
 la misma regla previamente fijada.
 
@@ -343,7 +347,7 @@ visualmente; no se requiere prueba del visor porque no cambia en este bloque.
 
 | Objetivo / superficie | Decisión | Evidencia y límite |
 |---|---|---|
-| Conservación y reconstrucción B11 en zonas reservadas | **Avanza**, como línea de investigación | Conservación y menor RMSE en múltiples zonas frente a vecino; no demuestra detalle verdadero a 10 m |
+| Reconstrucción reducida 40→20 en zonas reservadas; conservación 20→10 global | **Avanza**, como línea de investigación | Conservación y menor RMSE en múltiples zonas frente a vecino; no demuestra detalle verdadero a 10 m |
 | Selección general de una guía | **Revisa** | E mejora varios casos y D otros; D empeora 00059 el 31/10, E amplifica señal construida |
 | Lámina libre / lagunas de octubre | **Revisa** | Candidatos recuperados y valoración positiva de NDWI; sin contornos no se valida precisión espacial |
 | Encharcamiento de 00700014 el 31/10 | **Revisa** | MNDWI conserva señal que NDWI no muestra; E amplía candidatos, detector operativo sigue sin agua estimada |
@@ -359,3 +363,12 @@ de los otros inválidos sobre río/laguna, y controles negativos fechados. La
 observación parcelaria no se convierte en probabilidad calibrada, profundidad
 ni volumen. Los ciclos temporales, SAR, integración y transferencia operativa
 quedan fuera de esta entrega y se plantearán tras la revisión del usuario.
+
+## Continuación y corrección de alcance
+
+La [continuación acotada](../b11-followup/README.md) audita el SAFE publicado,
+la agregación radiométrica, las firmas y alternativas del detector con D/E fijas.
+Los metadatos de reserva se han corregido sin recalcular tablas ni figuras previas.
+Los inventarios/metadatos originales se conservan en `../b11-followup/previous-*.json`.
+`validation.json` y `protocol.json` siguen documentando la ejecución histórica del
+commit `48a78e8`, incluidos sus hashes originales; no describen esta corrección.

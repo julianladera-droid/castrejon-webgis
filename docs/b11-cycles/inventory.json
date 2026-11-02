@@ -1,5 +1,5 @@
 {
-  "version": 2,
+  "version": 3,
   "master_sha256": "be7c39285c5d1a010aa6180e431679c316a7bb070ee042ae19e0295c25873850",
   "references_sha256": "bceef444b218b537dd9a9745c5c6b1aae0f5ce911f26a07f08ad7debe480da36",
   "cases": [
@@ -149,7 +149,11 @@
       "uncertainty": "No water contour; undated context does not label this acquisition",
       "reference_notes": "Encharcamiento intermitente confirmado el 31/10/2026. Caso aportado despues de fijar el protocolo.",
       "role": "evaluation_descriptive_new_reference",
-      "reconstruction_role": "held_out_zone_plus_80m_buffer"
+      "experiment_roles": {
+        "full_20_to_10": "global_unsupervised_scene_fit; no spatial holdout",
+        "reduced_40_to_20": "whole zone plus 80m excluded from coefficient fit",
+        "detector_followup": "development_already_inspected; independent labelled evaluation pending"
+      }
     },
     {
       "zone": "45137A00800001",
@@ -333,7 +337,11 @@
       "uncertainty": "No water contour; undated context does not label this acquisition",
       "reference_notes": "Peque\u00f1a laguna intermitente; falta confirmar presencia por adquisicion.",
       "role": "evaluation_descriptive_new_reference",
-      "reconstruction_role": "held_out_zone_plus_80m_buffer"
+      "experiment_roles": {
+        "full_20_to_10": "global_unsupervised_scene_fit; no spatial holdout",
+        "reduced_40_to_20": "whole zone plus 80m excluded from coefficient fit",
+        "detector_followup": "development_already_inspected; independent labelled evaluation pending"
+      }
     },
     {
       "zone": "45137A00900001",
@@ -497,7 +505,11 @@
       "uncertainty": "No water contour; undated context does not label this acquisition",
       "reference_notes": "Laguna semipermanente en parte de la parcela; NDVI positivo el 31/10. No se etiqueta toda la parcela como agua.",
       "role": "selection_already_explored",
-      "reconstruction_role": "held_out_zone_plus_80m_buffer"
+      "experiment_roles": {
+        "full_20_to_10": "global_unsupervised_scene_fit; no spatial holdout",
+        "reduced_40_to_20": "whole zone plus 80m excluded from coefficient fit",
+        "detector_followup": "development_already_inspected; independent labelled evaluation pending"
+      }
     },
     {
       "zone": "45137A00900013",
@@ -585,7 +597,11 @@
       "uncertainty": "No water contour; undated context does not label this acquisition",
       "reference_notes": "Peque\u00f1a laguna intermitente; fecha de presencia no indicada.",
       "role": "evaluation_descriptive_new_reference",
-      "reconstruction_role": "held_out_zone_plus_80m_buffer"
+      "experiment_roles": {
+        "full_20_to_10": "global_unsupervised_scene_fit; no spatial holdout",
+        "reduced_40_to_20": "whole zone plus 80m excluded from coefficient fit",
+        "detector_followup": "development_already_inspected; independent labelled evaluation pending"
+      }
     },
     {
       "zone": "45137A00900059",
@@ -637,7 +653,11 @@
       "uncertainty": "No water contour; undated context does not label this acquisition",
       "reference_notes": "Laguna. Usuario localiza agua marcada como invalida en NDWI el 16/08/2023. No se presupone que todos los invalidos sean agua. Observacion de agosto a\u00f1adida despues del primer analisis, sin ajustar parametros.",
       "role": "selection_already_explored",
-      "reconstruction_role": "held_out_zone_plus_80m_buffer"
+      "experiment_roles": {
+        "full_20_to_10": "global_unsupervised_scene_fit; no spatial holdout",
+        "reduced_40_to_20": "whole zone plus 80m excluded from coefficient fit",
+        "detector_followup": "development_already_inspected; independent labelled evaluation pending"
+      }
     },
     {
       "zone": "45137A01000045",
@@ -697,7 +717,11 @@
       "uncertainty": "No water contour; undated context does not label this acquisition",
       "reference_notes": "Laguna; falta confirmar presencia por adquisicion.",
       "role": "evaluation_descriptive_new_reference",
-      "reconstruction_role": "held_out_zone_plus_80m_buffer"
+      "experiment_roles": {
+        "full_20_to_10": "global_unsupervised_scene_fit; no spatial holdout",
+        "reduced_40_to_20": "whole zone plus 80m excluded from coefficient fit",
+        "detector_followup": "development_already_inspected; independent labelled evaluation pending"
+      }
     },
     {
       "zone": "45137A01200001",
@@ -785,7 +809,11 @@
       "uncertainty": "No water contour; undated context does not label this acquisition",
       "reference_notes": "Edificios y paneles solares, confusion fechada el 31/10/2026; falta separar las huellas de ambos.",
       "role": "evaluation_descriptive_new_reference",
-      "reconstruction_role": "held_out_zone_plus_80m_buffer"
+      "experiment_roles": {
+        "full_20_to_10": "global_unsupervised_scene_fit; no spatial holdout",
+        "reduced_40_to_20": "whole zone plus 80m excluded from coefficient fit",
+        "detector_followup": "development_already_inspected; independent labelled evaluation pending"
+      }
     },
     {
       "zone": "45137A01200080",
@@ -889,7 +917,11 @@
       "uncertainty": "No water contour; undated context does not label this acquisition",
       "reference_notes": "Superficie construida en su totalidad segun usuario. Control parcelario fuerte, aun sin comprobacion de huellas por pixel.",
       "role": "evaluation_descriptive_new_reference",
-      "reconstruction_role": "held_out_zone_plus_80m_buffer"
+      "experiment_roles": {
+        "full_20_to_10": "global_unsupervised_scene_fit; no spatial holdout",
+        "reduced_40_to_20": "whole zone plus 80m excluded from coefficient fit",
+        "detector_followup": "development_already_inspected; independent labelled evaluation pending"
+      }
     },
     {
       "zone": "45137A01200109",
@@ -1475,7 +1507,11 @@
       "uncertainty": "No water contour; undated context does not label this acquisition",
       "reference_notes": "Construcciones: falso positivo confirmado por el usuario para 31/10/2026; no toda la parcela tiene por que estar construida.",
       "role": "evaluation_descriptive_new_reference",
-      "reconstruction_role": "held_out_zone_plus_80m_buffer"
+      "experiment_roles": {
+        "full_20_to_10": "global_unsupervised_scene_fit; no spatial holdout",
+        "reduced_40_to_20": "whole zone plus 80m excluded from coefficient fit",
+        "detector_followup": "development_already_inspected; independent labelled evaluation pending"
+      }
     },
     {
       "zone": "45137A03300074",
@@ -1567,7 +1603,11 @@
       "uncertainty": "No water contour; undated context does not label this acquisition",
       "reference_notes": "Inicio seguro de riego por inundacion el 30/07/2023 junto con 153 y 155; no confirma agua en cada pasada ni el 16/08.",
       "role": "evaluation_descriptive_new_reference",
-      "reconstruction_role": "held_out_zone_plus_80m_buffer"
+      "experiment_roles": {
+        "full_20_to_10": "global_unsupervised_scene_fit; no spatial holdout",
+        "reduced_40_to_20": "whole zone plus 80m excluded from coefficient fit",
+        "detector_followup": "development_already_inspected; independent labelled evaluation pending"
+      }
     },
     {
       "zone": "45137A03300153",
@@ -1615,7 +1655,11 @@
       "uncertainty": "No water contour; undated context does not label this acquisition",
       "reference_notes": "Agua bajo vegetacion, sobre todo al sur. Inicio de riego por inundacion confirmado el 30/07/2023, no adquisicion ni persistencia diaria confirmada.",
       "role": "selection_already_explored",
-      "reconstruction_role": "held_out_zone_plus_80m_buffer"
+      "experiment_roles": {
+        "full_20_to_10": "global_unsupervised_scene_fit; no spatial holdout",
+        "reduced_40_to_20": "whole zone plus 80m excluded from coefficient fit",
+        "detector_followup": "development_already_inspected; independent labelled evaluation pending"
+      }
     },
     {
       "zone": "45137A03300155",
@@ -1691,7 +1735,11 @@
       "uncertainty": "No water contour; undated context does not label this acquisition",
       "reference_notes": "Encharcamiento intermitente en agosto, mayor agua comunicada que en 153, con vegetacion. Riego por inundacion desde 30/07/2023.",
       "role": "selection_already_explored",
-      "reconstruction_role": "held_out_zone_plus_80m_buffer"
+      "experiment_roles": {
+        "full_20_to_10": "global_unsupervised_scene_fit; no spatial holdout",
+        "reduced_40_to_20": "whole zone plus 80m excluded from coefficient fit",
+        "detector_followup": "development_already_inspected; independent labelled evaluation pending"
+      }
     },
     {
       "zone": "45137A04000023",
@@ -1807,7 +1855,11 @@
       "uncertainty": "No water contour; undated context does not label this acquisition",
       "reference_notes": "La capa de agua detecta una nave ganadera el 31/10/2026.",
       "role": "evaluation_descriptive_new_reference",
-      "reconstruction_role": "held_out_zone_plus_80m_buffer"
+      "experiment_roles": {
+        "full_20_to_10": "global_unsupervised_scene_fit; no spatial holdout",
+        "reduced_40_to_20": "whole zone plus 80m excluded from coefficient fit",
+        "detector_followup": "development_already_inspected; independent labelled evaluation pending"
+      }
     },
     {
       "zone": "east_bare_soil",
@@ -1847,7 +1899,11 @@
       "uncertainty": "No water contour; undated context does not label this acquisition",
       "reference_notes": "Exploratory RGB context, not a confirmed negative control",
       "role": "selection_already_explored",
-      "reconstruction_role": "held_out_zone_plus_80m_buffer"
+      "experiment_roles": {
+        "full_20_to_10": "global_unsupervised_scene_fit; no spatial holdout",
+        "reduced_40_to_20": "whole zone plus 80m excluded from coefficient fit",
+        "detector_followup": "development_already_inspected; independent labelled evaluation pending"
+      }
     },
     {
       "zone": "north_dense_crop",
@@ -1887,7 +1943,11 @@
       "uncertainty": "No water contour; undated context does not label this acquisition",
       "reference_notes": "Exploratory RGB context, not a confirmed negative control",
       "role": "selection_already_explored",
-      "reconstruction_role": "held_out_zone_plus_80m_buffer"
+      "experiment_roles": {
+        "full_20_to_10": "global_unsupervised_scene_fit; no spatial holdout",
+        "reduced_40_to_20": "whole zone plus 80m excluded from coefficient fit",
+        "detector_followup": "development_already_inspected; independent labelled evaluation pending"
+      }
     },
     {
       "zone": "northwest_roof_context",
@@ -1927,7 +1987,11 @@
       "uncertainty": "No water contour; undated context does not label this acquisition",
       "reference_notes": "Exploratory RGB context, not a confirmed negative control",
       "role": "selection_already_explored",
-      "reconstruction_role": "held_out_zone_plus_80m_buffer"
+      "experiment_roles": {
+        "full_20_to_10": "global_unsupervised_scene_fit; no spatial holdout",
+        "reduced_40_to_20": "whole zone plus 80m excluded from coefficient fit",
+        "detector_followup": "development_already_inspected; independent labelled evaluation pending"
+      }
     },
     {
       "zone": "west_dark_context",
@@ -1967,7 +2031,11 @@
       "uncertainty": "No water contour; undated context does not label this acquisition",
       "reference_notes": "Exploratory RGB context, not a confirmed negative control",
       "role": "selection_already_explored",
-      "reconstruction_role": "held_out_zone_plus_80m_buffer"
+      "experiment_roles": {
+        "full_20_to_10": "global_unsupervised_scene_fit; no spatial holdout",
+        "reduced_40_to_20": "whole zone plus 80m excluded from coefficient fit",
+        "detector_followup": "development_already_inspected; independent labelled evaluation pending"
+      }
     },
     {
       "zone": "45137A00700014",
@@ -2115,7 +2183,11 @@
       "uncertainty": "No water contour; undated context does not label this acquisition",
       "reference_notes": "Encharcamiento intermitente confirmado el 31/10/2026. Caso aportado despues de fijar el protocolo.",
       "role": "evaluation_descriptive_new_reference",
-      "reconstruction_role": "held_out_zone_plus_80m_buffer"
+      "experiment_roles": {
+        "full_20_to_10": "global_unsupervised_scene_fit; no spatial holdout",
+        "reduced_40_to_20": "whole zone plus 80m excluded from coefficient fit",
+        "detector_followup": "development_already_inspected; independent labelled evaluation pending"
+      }
     },
     {
       "zone": "45137A00800001",
@@ -2299,7 +2371,11 @@
       "uncertainty": "No water contour; undated context does not label this acquisition",
       "reference_notes": "Peque\u00f1a laguna intermitente; falta confirmar presencia por adquisicion.",
       "role": "evaluation_descriptive_new_reference",
-      "reconstruction_role": "held_out_zone_plus_80m_buffer"
+      "experiment_roles": {
+        "full_20_to_10": "global_unsupervised_scene_fit; no spatial holdout",
+        "reduced_40_to_20": "whole zone plus 80m excluded from coefficient fit",
+        "detector_followup": "development_already_inspected; independent labelled evaluation pending"
+      }
     },
     {
       "zone": "45137A00900001",
@@ -2463,7 +2539,11 @@
       "uncertainty": "No water contour; undated context does not label this acquisition",
       "reference_notes": "Laguna semipermanente en parte de la parcela; NDVI positivo el 31/10. No se etiqueta toda la parcela como agua.",
       "role": "selection_already_explored",
-      "reconstruction_role": "held_out_zone_plus_80m_buffer"
+      "experiment_roles": {
+        "full_20_to_10": "global_unsupervised_scene_fit; no spatial holdout",
+        "reduced_40_to_20": "whole zone plus 80m excluded from coefficient fit",
+        "detector_followup": "development_already_inspected; independent labelled evaluation pending"
+      }
     },
     {
       "zone": "45137A00900013",
@@ -2551,7 +2631,11 @@
       "uncertainty": "No water contour; undated context does not label this acquisition",
       "reference_notes": "Peque\u00f1a laguna intermitente; fecha de presencia no indicada.",
       "role": "evaluation_descriptive_new_reference",
-      "reconstruction_role": "held_out_zone_plus_80m_buffer"
+      "experiment_roles": {
+        "full_20_to_10": "global_unsupervised_scene_fit; no spatial holdout",
+        "reduced_40_to_20": "whole zone plus 80m excluded from coefficient fit",
+        "detector_followup": "development_already_inspected; independent labelled evaluation pending"
+      }
     },
     {
       "zone": "45137A00900059",
@@ -2603,7 +2687,11 @@
       "uncertainty": "No water contour; undated context does not label this acquisition",
       "reference_notes": "Laguna. Usuario localiza agua marcada como invalida en NDWI el 16/08/2023. No se presupone que todos los invalidos sean agua. Observacion de agosto a\u00f1adida despues del primer analisis, sin ajustar parametros.",
       "role": "selection_already_explored",
-      "reconstruction_role": "held_out_zone_plus_80m_buffer"
+      "experiment_roles": {
+        "full_20_to_10": "global_unsupervised_scene_fit; no spatial holdout",
+        "reduced_40_to_20": "whole zone plus 80m excluded from coefficient fit",
+        "detector_followup": "development_already_inspected; independent labelled evaluation pending"
+      }
     },
     {
       "zone": "45137A01000045",
@@ -2663,7 +2751,11 @@
       "uncertainty": "No water contour; undated context does not label this acquisition",
       "reference_notes": "Laguna; falta confirmar presencia por adquisicion.",
       "role": "evaluation_descriptive_new_reference",
-      "reconstruction_role": "held_out_zone_plus_80m_buffer"
+      "experiment_roles": {
+        "full_20_to_10": "global_unsupervised_scene_fit; no spatial holdout",
+        "reduced_40_to_20": "whole zone plus 80m excluded from coefficient fit",
+        "detector_followup": "development_already_inspected; independent labelled evaluation pending"
+      }
     },
     {
       "zone": "45137A01200001",
@@ -2751,7 +2843,11 @@
       "uncertainty": "No water contour; undated context does not label this acquisition",
       "reference_notes": "Edificios y paneles solares, confusion fechada el 31/10/2026; falta separar las huellas de ambos.",
       "role": "evaluation_descriptive_new_reference",
-      "reconstruction_role": "held_out_zone_plus_80m_buffer"
+      "experiment_roles": {
+        "full_20_to_10": "global_unsupervised_scene_fit; no spatial holdout",
+        "reduced_40_to_20": "whole zone plus 80m excluded from coefficient fit",
+        "detector_followup": "development_already_inspected; independent labelled evaluation pending"
+      }
     },
     {
       "zone": "45137A01200080",
@@ -2855,7 +2951,11 @@
       "uncertainty": "No water contour; undated context does not label this acquisition",
       "reference_notes": "Superficie construida en su totalidad segun usuario. Control parcelario fuerte, aun sin comprobacion de huellas por pixel.",
       "role": "evaluation_descriptive_new_reference",
-      "reconstruction_role": "held_out_zone_plus_80m_buffer"
+      "experiment_roles": {
+        "full_20_to_10": "global_unsupervised_scene_fit; no spatial holdout",
+        "reduced_40_to_20": "whole zone plus 80m excluded from coefficient fit",
+        "detector_followup": "development_already_inspected; independent labelled evaluation pending"
+      }
     },
     {
       "zone": "45137A01200109",
@@ -3441,7 +3541,11 @@
       "uncertainty": "No water contour; undated context does not label this acquisition",
       "reference_notes": "Construcciones: falso positivo confirmado por el usuario para 31/10/2026; no toda la parcela tiene por que estar construida.",
       "role": "evaluation_descriptive_new_reference",
-      "reconstruction_role": "held_out_zone_plus_80m_buffer"
+      "experiment_roles": {
+        "full_20_to_10": "global_unsupervised_scene_fit; no spatial holdout",
+        "reduced_40_to_20": "whole zone plus 80m excluded from coefficient fit",
+        "detector_followup": "development_already_inspected; independent labelled evaluation pending"
+      }
     },
     {
       "zone": "45137A03300074",
@@ -3533,7 +3637,11 @@
       "uncertainty": "No water contour; undated context does not label this acquisition",
       "reference_notes": "Inicio seguro de riego por inundacion el 30/07/2023 junto con 153 y 155; no confirma agua en cada pasada ni el 16/08.",
       "role": "evaluation_descriptive_new_reference",
-      "reconstruction_role": "held_out_zone_plus_80m_buffer"
+      "experiment_roles": {
+        "full_20_to_10": "global_unsupervised_scene_fit; no spatial holdout",
+        "reduced_40_to_20": "whole zone plus 80m excluded from coefficient fit",
+        "detector_followup": "development_already_inspected; independent labelled evaluation pending"
+      }
     },
     {
       "zone": "45137A03300153",
@@ -3581,7 +3689,11 @@
       "uncertainty": "No water contour; undated context does not label this acquisition",
       "reference_notes": "Agua bajo vegetacion, sobre todo al sur. Inicio de riego por inundacion confirmado el 30/07/2023, no adquisicion ni persistencia diaria confirmada.",
       "role": "selection_already_explored",
-      "reconstruction_role": "held_out_zone_plus_80m_buffer"
+      "experiment_roles": {
+        "full_20_to_10": "global_unsupervised_scene_fit; no spatial holdout",
+        "reduced_40_to_20": "whole zone plus 80m excluded from coefficient fit",
+        "detector_followup": "development_already_inspected; independent labelled evaluation pending"
+      }
     },
     {
       "zone": "45137A03300155",
@@ -3657,7 +3769,11 @@
       "uncertainty": "No water contour; undated context does not label this acquisition",
       "reference_notes": "Encharcamiento intermitente en agosto, mayor agua comunicada que en 153, con vegetacion. Riego por inundacion desde 30/07/2023.",
       "role": "selection_already_explored",
-      "reconstruction_role": "held_out_zone_plus_80m_buffer"
+      "experiment_roles": {
+        "full_20_to_10": "global_unsupervised_scene_fit; no spatial holdout",
+        "reduced_40_to_20": "whole zone plus 80m excluded from coefficient fit",
+        "detector_followup": "development_already_inspected; independent labelled evaluation pending"
+      }
     },
     {
       "zone": "45137A04000023",
@@ -3773,7 +3889,11 @@
       "uncertainty": "No water contour; undated context does not label this acquisition",
       "reference_notes": "La capa de agua detecta una nave ganadera el 31/10/2026.",
       "role": "evaluation_descriptive_new_reference",
-      "reconstruction_role": "held_out_zone_plus_80m_buffer"
+      "experiment_roles": {
+        "full_20_to_10": "global_unsupervised_scene_fit; no spatial holdout",
+        "reduced_40_to_20": "whole zone plus 80m excluded from coefficient fit",
+        "detector_followup": "development_already_inspected; independent labelled evaluation pending"
+      }
     },
     {
       "zone": "east_bare_soil",
@@ -3813,7 +3933,11 @@
       "uncertainty": "No water contour; undated context does not label this acquisition",
       "reference_notes": "Exploratory RGB context, not a confirmed negative control",
       "role": "selection_already_explored",
-      "reconstruction_role": "held_out_zone_plus_80m_buffer"
+      "experiment_roles": {
+        "full_20_to_10": "global_unsupervised_scene_fit; no spatial holdout",
+        "reduced_40_to_20": "whole zone plus 80m excluded from coefficient fit",
+        "detector_followup": "development_already_inspected; independent labelled evaluation pending"
+      }
     },
     {
       "zone": "north_dense_crop",
@@ -3853,7 +3977,11 @@
       "uncertainty": "No water contour; undated context does not label this acquisition",
       "reference_notes": "Exploratory RGB context, not a confirmed negative control",
       "role": "selection_already_explored",
-      "reconstruction_role": "held_out_zone_plus_80m_buffer"
+      "experiment_roles": {
+        "full_20_to_10": "global_unsupervised_scene_fit; no spatial holdout",
+        "reduced_40_to_20": "whole zone plus 80m excluded from coefficient fit",
+        "detector_followup": "development_already_inspected; independent labelled evaluation pending"
+      }
     },
     {
       "zone": "northwest_roof_context",
@@ -3893,7 +4021,11 @@
       "uncertainty": "No water contour; undated context does not label this acquisition",
       "reference_notes": "Exploratory RGB context, not a confirmed negative control",
       "role": "selection_already_explored",
-      "reconstruction_role": "held_out_zone_plus_80m_buffer"
+      "experiment_roles": {
+        "full_20_to_10": "global_unsupervised_scene_fit; no spatial holdout",
+        "reduced_40_to_20": "whole zone plus 80m excluded from coefficient fit",
+        "detector_followup": "development_already_inspected; independent labelled evaluation pending"
+      }
     },
     {
       "zone": "west_dark_context",
@@ -3933,7 +4065,11 @@
       "uncertainty": "No water contour; undated context does not label this acquisition",
       "reference_notes": "Exploratory RGB context, not a confirmed negative control",
       "role": "selection_already_explored",
-      "reconstruction_role": "held_out_zone_plus_80m_buffer"
+      "experiment_roles": {
+        "full_20_to_10": "global_unsupervised_scene_fit; no spatial holdout",
+        "reduced_40_to_20": "whole zone plus 80m excluded from coefficient fit",
+        "detector_followup": "development_already_inspected; independent labelled evaluation pending"
+      }
     },
     {
       "zone": "45137A00700014",
@@ -4081,7 +4217,11 @@
       "uncertainty": "No water contour; undated context does not label this acquisition",
       "reference_notes": "Encharcamiento intermitente confirmado el 31/10/2026. Caso aportado despues de fijar el protocolo.",
       "role": "evaluation_descriptive_new_reference",
-      "reconstruction_role": "held_out_zone_plus_80m_buffer"
+      "experiment_roles": {
+        "full_20_to_10": "global_unsupervised_scene_fit; no spatial holdout",
+        "reduced_40_to_20": "whole zone plus 80m excluded from coefficient fit",
+        "detector_followup": "development_already_inspected; independent labelled evaluation pending"
+      }
     },
     {
       "zone": "45137A00800001",
@@ -4265,7 +4405,11 @@
       "uncertainty": "No water contour; undated context does not label this acquisition",
       "reference_notes": "Peque\u00f1a laguna intermitente; falta confirmar presencia por adquisicion.",
       "role": "evaluation_descriptive_new_reference",
-      "reconstruction_role": "held_out_zone_plus_80m_buffer"
+      "experiment_roles": {
+        "full_20_to_10": "global_unsupervised_scene_fit; no spatial holdout",
+        "reduced_40_to_20": "whole zone plus 80m excluded from coefficient fit",
+        "detector_followup": "development_already_inspected; independent labelled evaluation pending"
+      }
     },
     {
       "zone": "45137A00900001",
@@ -4429,7 +4573,11 @@
       "uncertainty": "No water contour; undated context does not label this acquisition",
       "reference_notes": "Laguna semipermanente en parte de la parcela; NDVI positivo el 31/10. No se etiqueta toda la parcela como agua.",
       "role": "selection_already_explored",
-      "reconstruction_role": "held_out_zone_plus_80m_buffer"
+      "experiment_roles": {
+        "full_20_to_10": "global_unsupervised_scene_fit; no spatial holdout",
+        "reduced_40_to_20": "whole zone plus 80m excluded from coefficient fit",
+        "detector_followup": "development_already_inspected; independent labelled evaluation pending"
+      }
     },
     {
       "zone": "45137A00900013",
@@ -4517,7 +4665,11 @@
       "uncertainty": "No water contour; undated context does not label this acquisition",
       "reference_notes": "Peque\u00f1a laguna intermitente; fecha de presencia no indicada.",
       "role": "evaluation_descriptive_new_reference",
-      "reconstruction_role": "held_out_zone_plus_80m_buffer"
+      "experiment_roles": {
+        "full_20_to_10": "global_unsupervised_scene_fit; no spatial holdout",
+        "reduced_40_to_20": "whole zone plus 80m excluded from coefficient fit",
+        "detector_followup": "development_already_inspected; independent labelled evaluation pending"
+      }
     },
     {
       "zone": "45137A00900059",
@@ -4569,7 +4721,11 @@
       "uncertainty": "No water contour; undated context does not label this acquisition",
       "reference_notes": "Laguna. Usuario localiza agua marcada como invalida en NDWI el 16/08/2023. No se presupone que todos los invalidos sean agua. Observacion de agosto a\u00f1adida despues del primer analisis, sin ajustar parametros.",
       "role": "selection_already_explored",
-      "reconstruction_role": "held_out_zone_plus_80m_buffer"
+      "experiment_roles": {
+        "full_20_to_10": "global_unsupervised_scene_fit; no spatial holdout",
+        "reduced_40_to_20": "whole zone plus 80m excluded from coefficient fit",
+        "detector_followup": "development_already_inspected; independent labelled evaluation pending"
+      }
     },
     {
       "zone": "45137A01000045",
@@ -4629,7 +4785,11 @@
       "uncertainty": "No water contour; undated context does not label this acquisition",
       "reference_notes": "Laguna; falta confirmar presencia por adquisicion.",
       "role": "evaluation_descriptive_new_reference",
-      "reconstruction_role": "held_out_zone_plus_80m_buffer"
+      "experiment_roles": {
+        "full_20_to_10": "global_unsupervised_scene_fit; no spatial holdout",
+        "reduced_40_to_20": "whole zone plus 80m excluded from coefficient fit",
+        "detector_followup": "development_already_inspected; independent labelled evaluation pending"
+      }
     },
     {
       "zone": "45137A01200001",
@@ -4717,7 +4877,11 @@
       "uncertainty": "No water contour; undated context does not label this acquisition",
       "reference_notes": "Edificios y paneles solares, confusion fechada el 31/10/2026; falta separar las huellas de ambos.",
       "role": "evaluation_descriptive_new_reference",
-      "reconstruction_role": "held_out_zone_plus_80m_buffer"
+      "experiment_roles": {
+        "full_20_to_10": "global_unsupervised_scene_fit; no spatial holdout",
+        "reduced_40_to_20": "whole zone plus 80m excluded from coefficient fit",
+        "detector_followup": "development_already_inspected; independent labelled evaluation pending"
+      }
     },
     {
       "zone": "45137A01200080",
@@ -4821,7 +4985,11 @@
       "uncertainty": "No water contour; undated context does not label this acquisition",
       "reference_notes": "Superficie construida en su totalidad segun usuario. Control parcelario fuerte, aun sin comprobacion de huellas por pixel.",
       "role": "evaluation_descriptive_new_reference",
-      "reconstruction_role": "held_out_zone_plus_80m_buffer"
+      "experiment_roles": {
+        "full_20_to_10": "global_unsupervised_scene_fit; no spatial holdout",
+        "reduced_40_to_20": "whole zone plus 80m excluded from coefficient fit",
+        "detector_followup": "development_already_inspected; independent labelled evaluation pending"
+      }
     },
     {
       "zone": "45137A01200109",
@@ -5407,7 +5575,11 @@
       "uncertainty": "No water contour; undated context does not label this acquisition",
       "reference_notes": "Construcciones: falso positivo confirmado por el usuario para 31/10/2026; no toda la parcela tiene por que estar construida.",
       "role": "evaluation_descriptive_new_reference",
-      "reconstruction_role": "held_out_zone_plus_80m_buffer"
+      "experiment_roles": {
+        "full_20_to_10": "global_unsupervised_scene_fit; no spatial holdout",
+        "reduced_40_to_20": "whole zone plus 80m excluded from coefficient fit",
+        "detector_followup": "development_already_inspected; independent labelled evaluation pending"
+      }
     },
     {
       "zone": "45137A03300074",
@@ -5499,7 +5671,11 @@
       "uncertainty": "No water contour; undated context does not label this acquisition",
       "reference_notes": "Inicio seguro de riego por inundacion el 30/07/2023 junto con 153 y 155; no confirma agua en cada pasada ni el 16/08.",
       "role": "evaluation_descriptive_new_reference",
-      "reconstruction_role": "held_out_zone_plus_80m_buffer"
+      "experiment_roles": {
+        "full_20_to_10": "global_unsupervised_scene_fit; no spatial holdout",
+        "reduced_40_to_20": "whole zone plus 80m excluded from coefficient fit",
+        "detector_followup": "development_already_inspected; independent labelled evaluation pending"
+      }
     },
     {
       "zone": "45137A03300153",
@@ -5547,7 +5723,11 @@
       "uncertainty": "No water contour; undated context does not label this acquisition",
       "reference_notes": "Agua bajo vegetacion, sobre todo al sur. Inicio de riego por inundacion confirmado el 30/07/2023, no adquisicion ni persistencia diaria confirmada.",
       "role": "selection_already_explored",
-      "reconstruction_role": "held_out_zone_plus_80m_buffer"
+      "experiment_roles": {
+        "full_20_to_10": "global_unsupervised_scene_fit; no spatial holdout",
+        "reduced_40_to_20": "whole zone plus 80m excluded from coefficient fit",
+        "detector_followup": "development_already_inspected; independent labelled evaluation pending"
+      }
     },
     {
       "zone": "45137A03300155",
@@ -5623,7 +5803,11 @@
       "uncertainty": "No water contour; undated context does not label this acquisition",
       "reference_notes": "Encharcamiento intermitente en agosto, mayor agua comunicada que en 153, con vegetacion. Riego por inundacion desde 30/07/2023.",
       "role": "selection_already_explored",
-      "reconstruction_role": "held_out_zone_plus_80m_buffer"
+      "experiment_roles": {
+        "full_20_to_10": "global_unsupervised_scene_fit; no spatial holdout",
+        "reduced_40_to_20": "whole zone plus 80m excluded from coefficient fit",
+        "detector_followup": "development_already_inspected; independent labelled evaluation pending"
+      }
     },
     {
       "zone": "45137A04000023",
@@ -5739,7 +5923,11 @@
       "uncertainty": "No water contour; undated context does not label this acquisition",
       "reference_notes": "La capa de agua detecta una nave ganadera el 31/10/2026.",
       "role": "evaluation_descriptive_new_reference",
-      "reconstruction_role": "held_out_zone_plus_80m_buffer"
+      "experiment_roles": {
+        "full_20_to_10": "global_unsupervised_scene_fit; no spatial holdout",
+        "reduced_40_to_20": "whole zone plus 80m excluded from coefficient fit",
+        "detector_followup": "development_already_inspected; independent labelled evaluation pending"
+      }
     },
     {
       "zone": "east_bare_soil",
@@ -5779,7 +5967,11 @@
       "uncertainty": "No water contour; undated context does not label this acquisition",
       "reference_notes": "Exploratory RGB context, not a confirmed negative control",
       "role": "selection_already_explored",
-      "reconstruction_role": "held_out_zone_plus_80m_buffer"
+      "experiment_roles": {
+        "full_20_to_10": "global_unsupervised_scene_fit; no spatial holdout",
+        "reduced_40_to_20": "whole zone plus 80m excluded from coefficient fit",
+        "detector_followup": "development_already_inspected; independent labelled evaluation pending"
+      }
     },
     {
       "zone": "north_dense_crop",
@@ -5819,7 +6011,11 @@
       "uncertainty": "No water contour; undated context does not label this acquisition",
       "reference_notes": "Exploratory RGB context, not a confirmed negative control",
       "role": "selection_already_explored",
-      "reconstruction_role": "held_out_zone_plus_80m_buffer"
+      "experiment_roles": {
+        "full_20_to_10": "global_unsupervised_scene_fit; no spatial holdout",
+        "reduced_40_to_20": "whole zone plus 80m excluded from coefficient fit",
+        "detector_followup": "development_already_inspected; independent labelled evaluation pending"
+      }
     },
     {
       "zone": "northwest_roof_context",
@@ -5859,7 +6055,11 @@
       "uncertainty": "No water contour; undated context does not label this acquisition",
       "reference_notes": "Exploratory RGB context, not a confirmed negative control",
       "role": "selection_already_explored",
-      "reconstruction_role": "held_out_zone_plus_80m_buffer"
+      "experiment_roles": {
+        "full_20_to_10": "global_unsupervised_scene_fit; no spatial holdout",
+        "reduced_40_to_20": "whole zone plus 80m excluded from coefficient fit",
+        "detector_followup": "development_already_inspected; independent labelled evaluation pending"
+      }
     },
     {
       "zone": "west_dark_context",
@@ -5899,7 +6099,11 @@
       "uncertainty": "No water contour; undated context does not label this acquisition",
       "reference_notes": "Exploratory RGB context, not a confirmed negative control",
       "role": "selection_already_explored",
-      "reconstruction_role": "held_out_zone_plus_80m_buffer"
+      "experiment_roles": {
+        "full_20_to_10": "global_unsupervised_scene_fit; no spatial holdout",
+        "reduced_40_to_20": "whole zone plus 80m excluded from coefficient fit",
+        "detector_followup": "development_already_inspected; independent labelled evaluation pending"
+      }
     }
   ],
   "pending": [
@@ -5946,5 +6150,6 @@
       "needed": "Contornos independientes y fechas de presencia para lagunas sin fecha; temporalidad precisa del agua bajo vegetacion en agosto."
     }
   ],
-  "trend": "User reports less water 10\u201331 October; no 10 October acquisition or area/volume trend inferred."
+  "trend": "User reports less water 10\u201331 October; no 10 October acquisition or area/volume trend inferred.",
+  "amendment": "Scope correction only, numerical results at 48a78e8 unchanged; original in ../b11-followup/previous-inventory.json"
 }

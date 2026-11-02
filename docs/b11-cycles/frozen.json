@@ -227,6 +227,11 @@
       ],
       "downloaded_href": "https://sentinel-s2-l2a.s3.eu-central-1.amazonaws.com/tiles/30/T/UK/2023/8/16/0/R10m/B02.jp2",
       "sha256": "c30da3f60e13e5ff15fe9f2c36bf8b29f2efb0dde3c252af18d4f849a002691c"
+    },
+    "fit_scope_correction": {
+      "full_20_to_10": "global_unsupervised_scene_fit; no spatial holdout",
+      "reduced_40_to_20": "whole zone plus 80m excluded from coefficient fit",
+      "detector_followup": "development_already_inspected; independent labelled evaluation pending"
     }
   },
   {
@@ -455,6 +460,11 @@
       ],
       "downloaded_href": "https://sentinel-s2-l2a.s3.eu-central-1.amazonaws.com/tiles/30/T/UK/2026/10/14/1/R10m/B02.jp2",
       "sha256": "c91cc8dd4d075b6dd342a6b0ff10c96ed0b17083c7a46c9a38576580ef5967c8"
+    },
+    "fit_scope_correction": {
+      "full_20_to_10": "global_unsupervised_scene_fit; no spatial holdout",
+      "reduced_40_to_20": "whole zone plus 80m excluded from coefficient fit",
+      "detector_followup": "development_already_inspected; independent labelled evaluation pending"
     }
   },
   {
@@ -683,6 +693,11 @@
       ],
       "downloaded_href": "https://sentinel-s2-l2a.s3.eu-central-1.amazonaws.com/tiles/30/T/UK/2026/10/31/0/R10m/B02.jp2",
       "sha256": "96db426ccc079482be1b2f28a0f8c2302bcd157d9cf1a6473c57b1dbea3779e7"
+    },
+    "fit_scope_correction": {
+      "full_20_to_10": "global_unsupervised_scene_fit; no spatial holdout",
+      "reduced_40_to_20": "whole zone plus 80m excluded from coefficient fit",
+      "detector_followup": "development_already_inspected; independent labelled evaluation pending"
     }
   }
 ]

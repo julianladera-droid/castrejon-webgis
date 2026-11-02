@@ -1,5 +1,5 @@
 # SKILL · Castrejón WebGIS — Contrato de arquitectura y evolución
-Version: 0.1.34
+Version: 0.1.35
 Fecha base: 2026-09-30
 Estado: ACTIVO · se actualiza tras cada ciclo de pruebas
 
@@ -779,3 +779,9 @@ Se considera regresión cualquier cambio que haga funcionar una capa localmente 
 - Ensayo reducido: media de área 2×2 como filtro box, no MTF instrumental calibrada; guías calculadas después de agregar reflectancias. Reserva de zonas completas y halo de 80 m fuera del ajuste, sin usar B11 nativa de evaluación en coeficientes.
 - Regresiones: exclusión de nodata/negativos, bloques completos, ausencia de fuga entre ajuste y evaluación, conservación, áreas exactas y reproducción determinista. Ganancias del estudio previo ya exploradas se consideran selección, no validación independiente.
 - Referencias ampliadas durante el estudio: 13 parcelas y cuatro contextos, tres adquisiciones; construcciones/paneles fechados el 31/10, agua inválida localizada en 00059 el 16/08 y comienzo del riego el 30/07 sin inferir persistencia. No se ajustan umbrales a las referencias nuevas.
+
+### 0.1.35 — 2026-11-02 · Continuación acotada de B11
+- Reserva: 80 m sólo en ensayo reducido 40→20. D/E completas 20→10 ajustan globalmente la adquisición sin etiquetas; no son validación espacial fuera del ajuste.
+- Comparar N0509/N0510 por separado, políticas de agregación y firmas observadas/estimadas. Mantener reconstrucciones congeladas al ensayar detectores.
+- Casos anteriores son desarrollo. Nuevas zonas automáticas son propuestas, nunca verdad independiente. Sin reservas independientes etiquetadas, no declarar exactitud.
+- Regresiones: preservación numérica previa, identidad SAFE, negativos/nodata separados, máscaras y soportes comunes. Sin SAR, nuevo reconstruidor, integración operativa, fusión ni despliegue.
