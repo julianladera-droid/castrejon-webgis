@@ -129,7 +129,8 @@ jobs:
           /usr/bin/python3 scripts/test_parcel_ndvi.py
           /usr/bin/python3 scripts/test_parcel_water.py
           /usr/bin/python3 scripts/test_parcel_comparison.py
-          /usr/bin/python3 scripts/build_sentinel_web.py sentinel-products _site/sentinel --collection
+          /usr/bin/python3 scripts/upgrade_sentinel_products.py sentinel-products-v3 sentinel-products
+          /usr/bin/python3 scripts/build_sentinel_web.py sentinel-products-v3 _site/sentinel --collection
       - name: Upload static site
         uses: actions/upload-pages-artifact@v3
         with:

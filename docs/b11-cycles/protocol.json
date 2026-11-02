@@ -1,0 +1,23 @@
+{
+  "python": "3.12.9",
+  "gdal": "3100200",
+  "numpy": "1.26.4",
+  "signal_floor": 0.01,
+  "sensitivity_floors": [
+    0,
+    0.005,
+    0.01,
+    0.02
+  ],
+  "ridge": 1e-06,
+  "heldout_buffer_m": 80,
+  "edge_contrast": 0.03,
+  "code_sha256": {
+    "b11_cycles.py": "e06931f758e64a6ee5f4aace680bb93b8ff4b87c71fbda04e87a1128b9de9c25",
+    "water_sharpening.py": "a4c7967dbfba8026e51adad23840a6b36b15f2cfb40b0619c8847b578e803d54",
+    "water_detection.py": "87e3bc59ef4051021e3b008fff8fc8bc77c51bc32a5f5f6f0b384b1dccff82e9",
+    "spectral_quality.py": "bed9190defc26467eca0b9443e3c981a709dd0a2b25b61f9641370fcb07feb30",
+    "parcel_grid.py": "33584490d5f145c996f3d3001414157c3eeef203233cb67220e0e2a0d226bcd0",
+    "sentinel_pipeline.py": "d98b8b4625fe5d7cb81b66c528a96f0de6e9f8a28f0c36947962f8577acb09b6"
+  }
+}

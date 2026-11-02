@@ -80,6 +80,23 @@ class WaterTests(unittest.TestCase):
             self.assertTrue(zones['features'])
             self.assertTrue(all(table['parcels'][f['properties']['refcat']][f['properties']['class']-1]>0 for f in zones['features']))
 
+    def test_residual_area_is_separate_and_never_a_temporal_water_event(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root=Path(tmp);after=root/'after';after.mkdir();before=root/'before';before.mkdir()
+            master=root/'master.json';webhash='a'*64
+            master.write_text(json.dumps({'crs':'EPSG:25830','web_sha256':webhash,
+                'features':[{'refcat':'mixed','geometry':polygon(5,0,20,20)}]}))
+            gdal.GetDriverByName('GTiff').CreateCopy(str(after/'WATER.tif'),self.raster([[4,1],[2,3]]))
+            gdal.GetDriverByName('GTiff').CreateCopy(str(before/'WATER.tif'),self.raster([[1,4],[0,0]]))
+            entry={'id':'B','datetime':'2025-01-02T00:00:00Z','parcel_indices':{'parcel_web_sha256':webhash},'water_raster_sha256':'b'*64}
+            previous={**entry,'id':'A','datetime':'2025-01-01T00:00:00Z'}
+            build_water(after,entry,master,root,before,previous)
+            data=json.loads((root/'parcel-water.json').read_text());row=data['parcels']['mixed']
+            self.assertEqual(row,[100,50,100,100,300,0,0,0,0,50])
+            self.assertEqual(sum(row[i] for i in [1,2,3,9]),row[4])
+            zones=json.loads((root/'water-zones.geojson').read_text())
+            self.assertEqual({f['properties']['class'] for f in zones['features']},{1,2,3,4})
+
     def test_invalid_class_and_nonmetric_grid_rejected(self):
         with self.assertRaises(ValueError): regions(self.raster([[12]]))
         a=self.raster([[1]]);a.SetGeoTransform((0,11,0,20,0,-10))

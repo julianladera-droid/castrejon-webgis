@@ -1,7 +1,7 @@
 """Shared version boundary; deliberately usable without the geospatial runtime."""
-PRODUCT_VERSION = 2
+PRODUCT_VERSION = 3
 RADIOMETRY = 'asset_scale_offset_nonnegative_sum_gt_0.01_v1'
-WATER_METHOD = 'optical_surface_water_v2'
+WATER_METHOD = 'optical_field_visit_v3'
 INDEX_RESOLUTIONS = {'NDVI': 10, 'EVI2': 10, 'NDMI': 20, 'NDWI': 10, 'MNDWI': 20}
 RAW_BANDS = {'B03_10m': 10, 'B04_10m': 10, 'B08_10m': 10,
              'B8A_20m': 20, 'B11_20m': 20, 'SCL_20m': 20}
@@ -14,3 +14,9 @@ def compatible(manifest):
     return (manifest.get('version') == PRODUCT_VERSION and
             manifest.get('radiometry') == RADIOMETRY and
             manifest.get('water', {}).get('method') == WATER_METHOD)
+
+
+def upgradeable(manifest):
+    """Only identified v2 products can be staged for migration, never published as v3."""
+    return (manifest.get('version') == 2 and manifest.get('radiometry') == RADIOMETRY and
+            manifest.get('water', {}).get('method') == 'optical_surface_water_v2')

@@ -1,0 +1,703 @@
+[
+  {
+    "product": "S2A_MSIL2A_20230816T105631_N0509_R094_T30TUK_20230816T171602",
+    "baseline": "N0509",
+    "datetime": "2023-08-16T10:56:31.024Z",
+    "manifest_sha256": "85b22876b959d5c74cdbe84925fee6bb7b63f6c3f9f492c0b5729cd215a211c6",
+    "raw_bands": {
+      "B03_10m": {
+        "sha256": "0e32aeebf1ce7df818292c7854c6362df13de6b569832264ac8d249f8f4377ff",
+        "asset_href": "https://sentinel-s2-l2a.s3.eu-central-1.amazonaws.com/tiles/30/T/UK/2023/8/16/0/R10m/B03.jp2",
+        "source_checksum": null,
+        "scale": 0.0001,
+        "offset": -0.1,
+        "nodata": 0,
+        "resolution_m": 10,
+        "negative_count": 329
+      },
+      "B04_10m": {
+        "sha256": "009693100049d94dc23b0877c4575ae20d7d09bda87ade9d2fbbbd3455d99f31",
+        "asset_href": "https://sentinel-s2-l2a.s3.eu-central-1.amazonaws.com/tiles/30/T/UK/2023/8/16/0/R10m/B04.jp2",
+        "source_checksum": null,
+        "scale": 0.0001,
+        "offset": -0.1,
+        "nodata": 0,
+        "resolution_m": 10,
+        "negative_count": 6128
+      },
+      "B08_10m": {
+        "sha256": "193ed202e5711a3f143d32c536c0b85b4e5611f51c33d0906d27b49a2dc837e1",
+        "asset_href": "https://sentinel-s2-l2a.s3.eu-central-1.amazonaws.com/tiles/30/T/UK/2023/8/16/0/R10m/B08.jp2",
+        "source_checksum": null,
+        "scale": 0.0001,
+        "offset": -0.1,
+        "nodata": 0,
+        "resolution_m": 10,
+        "negative_count": 7354
+      },
+      "B8A_20m": {
+        "sha256": "6f137cd9ee0e79e14b2aa5197693784d7885fdae50b5ec759077004dcdd9d19f",
+        "asset_href": "https://sentinel-s2-l2a.s3.eu-central-1.amazonaws.com/tiles/30/T/UK/2023/8/16/0/R20m/B8A.jp2",
+        "source_checksum": null,
+        "scale": 0.0001,
+        "offset": -0.1,
+        "nodata": 0,
+        "resolution_m": 20,
+        "negative_count": 1414
+      },
+      "B11_20m": {
+        "sha256": "b3e8ffec6374195bf3e7da34c6563621a15b1ff49034e4fe7acfbf746c509930",
+        "asset_href": "https://sentinel-s2-l2a.s3.eu-central-1.amazonaws.com/tiles/30/T/UK/2023/8/16/0/R20m/B11.jp2",
+        "source_checksum": null,
+        "scale": 0.0001,
+        "offset": -0.1,
+        "nodata": 0,
+        "resolution_m": 20,
+        "negative_count": 0
+      },
+      "SCL_20m": {
+        "sha256": "b08da4183ffd286031eaf2fc83e2a53aec86abb54509e000c292deeb10da0d41",
+        "asset_href": "https://sentinel-s2-l2a.s3.eu-central-1.amazonaws.com/tiles/30/T/UK/2023/8/16/0/R20m/SCL.jp2",
+        "source_checksum": null,
+        "scale": 1,
+        "offset": 0,
+        "nodata": 0,
+        "resolution_m": 20
+      }
+    },
+    "grid10": [
+      373380.0,
+      10.0,
+      0.0,
+      4412860.0,
+      0.0,
+      -10.0
+    ],
+    "grid20": [
+      373380.0,
+      20.0,
+      0.0,
+      4412860.0,
+      0.0,
+      -20.0
+    ],
+    "size10": [
+      1488,
+      642
+    ],
+    "reduced_fit": {
+      "D": {
+        "coefficients": [
+          0.6047582521716374,
+          0.5265583019907942
+        ],
+        "training_blocks": 56243
+      },
+      "E": {
+        "coefficients": [
+          0.4892625932292856,
+          -0.09088654021196464,
+          -0.46421525110744954
+        ],
+        "training_blocks": 56193
+      }
+    },
+    "guidance": {
+      "D": {
+        "method": "within_date_ridge_mean_preserving_detail_v1",
+        "guides": [
+          "NDWI"
+        ],
+        "coefficients": [
+          0.5711166220689015,
+          0.44477258779125045
+        ],
+        "training_blocks": 233959,
+        "max_abs_reaggregation_error": 5.215406420622237e-08,
+        "rmse_reaggregation": 1.1772949287550762e-08,
+        "status": "experimental_not_operational",
+        "original_B11_resolution_m": 20,
+        "estimated_grid_m": 10
+      },
+      "E": {
+        "method": "within_date_ridge_mean_preserving_detail_v1",
+        "guides": [
+          "NDWI",
+          "NDVI"
+        ],
+        "coefficients": [
+          0.44111505090278824,
+          -0.29611935960128544,
+          -0.5857719543582319
+        ],
+        "training_blocks": 233595,
+        "max_abs_reaggregation_error": 5.21540641784668e-08,
+        "rmse_reaggregation": 1.1497153636707744e-08,
+        "status": "experimental_not_operational",
+        "original_B11_resolution_m": 20,
+        "estimated_grid_m": 10
+      }
+    },
+    "diagnostics": {
+      "C": {
+        "negative_pixels": 0,
+        "neighbour_range_overshoots": 0,
+        "reaggregation": {
+          "n": 237149,
+          "bias": 0.0,
+          "mae": 0.0,
+          "rmse": 0.0
+        },
+        "mean_abs_detail": 0.0,
+        "jump_across_parent_boundary": 0.020536466051034125,
+        "jump_within_parent": 0.0
+      },
+      "D": {
+        "negative_pixels": 0,
+        "neighbour_range_overshoots": 110360,
+        "reaggregation": {
+          "n": 233959,
+          "bias": -5.4900735409667095e-11,
+          "mae": 9.179213257127716e-09,
+          "rmse": 1.1772949287550762e-08
+        },
+        "mean_abs_detail": 0.008646035067086692,
+        "jump_across_parent_boundary": 0.017523158521088808,
+        "jump_within_parent": 0.012518612241580325
+      },
+      "E": {
+        "negative_pixels": 0,
+        "neighbour_range_overshoots": 112267,
+        "reaggregation": {
+          "n": 233595,
+          "bias": 2.0080703429347592e-11,
+          "mae": 8.985382708743448e-09,
+          "rmse": 1.1497153636707744e-08
+        },
+        "mean_abs_detail": 0.008806532649708387,
+        "jump_across_parent_boundary": 0.01702537284530954,
+        "jump_within_parent": 0.012840721107510002
+      }
+    },
+    "stability": {
+      "D_E_sign_disagreement_pixels": 1297,
+      "D_E_common_pixels": 934332,
+      "D_E_B11_rmse": 0.012932918799811458
+    },
+    "reduced_model": "2x2 area box, no calibrated instrument MTF; crop last row/column if odd; 80m holdout buffer",
+    "rgb_blue_provenance": {
+      "href": "s3://sentinel-s2-l2a/tiles/30/T/UK/2023/8/16/0/B02.jp2",
+      "type": "image/jp2",
+      "title": "Blue (band 2) - 10m",
+      "eo:bands": [
+        {
+          "name": "blue",
+          "common_name": "blue",
+          "description": "Blue (band 2)",
+          "center_wavelength": 0.49,
+          "full_width_half_max": 0.098
+        }
+      ],
+      "gsd": 10,
+      "proj:shape": [
+        10980,
+        10980
+      ],
+      "proj:transform": [
+        10,
+        0,
+        300000,
+        0,
+        -10,
+        4500000
+      ],
+      "raster:bands": [
+        {
+          "nodata": 0,
+          "data_type": "uint16",
+          "bits_per_sample": 15,
+          "spatial_resolution": 10,
+          "scale": 0.0001,
+          "offset": -0.1
+        }
+      ],
+      "roles": [
+        "data",
+        "reflectance"
+      ],
+      "downloaded_href": "https://sentinel-s2-l2a.s3.eu-central-1.amazonaws.com/tiles/30/T/UK/2023/8/16/0/R10m/B02.jp2",
+      "sha256": "c30da3f60e13e5ff15fe9f2c36bf8b29f2efb0dde3c252af18d4f849a002691c"
+    },
+    "fit_scope_correction": {
+      "full_20_to_10": "global_unsupervised_scene_fit; no spatial holdout",
+      "reduced_40_to_20": "whole zone plus 80m excluded from coefficient fit",
+      "detector_followup": "development_already_inspected; independent labelled evaluation pending"
+    }
+  },
+  {
+    "product": "S2A_MSIL2A_20261014T110941_N0513_R137_T30TUK_20261014T173008",
+    "baseline": "N0513",
+    "datetime": "2026-10-14T11:09:41.024000Z",
+    "manifest_sha256": "42d618e3721955c6a9cc3ff656b14306566b19e35099a59cfc65803e07a417ce",
+    "raw_bands": {
+      "B03_10m": {
+        "sha256": "5ccdfd65f18be2182b9847afd312e9a5da1964d4fefb8527871679d3cf446870",
+        "asset_href": "s3://eodata/Sentinel-2/MSI/L2A/2026/10/14/S2A_MSIL2A_20261014T110941_N0513_R137_T30TUK_20261014T173008.SAFE/GRANULE/L2A_T30TUK_A059079_20261014T111753/IMG_DATA/R10m/T30TUK_20261014T110941_B03_10m.jp2",
+        "source_checksum": "1620bf4768a9e7184fe6278f76c84b1395c1bb6f1a117be607dacf6302979e4c263d",
+        "scale": 0.0001,
+        "offset": -0.1,
+        "nodata": 0,
+        "resolution_m": 10,
+        "negative_count": 803
+      },
+      "B04_10m": {
+        "sha256": "8ea00ce4393026b0e6c5ee2b48a9b4a4264987b6f2cb6af393efbf21e959bb28",
+        "asset_href": "s3://eodata/Sentinel-2/MSI/L2A/2026/10/14/S2A_MSIL2A_20261014T110941_N0513_R137_T30TUK_20261014T173008.SAFE/GRANULE/L2A_T30TUK_A059079_20261014T111753/IMG_DATA/R10m/T30TUK_20261014T110941_B04_10m.jp2",
+        "source_checksum": "1620b69b3aedb53702b24573541a6a2186171bdf4e9ba4aadd5bb5f875242e06e09d",
+        "scale": 0.0001,
+        "offset": -0.1,
+        "nodata": 0,
+        "resolution_m": 10,
+        "negative_count": 2370
+      },
+      "B08_10m": {
+        "sha256": "542d2945d9aad2df14550ff16b465165e62097c1729625b0a9cec7833dc959a9",
+        "asset_href": "s3://eodata/Sentinel-2/MSI/L2A/2026/10/14/S2A_MSIL2A_20261014T110941_N0513_R137_T30TUK_20261014T173008.SAFE/GRANULE/L2A_T30TUK_A059079_20261014T111753/IMG_DATA/R10m/T30TUK_20261014T110941_B08_10m.jp2",
+        "source_checksum": "16202fb1dcc0c8ac3682241c2aebd14b91f70250f7023718111606f4c53e425c8b33",
+        "scale": 0.0001,
+        "offset": -0.1,
+        "nodata": 0,
+        "resolution_m": 10,
+        "negative_count": 1377
+      },
+      "B8A_20m": {
+        "sha256": "e1560b1a2924db3c60039971dba38df6774351a29dbcadb7c85ec938bdc6ec7e",
+        "asset_href": "s3://eodata/Sentinel-2/MSI/L2A/2026/10/14/S2A_MSIL2A_20261014T110941_N0513_R137_T30TUK_20261014T173008.SAFE/GRANULE/L2A_T30TUK_A059079_20261014T111753/IMG_DATA/R20m/T30TUK_20261014T110941_B8A_20m.jp2",
+        "source_checksum": "1620150b7ee5b736218170745924325e4aaa02082d7708433d181a311c934fc606e2",
+        "scale": 0.0001,
+        "offset": -0.1,
+        "nodata": 0,
+        "resolution_m": 20,
+        "negative_count": 768
+      },
+      "B11_20m": {
+        "sha256": "d1e83f69b58b29604560f3fdc6504b1479645a0f648361508fb9caa54c414c95",
+        "asset_href": "s3://eodata/Sentinel-2/MSI/L2A/2026/10/14/S2A_MSIL2A_20261014T110941_N0513_R137_T30TUK_20261014T173008.SAFE/GRANULE/L2A_T30TUK_A059079_20261014T111753/IMG_DATA/R20m/T30TUK_20261014T110941_B11_20m.jp2",
+        "source_checksum": "16203d1a7c65168c126eaef75a419838d1a17d60a261078ac4aa4c6abb39efd81f6e",
+        "scale": 0.0001,
+        "offset": -0.1,
+        "nodata": 0,
+        "resolution_m": 20,
+        "negative_count": 0
+      },
+      "SCL_20m": {
+        "sha256": "de118682e5a3224211076406e091f9600399a40acc101c969368f80368165b4a",
+        "asset_href": "s3://eodata/Sentinel-2/MSI/L2A/2026/10/14/S2A_MSIL2A_20261014T110941_N0513_R137_T30TUK_20261014T173008.SAFE/GRANULE/L2A_T30TUK_A059079_20261014T111753/IMG_DATA/R20m/T30TUK_20261014T110941_SCL_20m.jp2",
+        "source_checksum": "16208e7fa299ae8b813043afa214552fd70d0a332274a980c7d4176b4d3d8226fb04",
+        "scale": null,
+        "offset": null,
+        "nodata": 0,
+        "resolution_m": 20
+      }
+    },
+    "grid10": [
+      373380.0,
+      10.0,
+      0.0,
+      4412860.0,
+      0.0,
+      -10.0
+    ],
+    "grid20": [
+      373380.0,
+      20.0,
+      0.0,
+      4412860.0,
+      0.0,
+      -20.0
+    ],
+    "size10": [
+      1488,
+      642
+    ],
+    "reduced_fit": {
+      "D": {
+        "coefficients": [
+          0.4403248468082477,
+          0.31458758596607406
+        ],
+        "training_blocks": 57375
+      },
+      "E": {
+        "coefficients": [
+          0.3200503115455616,
+          -0.48332512267957056,
+          -0.6939593095074932
+        ],
+        "training_blocks": 57210
+      }
+    },
+    "guidance": {
+      "D": {
+        "method": "within_date_ridge_mean_preserving_detail_v1",
+        "guides": [
+          "NDWI"
+        ],
+        "coefficients": [
+          0.422424145780015,
+          0.269988596443606
+        ],
+        "training_blocks": 236399,
+        "max_abs_reaggregation_error": 5.21540641784668e-08,
+        "rmse_reaggregation": 1.1385944378787667e-08,
+        "status": "experimental_not_operational",
+        "original_B11_resolution_m": 20,
+        "estimated_grid_m": 10
+      },
+      "E": {
+        "method": "within_date_ridge_mean_preserving_detail_v1",
+        "guides": [
+          "NDWI",
+          "NDVI"
+        ],
+        "coefficients": [
+          0.314038231142815,
+          -0.49612521138399596,
+          -0.6899182889919173
+        ],
+        "training_blocks": 235742,
+        "max_abs_reaggregation_error": 2.9802322387695312e-08,
+        "rmse_reaggregation": 1.0922748954947023e-08,
+        "status": "experimental_not_operational",
+        "original_B11_resolution_m": 20,
+        "estimated_grid_m": 10
+      }
+    },
+    "diagnostics": {
+      "C": {
+        "negative_pixels": 0,
+        "neighbour_range_overshoots": 0,
+        "reaggregation": {
+          "n": 238818,
+          "bias": 0.0,
+          "mae": 0.0,
+          "rmse": 0.0
+        },
+        "mean_abs_detail": 0.0,
+        "jump_across_parent_boundary": 0.020401775346581816,
+        "jump_within_parent": 0.0
+      },
+      "D": {
+        "negative_pixels": 0,
+        "neighbour_range_overshoots": 92157,
+        "reaggregation": {
+          "n": 236399,
+          "bias": 1.3186761105542515e-11,
+          "mae": 8.869490469151433e-09,
+          "rmse": 1.1385944378787667e-08
+        },
+        "mean_abs_detail": 0.006851799011389933,
+        "jump_across_parent_boundary": 0.019098874440799846,
+        "jump_within_parent": 0.009982134308933433
+      },
+      "E": {
+        "negative_pixels": 0,
+        "neighbour_range_overshoots": 159009,
+        "reaggregation": {
+          "n": 235742,
+          "bias": 1.7641056252737455e-11,
+          "mae": 8.295883722666118e-09,
+          "rmse": 1.0922748954947023e-08
+        },
+        "mean_abs_detail": 0.010900078337689372,
+        "jump_across_parent_boundary": 0.020265374105674774,
+        "jump_within_parent": 0.016332298404619867
+      }
+    },
+    "stability": {
+      "D_E_sign_disagreement_pixels": 3749,
+      "D_E_common_pixels": 942548,
+      "D_E_B11_rmse": 0.01679588853098946
+    },
+    "reduced_model": "2x2 area box, no calibrated instrument MTF; crop last row/column if odd; 80m holdout buffer",
+    "rgb_blue_provenance": {
+      "href": "s3://sentinel-s2-l2a/tiles/30/T/UK/2026/10/14/1/R10m/B02.jp2",
+      "type": "image/jp2",
+      "title": "Blue - 10m",
+      "eo:bands": [
+        {
+          "name": "B02",
+          "common_name": "blue",
+          "center_wavelength": 0.49,
+          "full_width_half_max": 0.098
+        }
+      ],
+      "gsd": 10,
+      "proj:shape": [
+        10980,
+        10980
+      ],
+      "proj:transform": [
+        10,
+        0,
+        300000,
+        0,
+        -10,
+        4500000
+      ],
+      "raster:bands": [
+        {
+          "nodata": 0,
+          "data_type": "uint16",
+          "spatial_resolution": 10,
+          "scale": 0.0001,
+          "offset": -0.1
+        }
+      ],
+      "roles": [
+        "data",
+        "reflectance"
+      ],
+      "downloaded_href": "https://sentinel-s2-l2a.s3.eu-central-1.amazonaws.com/tiles/30/T/UK/2026/10/14/1/R10m/B02.jp2",
+      "sha256": "c91cc8dd4d075b6dd342a6b0ff10c96ed0b17083c7a46c9a38576580ef5967c8"
+    },
+    "fit_scope_correction": {
+      "full_20_to_10": "global_unsupervised_scene_fit; no spatial holdout",
+      "reduced_40_to_20": "whole zone plus 80m excluded from coefficient fit",
+      "detector_followup": "development_already_inspected; independent labelled evaluation pending"
+    }
+  },
+  {
+    "product": "S2A_MSIL2A_20261031T110121_N0513_R094_T30TUK_20261031T173605",
+    "baseline": "N0513",
+    "datetime": "2026-10-31T11:01:21.024000Z",
+    "manifest_sha256": "c2c6aed8d3d3388fca16646432fe19f2128ca4b64f2f9cb7d2f9bb3f1338c885",
+    "raw_bands": {
+      "B03_10m": {
+        "sha256": "656f9dd8e149146120b1dc8e6bb10f8996da6c6d791e0268703e036da6ce54f7",
+        "asset_href": "s3://eodata/Sentinel-2/MSI/L2A/2026/10/31/S2A_MSIL2A_20261031T110121_N0513_R094_T30TUK_20261031T173605.SAFE/GRANULE/L2A_T30TUK_A059322_20261031T110430/IMG_DATA/R10m/T30TUK_20261031T110121_B03_10m.jp2",
+        "source_checksum": "1620f7197ad2fff5668c5dbc799246f2496e4de40ae0a5e1cc805b1892d60b9a082e",
+        "scale": 0.0001,
+        "offset": -0.1,
+        "nodata": 0,
+        "resolution_m": 10,
+        "negative_count": 0
+      },
+      "B04_10m": {
+        "sha256": "c23d8271028bb57ebcf9817795a8a33669e7d25c9662b59c898289cae45ed705",
+        "asset_href": "s3://eodata/Sentinel-2/MSI/L2A/2026/10/31/S2A_MSIL2A_20261031T110121_N0513_R094_T30TUK_20261031T173605.SAFE/GRANULE/L2A_T30TUK_A059322_20261031T110430/IMG_DATA/R10m/T30TUK_20261031T110121_B04_10m.jp2",
+        "source_checksum": "16209d987e64f4447abe3a44af9da6d3f373a51bf2365f775c5b8f9b56802dfc8d80",
+        "scale": 0.0001,
+        "offset": -0.1,
+        "nodata": 0,
+        "resolution_m": 10,
+        "negative_count": 0
+      },
+      "B08_10m": {
+        "sha256": "ebc16823cf9707c045b43b649d576e8d69fb7dfc2fc39b7ab3419e8f0ccd37fa",
+        "asset_href": "s3://eodata/Sentinel-2/MSI/L2A/2026/10/31/S2A_MSIL2A_20261031T110121_N0513_R094_T30TUK_20261031T173605.SAFE/GRANULE/L2A_T30TUK_A059322_20261031T110430/IMG_DATA/R10m/T30TUK_20261031T110121_B08_10m.jp2",
+        "source_checksum": "16203d6926c641bdf147b9a65fdfd1d6e6e8b9ec0d1a0861f2ebe0c44b1ec2dbd512",
+        "scale": 0.0001,
+        "offset": -0.1,
+        "nodata": 0,
+        "resolution_m": 10,
+        "negative_count": 0
+      },
+      "B8A_20m": {
+        "sha256": "2f39dd2cba8d8c225fa735d6457ca466ed485273e3396f3148d2e2df0d2a2d61",
+        "asset_href": "s3://eodata/Sentinel-2/MSI/L2A/2026/10/31/S2A_MSIL2A_20261031T110121_N0513_R094_T30TUK_20261031T173605.SAFE/GRANULE/L2A_T30TUK_A059322_20261031T110430/IMG_DATA/R20m/T30TUK_20261031T110121_B8A_20m.jp2",
+        "source_checksum": "1620d3848fb229220fe321a781df93be3638c17dd3a50ef10923151944ff8f46e229",
+        "scale": 0.0001,
+        "offset": -0.1,
+        "nodata": 0,
+        "resolution_m": 20,
+        "negative_count": 1
+      },
+      "B11_20m": {
+        "sha256": "a8d51935029b4e6a3e6a355c9198772e81bba1bc3b47180497986286df9f889c",
+        "asset_href": "s3://eodata/Sentinel-2/MSI/L2A/2026/10/31/S2A_MSIL2A_20261031T110121_N0513_R094_T30TUK_20261031T173605.SAFE/GRANULE/L2A_T30TUK_A059322_20261031T110430/IMG_DATA/R20m/T30TUK_20261031T110121_B11_20m.jp2",
+        "source_checksum": "16200eb55f1e6c23421acf7f90a12ddd469cda0ac2e0c9ec8e493f444e416eb9f1aa",
+        "scale": 0.0001,
+        "offset": -0.1,
+        "nodata": 0,
+        "resolution_m": 20,
+        "negative_count": 0
+      },
+      "SCL_20m": {
+        "sha256": "e47e3c52be42718f262c8011e38210551492ba255a6ff313c0c8ae8fec848b79",
+        "asset_href": "s3://eodata/Sentinel-2/MSI/L2A/2026/10/31/S2A_MSIL2A_20261031T110121_N0513_R094_T30TUK_20261031T173605.SAFE/GRANULE/L2A_T30TUK_A059322_20261031T110430/IMG_DATA/R20m/T30TUK_20261031T110121_SCL_20m.jp2",
+        "source_checksum": "16203b5226bb7c53302617ae460ece8876e1a37ef3c93c31132cc5abf21e72759a69",
+        "scale": null,
+        "offset": null,
+        "nodata": 0,
+        "resolution_m": 20
+      }
+    },
+    "grid10": [
+      373380.0,
+      10.0,
+      0.0,
+      4412860.0,
+      0.0,
+      -10.0
+    ],
+    "grid20": [
+      373380.0,
+      20.0,
+      0.0,
+      4412860.0,
+      0.0,
+      -20.0
+    ],
+    "size10": [
+      1488,
+      642
+    ],
+    "reduced_fit": {
+      "D": {
+        "coefficients": [
+          0.3999271647647131,
+          0.2389305191505432
+        ],
+        "training_blocks": 57685
+      },
+      "E": {
+        "coefficients": [
+          0.28059616614489863,
+          -0.7137703937777538,
+          -0.8195201697705911
+        ],
+        "training_blocks": 57685
+      }
+    },
+    "guidance": {
+      "D": {
+        "method": "within_date_ridge_mean_preserving_detail_v1",
+        "guides": [
+          "NDWI"
+        ],
+        "coefficients": [
+          0.38527273307744486,
+          0.20262545194458262
+        ],
+        "training_blocks": 237760,
+        "max_abs_reaggregation_error": 4.470348358154297e-08,
+        "rmse_reaggregation": 1.1655015081773782e-08,
+        "status": "experimental_not_operational",
+        "original_B11_resolution_m": 20,
+        "estimated_grid_m": 10
+      },
+      "E": {
+        "method": "within_date_ridge_mean_preserving_detail_v1",
+        "guides": [
+          "NDWI",
+          "NDVI"
+        ],
+        "coefficients": [
+          0.28075886372807224,
+          -0.7028659216502057,
+          -0.8054195841477987
+        ],
+        "training_blocks": 237760,
+        "max_abs_reaggregation_error": 5.21540641784668e-08,
+        "rmse_reaggregation": 1.0738615020286389e-08,
+        "status": "experimental_not_operational",
+        "original_B11_resolution_m": 20,
+        "estimated_grid_m": 10
+      }
+    },
+    "diagnostics": {
+      "C": {
+        "negative_pixels": 0,
+        "neighbour_range_overshoots": 0,
+        "reaggregation": {
+          "n": 238824,
+          "bias": 0.0,
+          "mae": 0.0,
+          "rmse": 0.0
+        },
+        "mean_abs_detail": 0.0,
+        "jump_across_parent_boundary": 0.018911383956204904,
+        "jump_within_parent": 0.0
+      },
+      "D": {
+        "negative_pixels": 0,
+        "neighbour_range_overshoots": 68695,
+        "reaggregation": {
+          "n": 237760,
+          "bias": 7.933603363076628e-13,
+          "mae": 9.18659134637642e-09,
+          "rmse": 1.1655015081773782e-08
+        },
+        "mean_abs_detail": 0.004140886533986635,
+        "jump_across_parent_boundary": 0.018308570694581076,
+        "jump_within_parent": 0.005999138111101602
+      },
+      "E": {
+        "negative_pixels": 0,
+        "neighbour_range_overshoots": 177147,
+        "reaggregation": {
+          "n": 237760,
+          "bias": -4.234014060002497e-11,
+          "mae": 8.124879860385723e-09,
+          "rmse": 1.0738615020286389e-08
+        },
+        "mean_abs_detail": 0.01071397791608192,
+        "jump_across_parent_boundary": 0.019068958272710313,
+        "jump_within_parent": 0.016028717245065553
+      }
+    },
+    "stability": {
+      "D_E_sign_disagreement_pixels": 8025,
+      "D_E_common_pixels": 951016,
+      "D_E_B11_rmse": 0.01652909941149671
+    },
+    "reduced_model": "2x2 area box, no calibrated instrument MTF; crop last row/column if odd; 80m holdout buffer",
+    "rgb_blue_provenance": {
+      "href": "s3://sentinel-s2-l2a/tiles/30/T/UK/2026/10/31/0/R10m/B02.jp2",
+      "type": "image/jp2",
+      "title": "Blue - 10m",
+      "eo:bands": [
+        {
+          "name": "B02",
+          "common_name": "blue",
+          "center_wavelength": 0.49,
+          "full_width_half_max": 0.098
+        }
+      ],
+      "gsd": 10,
+      "proj:shape": [
+        10980,
+        10980
+      ],
+      "proj:transform": [
+        10,
+        0,
+        300000,
+        0,
+        -10,
+        4500000
+      ],
+      "raster:bands": [
+        {
+          "nodata": 0,
+          "data_type": "uint16",
+          "spatial_resolution": 10,
+          "scale": 0.0001,
+          "offset": -0.1
+        }
+      ],
+      "roles": [
+        "data",
+        "reflectance"
+      ],
+      "downloaded_href": "https://sentinel-s2-l2a.s3.eu-central-1.amazonaws.com/tiles/30/T/UK/2026/10/31/0/R10m/B02.jp2",
+      "sha256": "96db426ccc079482be1b2f28a0f8c2302bcd157d9cf1a6473c57b1dbea3779e7"
+    },
+    "fit_scope_correction": {
+      "full_20_to_10": "global_unsupervised_scene_fit; no spatial holdout",
+      "reduced_40_to_20": "whole zone plus 80m excluded from coefficient fit",
+      "detector_followup": "development_already_inspected; independent labelled evaluation pending"
+    }
+  }
+]

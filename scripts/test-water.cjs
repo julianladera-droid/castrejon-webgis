@@ -10,16 +10,17 @@ function setup({corrupt=false,delay=false,mutate=()=>{}}={}) {
  const b={...a,id:'B',datetime:'2026-10-31T11:00:00Z'};
  for(const entry of [a,b]) {
   const previous=entry===b;
-  const data={version:2,method:'optical_surface_water_v2',status:'exploratory',resolution_m:10,support_resolution_m:20,min_valid_percent:80,
+  const data={version:3,method:'optical_field_visit_v3',status:'field_visit_estimate',resolution_m:10,support_resolution_m:20,min_valid_percent:80,
    area_method:'fractional_cell_intersection_25830',observation:{id:entry.id,datetime:entry.datetime},
    previous:previous?{id:a.id,datetime:a.datetime}:null,source_sha256:h,previous_sha256:previous?h:null,
    parcel_web_sha256:h,master_sha256:h,
-   columns:['water_m2','ambiguous_m2','unknown_m2','evaluated_m2','parcel_m2','appeared_m2','both_observations_m2','disappeared_m2','common_evaluated_m2'],
-   parcels:Object.fromEntries(Array.from({length:919},(_,i)=>['r'+i,[0,0,0,1000,1000,0,0,0,1000]]))};
-  data.parcels.r0=[300,100,100,800,1000,100,200,0,800];data.parcels.r2=[100,100,400,500,1000,100,0,0,500];data.parcels.r3=[0,0,1000,0,1000,0,0,0,0];
+   columns:['water_m2','ambiguous_m2','unknown_m2','evaluated_m2','parcel_m2','appeared_m2','both_observations_m2','disappeared_m2','common_evaluated_m2','residual_m2'],
+   parcels:Object.fromEntries(Array.from({length:919},(_,i)=>['r'+i,[0,0,0,1000,1000,0,0,0,1000,0]]))};
+  data.parcels.r0=[300,100,100,800,1000,100,200,0,800,0];data.parcels.r2=[100,100,400,500,1000,100,0,0,500,0];data.parcels.r3=[0,0,1000,0,1000,0,0,0,0,0];
+  data.parcels.r4=[0,0,0,800,1000,0,0,0,800,200];
   if(!previous) for(const row of Object.values(data.parcels))row.splice(5,4,null,null,null,null);
   mutate(data);
-  const zones={type:'FeatureCollection',features:[{type:'Feature',properties:{refcat:'r0',class:1},geometry:{type:'Polygon',coordinates:[]}}]};
+  const zones={type:'FeatureCollection',features:[{type:'Feature',properties:{refcat:'r0',class:1},geometry:{type:'Polygon',coordinates:[]}},{type:'Feature',properties:{refcat:'r4',class:4},geometry:{type:'Polygon',coordinates:[]}}]};
   entry.water={method:data.method,parcel_web_sha256:h};
   for(const [key,name,payload] of [['table','parcel-water.json',data],['zones','water-zones.geojson',zones]]) {
    const bytes=Buffer.from(JSON.stringify(payload)),path=`sentinel/${entry.id}/${name}`;
@@ -41,7 +42,8 @@ function setup({corrupt=false,delay=false,mutate=()=>{}}={}) {
 (async()=>{
  const s=setup();s.context.syncWater();await flush();assert(s.layer.visible);assert.equal(s.requests.length,2);assert.equal(s.sourceReads(),1);
  await s.select('r0');assert.match(s.e.parcelWaterValue.textContent,/30%/);assert.match(s.e.parcelWaterNote.textContent,/ambas 20%/);
- assert.match(s.e.parcelWaterDates.textContent,/2026-10-31.*método óptico v2/);assert.match(s.e.parcelWaterNote.textContent,/Ambigua: 10%.*No evaluable: 10%/);
+ assert.match(s.e.parcelWaterDates.textContent,/2026-10-31.*aproximación para campo/);assert.match(s.e.parcelWaterNote.textContent,/Ambigua: 10%.*No evaluable: 10%/);
+ await s.select('r4');assert.match(s.e.parcelWaterNote.textContent,/residual: 200 m²/);assert.match(s.e.parcelWaterValue.textContent,/revisar 200 m²/);
  await s.select('r1');assert.match(s.e.parcelWaterValue.textContent,/^0%/);
  await s.select('r2');assert.equal(s.e.parcelWaterValue.textContent,'No concluyente');assert.match(s.e.parcelWaterNote.textContent,/Cobertura clasificable: 50%/);
  await s.select('r3');assert.equal(s.e.parcelWaterValue.textContent,'No concluyente');assert.match(s.e.parcelWaterNote.textContent,/No evaluable: 100%/);

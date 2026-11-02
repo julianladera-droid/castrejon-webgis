@@ -1,0 +1,527 @@
+{
+  "version": 2,
+  "acquisitions": [
+    {
+      "id": "S2A_MSIL2A_20261031T110121_N0513_R094_T30TUK_20261031T173605",
+      "datetime": "2026-10-31T11:01:21.024000Z",
+      "indices": {
+        "NDVI": {
+          "label": "NDVI \u00b7 vigor vegetal",
+          "range": [
+            -1,
+            1
+          ],
+          "colors": [
+            "#314b91",
+            "#d8c496",
+            "#ffffbf",
+            "#73b554",
+            "#006837"
+          ],
+          "valid_percent_rectangle": 100.0,
+          "resolution_m": 10,
+          "mean_rectangle": 0.3347617983818054,
+          "sha256": "6fba13c4b1ec2544abbe3cfa0b893208413fdcefb5ba97119b2e43bcda07a472",
+          "projection": "EPSG:3857",
+          "extent": [
+            -498738.30616411846,
+            4836709.354962837,
+            -479256.3413797892,
+            4845389.695985648
+          ],
+          "image": "sentinel/S2A_MSIL2A_20261031T110121_N0513_R094_T30TUK_20261031T173605/NDVI.png",
+          "download": "sentinel/S2A_MSIL2A_20261031T110121_N0513_R094_T30TUK_20261031T173605/NDVI.tif"
+        },
+        "EVI2": {
+          "label": "EVI2 \u00b7 vegetaci\u00f3n",
+          "range": [
+            0,
+            1
+          ],
+          "colors": [
+            "#fff7bc",
+            "#fec44f",
+            "#78c679",
+            "#238443",
+            "#004529"
+          ],
+          "valid_percent_rectangle": 100.0,
+          "resolution_m": 10,
+          "mean_rectangle": 0.19602195918560028,
+          "sha256": "4d65e43a51f3a06838f524e296321e47f9efc52721d703059b40324c626aeed5",
+          "projection": "EPSG:3857",
+          "extent": [
+            -498738.30616411846,
+            4836709.354962837,
+            -479256.3413797892,
+            4845389.695985648
+          ],
+          "image": "sentinel/S2A_MSIL2A_20261031T110121_N0513_R094_T30TUK_20261031T173605/EVI2.png",
+          "download": "sentinel/S2A_MSIL2A_20261031T110121_N0513_R094_T30TUK_20261031T173605/EVI2.tif"
+        },
+        "NDMI": {
+          "label": "NDMI \u00b7 humedad de la vegetaci\u00f3n",
+          "range": [
+            -1,
+            1
+          ],
+          "colors": [
+            "#8c510a",
+            "#dfc27d",
+            "#f5f5f5",
+            "#80cdc1",
+            "#01665e"
+          ],
+          "valid_percent_rectangle": 99.99958128161323,
+          "resolution_m": 20,
+          "mean_rectangle": -0.06463585793972015,
+          "sha256": "b1cc91d8506acd40a022000d1100eaa7220dc7c9b8600f6c0346d5d29936520a",
+          "projection": "EPSG:3857",
+          "extent": [
+            -498738.30616411846,
+            4836696.340958306,
+            -479269.3553843211,
+            4845389.695985648
+          ],
+          "image": "sentinel/S2A_MSIL2A_20261031T110121_N0513_R094_T30TUK_20261031T173605/NDMI.png",
+          "download": "sentinel/S2A_MSIL2A_20261031T110121_N0513_R094_T30TUK_20261031T173605/NDMI.tif"
+        },
+        "NDWI": {
+          "label": "NDWI \u00b7 se\u00f1al de agua superficial",
+          "range": [
+            -1,
+            1
+          ],
+          "colors": [
+            "#8c510a",
+            "#dfc27d",
+            "#f5f5f5",
+            "#80cdc1",
+            "#01665e"
+          ],
+          "valid_percent_rectangle": 100.0,
+          "resolution_m": 10,
+          "mean_rectangle": -0.41313907504081726,
+          "sha256": "8530fb43443febc6037a1c4be9c1ba42d9140e84c3b15e38d1532b14c6a1d434",
+          "projection": "EPSG:3857",
+          "extent": [
+            -498738.30616411846,
+            4836709.354962837,
+            -479256.3413797892,
+            4845389.695985648
+          ],
+          "image": "sentinel/S2A_MSIL2A_20261031T110121_N0513_R094_T30TUK_20261031T173605/NDWI.png",
+          "download": "sentinel/S2A_MSIL2A_20261031T110121_N0513_R094_T30TUK_20261031T173605/NDWI.tif"
+        },
+        "MNDWI": {
+          "label": "MNDWI \u00b7 apoyo de 20 m",
+          "range": [
+            -1,
+            1
+          ],
+          "colors": [
+            "#8c510a",
+            "#dfc27d",
+            "#f5f5f5",
+            "#80cdc1",
+            "#01665e"
+          ],
+          "valid_percent_rectangle": 100.0,
+          "resolution_m": 20,
+          "mean_rectangle": -0.4866131842136383,
+          "sha256": "a8ac858d1e02f111dcb054a81c5a4e764bb1dd522bd9cac14e215c541000b5d6",
+          "projection": "EPSG:3857",
+          "extent": [
+            -498738.30616411846,
+            4836696.340958306,
+            -479269.3553843211,
+            4845389.695985648
+          ],
+          "image": "sentinel/S2A_MSIL2A_20261031T110121_N0513_R094_T30TUK_20261031T173605/MNDWI.png",
+          "download": "sentinel/S2A_MSIL2A_20261031T110121_N0513_R094_T30TUK_20261031T173605/MNDWI.tif"
+        }
+      },
+      "source": "Copernicus Sentinel-2 L2A",
+      "quality_scope": "rect\u00e1ngulo envolvente",
+      "kind": "ESTIMADO",
+      "water_raster_sha256": "885e87194336e7ed7eac4f9e43a94598417541e95daae79421e06cb1a6785134",
+      "quality_mask": {
+        "path": "sentinel/S2A_MSIL2A_20261031T110121_N0513_R094_T30TUK_20261031T173605/SCL.tif",
+        "resolution_m": 20,
+        "sha256": "89c76c93b9e5d3cc7c1fdd7c61cf96e5480457204427699edaaf175e9f8a5ba9",
+        "kind": "SCL classification, not a validated waterlogging map"
+      },
+      "parcel_indices": {
+        "path": "sentinel/S2A_MSIL2A_20261031T110121_N0513_R094_T30TUK_20261031T173605/parcel-indices.json",
+        "sha256": "782b19ef3557b03c2764ec9dd0dd36bbd1a228b8f68946a12841a05930cde158",
+        "parcel_web_sha256": "5321dcc6c63cf09881e1f86048ecc524387d7d0b0bf63f102176405aed9fa7d4"
+      },
+      "water": {
+        "method": "optical_surface_water_v2",
+        "parcel_web_sha256": "5321dcc6c63cf09881e1f86048ecc524387d7d0b0bf63f102176405aed9fa7d4",
+        "table": {
+          "path": "sentinel/S2A_MSIL2A_20261031T110121_N0513_R094_T30TUK_20261031T173605/parcel-water.json",
+          "sha256": "18ce61b95534e9ec39d5623ac60833fc8d664c63d459c8101c23d9c9d5a760b5"
+        },
+        "zones": {
+          "path": "sentinel/S2A_MSIL2A_20261031T110121_N0513_R094_T30TUK_20261031T173605/water-zones.geojson",
+          "sha256": "03c30520778490a336131e42e617ff15fea40825dc8e78006fa6a8b06d007bc7"
+        }
+      }
+    },
+    {
+      "id": "S2A_MSIL2A_20261014T110941_N0513_R137_T30TUK_20261014T173008",
+      "datetime": "2026-10-14T11:09:41.024000Z",
+      "indices": {
+        "NDVI": {
+          "label": "NDVI \u00b7 vigor vegetal",
+          "range": [
+            -1,
+            1
+          ],
+          "colors": [
+            "#314b91",
+            "#d8c496",
+            "#ffffbf",
+            "#73b554",
+            "#006837"
+          ],
+          "valid_percent_rectangle": 99.41379425853349,
+          "resolution_m": 10,
+          "mean_rectangle": 0.3011772632598877,
+          "sha256": "8723d7cbf2d62a62a74fcacaa18a247a1f8343844196a02a0ae016b7fe9456c4",
+          "projection": "EPSG:3857",
+          "extent": [
+            -498738.30616411846,
+            4836709.354962837,
+            -479256.3413797892,
+            4845389.695985648
+          ],
+          "image": "sentinel/S2A_MSIL2A_20261014T110941_N0513_R137_T30TUK_20261014T173008/NDVI.png",
+          "download": "sentinel/S2A_MSIL2A_20261014T110941_N0513_R137_T30TUK_20261014T173008/NDVI.tif"
+        },
+        "EVI2": {
+          "label": "EVI2 \u00b7 vegetaci\u00f3n",
+          "range": [
+            0,
+            1
+          ],
+          "colors": [
+            "#fff7bc",
+            "#fec44f",
+            "#78c679",
+            "#238443",
+            "#004529"
+          ],
+          "valid_percent_rectangle": 99.41379425853349,
+          "resolution_m": 10,
+          "mean_rectangle": 0.16510798037052155,
+          "sha256": "64bb91f38715f1aa036e9a54d501c9c56f0616255e1946b961e8d966d58c72f7",
+          "projection": "EPSG:3857",
+          "extent": [
+            -498738.30616411846,
+            4836709.354962837,
+            -479256.3413797892,
+            4845389.695985648
+          ],
+          "image": "sentinel/S2A_MSIL2A_20261014T110941_N0513_R137_T30TUK_20261014T173008/EVI2.png",
+          "download": "sentinel/S2A_MSIL2A_20261014T110941_N0513_R137_T30TUK_20261014T173008/EVI2.tif"
+        },
+        "NDMI": {
+          "label": "NDMI \u00b7 humedad de la vegetaci\u00f3n",
+          "range": [
+            -1,
+            1
+          ],
+          "colors": [
+            "#8c510a",
+            "#dfc27d",
+            "#f5f5f5",
+            "#80cdc1",
+            "#01665e"
+          ],
+          "valid_percent_rectangle": 99.66711888252438,
+          "resolution_m": 20,
+          "mean_rectangle": -0.09610342234373093,
+          "sha256": "61649fceb624af95e37f38de5cc351c23c1a87f6ca070bbe8cf3e5ac0d38cf4b",
+          "projection": "EPSG:3857",
+          "extent": [
+            -498738.30616411846,
+            4836696.340958306,
+            -479269.3553843211,
+            4845389.695985648
+          ],
+          "image": "sentinel/S2A_MSIL2A_20261014T110941_N0513_R137_T30TUK_20261014T173008/NDMI.png",
+          "download": "sentinel/S2A_MSIL2A_20261014T110941_N0513_R137_T30TUK_20261014T173008/NDMI.tif"
+        },
+        "NDWI": {
+          "label": "NDWI \u00b7 se\u00f1al de agua superficial",
+          "range": [
+            -1,
+            1
+          ],
+          "colors": [
+            "#8c510a",
+            "#dfc27d",
+            "#f5f5f5",
+            "#80cdc1",
+            "#01665e"
+          ],
+          "valid_percent_rectangle": 99.60609067765384,
+          "resolution_m": 10,
+          "mean_rectangle": -0.41200053691864014,
+          "sha256": "27f564895fdb66df8cd5d75aaf84044ec845a69bac465f7d269a6152fcfbd612",
+          "projection": "EPSG:3857",
+          "extent": [
+            -498738.30616411846,
+            4836709.354962837,
+            -479256.3413797892,
+            4845389.695985648
+          ],
+          "image": "sentinel/S2A_MSIL2A_20261014T110941_N0513_R137_T30TUK_20261014T173008/NDWI.png",
+          "download": "sentinel/S2A_MSIL2A_20261014T110941_N0513_R137_T30TUK_20261014T173008/NDWI.tif"
+        },
+        "MNDWI": {
+          "label": "MNDWI \u00b7 apoyo de 20 m",
+          "range": [
+            -1,
+            1
+          ],
+          "colors": [
+            "#8c510a",
+            "#dfc27d",
+            "#f5f5f5",
+            "#80cdc1",
+            "#01665e"
+          ],
+          "valid_percent_rectangle": 99.92923659263727,
+          "resolution_m": 20,
+          "mean_rectangle": -0.5233783721923828,
+          "sha256": "91d62630e096cae1d3aac3a10d944ac3936854ed0a4c9e660d78609359c497ab",
+          "projection": "EPSG:3857",
+          "extent": [
+            -498738.30616411846,
+            4836696.340958306,
+            -479269.3553843211,
+            4845389.695985648
+          ],
+          "image": "sentinel/S2A_MSIL2A_20261014T110941_N0513_R137_T30TUK_20261014T173008/MNDWI.png",
+          "download": "sentinel/S2A_MSIL2A_20261014T110941_N0513_R137_T30TUK_20261014T173008/MNDWI.tif"
+        }
+      },
+      "source": "Copernicus Sentinel-2 L2A",
+      "quality_scope": "rect\u00e1ngulo envolvente",
+      "kind": "ESTIMADO",
+      "water_raster_sha256": "cc64eacad6aaa4ab3319f1e5bd46c2073a43d9e3ae750b151e8feb56729d3a35",
+      "quality_mask": {
+        "path": "sentinel/S2A_MSIL2A_20261014T110941_N0513_R137_T30TUK_20261014T173008/SCL.tif",
+        "resolution_m": 20,
+        "sha256": "f53cb373e5c58511348c73e2f77ce0f82a92d2ef72b853073d0ac4349c11e3cd",
+        "kind": "SCL classification, not a validated waterlogging map"
+      },
+      "parcel_indices": {
+        "path": "sentinel/S2A_MSIL2A_20261014T110941_N0513_R137_T30TUK_20261014T173008/parcel-indices.json",
+        "sha256": "5ab9bed5d05d317d46ff53d32ca9242a30b20e6a1e239a5e819ca98c89b54ba2",
+        "parcel_web_sha256": "5321dcc6c63cf09881e1f86048ecc524387d7d0b0bf63f102176405aed9fa7d4"
+      },
+      "water": {
+        "method": "optical_surface_water_v2",
+        "parcel_web_sha256": "5321dcc6c63cf09881e1f86048ecc524387d7d0b0bf63f102176405aed9fa7d4",
+        "table": {
+          "path": "sentinel/S2A_MSIL2A_20261014T110941_N0513_R137_T30TUK_20261014T173008/parcel-water.json",
+          "sha256": "a1383baf161ee83ecdf40580085bb457d1274b279daabae26b585e80a39d9e92"
+        },
+        "zones": {
+          "path": "sentinel/S2A_MSIL2A_20261014T110941_N0513_R137_T30TUK_20261014T173008/water-zones.geojson",
+          "sha256": "0876eb544e8da79c472bcfab97854fb2a4244a2f250bd840a8ba2fdb5cef20a3"
+        }
+      }
+    },
+    {
+      "id": "S2A_MSIL2A_20230816T105631_N0510_R094_T30TUK_20241021T044404",
+      "datetime": "2023-08-16T10:56:31.024000Z",
+      "indices": {
+        "NDVI": {
+          "label": "NDVI \u00b7 vigor vegetal",
+          "range": [
+            -1,
+            1
+          ],
+          "colors": [
+            "#314b91",
+            "#d8c496",
+            "#ffffbf",
+            "#73b554",
+            "#006837"
+          ],
+          "valid_percent_rectangle": 98.37244163065688,
+          "resolution_m": 10,
+          "mean_rectangle": 0.26303839683532715,
+          "sha256": "934812cfe9172ca4cc7c539811b876d1a69561302ff857a0c8175fdf077f2440",
+          "projection": "EPSG:3857",
+          "extent": [
+            -498738.30616411846,
+            4836709.354962837,
+            -479256.3413797892,
+            4845389.695985648
+          ],
+          "image": "sentinel/S2A_MSIL2A_20230816T105631_N0510_R094_T30TUK_20241021T044404/NDVI.png",
+          "download": "sentinel/S2A_MSIL2A_20230816T105631_N0510_R094_T30TUK_20241021T044404/NDVI.tif"
+        },
+        "EVI2": {
+          "label": "EVI2 \u00b7 vegetaci\u00f3n",
+          "range": [
+            0,
+            1
+          ],
+          "colors": [
+            "#fff7bc",
+            "#fec44f",
+            "#78c679",
+            "#238443",
+            "#004529"
+          ],
+          "valid_percent_rectangle": 98.37244163065688,
+          "resolution_m": 10,
+          "mean_rectangle": 0.18601346015930176,
+          "sha256": "25b44cbda69d797ec50c9ec9568a1608c5073c8135a25969a658bd5b55b3011b",
+          "projection": "EPSG:3857",
+          "extent": [
+            -498738.30616411846,
+            4836709.354962837,
+            -479256.3413797892,
+            4845389.695985648
+          ],
+          "image": "sentinel/S2A_MSIL2A_20230816T105631_N0510_R094_T30TUK_20241021T044404/EVI2.png",
+          "download": "sentinel/S2A_MSIL2A_20230816T105631_N0510_R094_T30TUK_20241021T044404/EVI2.tif"
+        },
+        "NDMI": {
+          "label": "NDMI \u00b7 humedad de la vegetaci\u00f3n",
+          "range": [
+            -1,
+            1
+          ],
+          "colors": [
+            "#8c510a",
+            "#dfc27d",
+            "#f5f5f5",
+            "#80cdc1",
+            "#01665e"
+          ],
+          "valid_percent_rectangle": 98.63665293270358,
+          "resolution_m": 20,
+          "mean_rectangle": -0.07612968236207962,
+          "sha256": "ada1308ab64aadc22eefb421b4f44cd8257ecf9e27e8c5c06bd85d14ea491035",
+          "projection": "EPSG:3857",
+          "extent": [
+            -498738.30616411846,
+            4836696.340958306,
+            -479269.3553843211,
+            4845389.695985648
+          ],
+          "image": "sentinel/S2A_MSIL2A_20230816T105631_N0510_R094_T30TUK_20241021T044404/NDMI.png",
+          "download": "sentinel/S2A_MSIL2A_20230816T105631_N0510_R094_T30TUK_20241021T044404/NDMI.tif"
+        },
+        "NDWI": {
+          "label": "NDWI \u00b7 se\u00f1al de agua superficial",
+          "range": [
+            -1,
+            1
+          ],
+          "colors": [
+            "#8c510a",
+            "#dfc27d",
+            "#f5f5f5",
+            "#80cdc1",
+            "#01665e"
+          ],
+          "valid_percent_rectangle": 98.51627139650955,
+          "resolution_m": 10,
+          "mean_rectangle": -0.38326993584632874,
+          "sha256": "9e6f92ee515b18eebf8631bed81c08a6c904cb862bd7a16e1b0cf45742eb5bf4",
+          "projection": "EPSG:3857",
+          "extent": [
+            -498738.30616411846,
+            4836709.354962837,
+            -479256.3413797892,
+            4845389.695985648
+          ],
+          "image": "sentinel/S2A_MSIL2A_20230816T105631_N0510_R094_T30TUK_20241021T044404/NDWI.png",
+          "download": "sentinel/S2A_MSIL2A_20230816T105631_N0510_R094_T30TUK_20241021T044404/NDWI.tif"
+        },
+        "MNDWI": {
+          "label": "MNDWI \u00b7 apoyo de 20 m",
+          "range": [
+            -1,
+            1
+          ],
+          "colors": [
+            "#8c510a",
+            "#dfc27d",
+            "#f5f5f5",
+            "#80cdc1",
+            "#01665e"
+          ],
+          "valid_percent_rectangle": 99.19522326064381,
+          "resolution_m": 20,
+          "mean_rectangle": -0.4705677628517151,
+          "sha256": "14ccee62d068aaa4a8ac3049f356d5503361933385febf1668a980a5e71c9f82",
+          "projection": "EPSG:3857",
+          "extent": [
+            -498738.30616411846,
+            4836696.340958306,
+            -479269.3553843211,
+            4845389.695985648
+          ],
+          "image": "sentinel/S2A_MSIL2A_20230816T105631_N0510_R094_T30TUK_20241021T044404/MNDWI.png",
+          "download": "sentinel/S2A_MSIL2A_20230816T105631_N0510_R094_T30TUK_20241021T044404/MNDWI.tif"
+        }
+      },
+      "source": "Copernicus Sentinel-2 L2A",
+      "quality_scope": "rect\u00e1ngulo envolvente",
+      "kind": "ESTIMADO",
+      "water_raster_sha256": "5f8668d7f2699f8c3e763ff87477c07f4856e49cbbbb033b79bebfc5b4622126",
+      "quality_mask": {
+        "path": "sentinel/S2A_MSIL2A_20230816T105631_N0510_R094_T30TUK_20241021T044404/SCL.tif",
+        "resolution_m": 20,
+        "sha256": "a484a2195dee253cec5db0cd3a36d7b4c13d386b833fdbb0cadc4c52a3d783a9",
+        "kind": "SCL classification, not a validated waterlogging map"
+      },
+      "parcel_indices": {
+        "path": "sentinel/S2A_MSIL2A_20230816T105631_N0510_R094_T30TUK_20241021T044404/parcel-indices.json",
+        "sha256": "c629c3f28fceb3184b1429a12216fd4458223d2f687f045d475363849bd3e42a",
+        "parcel_web_sha256": "5321dcc6c63cf09881e1f86048ecc524387d7d0b0bf63f102176405aed9fa7d4"
+      },
+      "water": {
+        "method": "optical_surface_water_v2",
+        "parcel_web_sha256": "5321dcc6c63cf09881e1f86048ecc524387d7d0b0bf63f102176405aed9fa7d4",
+        "table": {
+          "path": "sentinel/S2A_MSIL2A_20230816T105631_N0510_R094_T30TUK_20241021T044404/parcel-water.json",
+          "sha256": "fd91141d4c63190c1366ff7763e90543937b1d441795683264809f30cdc53736"
+        },
+        "zones": {
+          "path": "sentinel/S2A_MSIL2A_20230816T105631_N0510_R094_T30TUK_20241021T044404/water-zones.geojson",
+          "sha256": "16c71da94cb550df545e9d10de11939b59cd04a1f8c73e724a2fc805863012ba"
+        }
+      }
+    }
+  ],
+  "comparisons": [
+    {
+      "id": "comparison-5163c4ec034fc20833cb6aae",
+      "a": "S2A_MSIL2A_20230816T105631_N0510_R094_T30TUK_20241021T044404",
+      "b": "S2A_MSIL2A_20261014T110941_N0513_R137_T30TUK_20261014T173008",
+      "path": "sentinel/comparison-5163c4ec034fc20833cb6aae/parcel-comparison.json",
+      "sha256": "ac6338ec38de69a69a940166a515785385fa62d40b54a002e4511cc08ca6be50",
+      "parcel_web_sha256": "5321dcc6c63cf09881e1f86048ecc524387d7d0b0bf63f102176405aed9fa7d4"
+    },
+    {
+      "id": "comparison-6a425e627f732f4202fa5502",
+      "a": "S2A_MSIL2A_20261014T110941_N0513_R137_T30TUK_20261014T173008",
+      "b": "S2A_MSIL2A_20261031T110121_N0513_R094_T30TUK_20261031T173605",
+      "path": "sentinel/comparison-6a425e627f732f4202fa5502/parcel-comparison.json",
+      "sha256": "fb2c3f51d7ede18bca69d0816fa6c06d0cf0c392ff8f8829c1bf954d82febcb7",
+      "parcel_web_sha256": "5321dcc6c63cf09881e1f86048ecc524387d7d0b0bf63f102176405aed9fa7d4"
+    }
+  ]
+}

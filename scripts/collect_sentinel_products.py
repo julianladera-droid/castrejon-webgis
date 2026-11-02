@@ -7,7 +7,7 @@ from pathlib import Path
 import re
 from urllib.request import Request, HTTPRedirectHandler, build_opener
 import zipfile
-from sentinel_contract import compatible, PRODUCT_FILES
+from sentinel_contract import compatible, upgradeable, PRODUCT_FILES
 
 
 def collect(output):
@@ -42,7 +42,7 @@ def collect(output):
             raise ValueError('Artifact size or checksum mismatch')
         with zipfile.ZipFile(io.BytesIO(payload)) as archive:
             manifest = json.loads(archive.read('manifest.json'))
-            if manifest.get('status') != 'quality_passed' or not compatible(manifest):
+            if manifest.get('status') != 'quality_passed' or not (compatible(manifest) or upgradeable(manifest)):
                 continue
             date = manifest['source_item']['properties']['datetime'][:10]
             if date in seen:

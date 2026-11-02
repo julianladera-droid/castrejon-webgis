@@ -30,7 +30,8 @@ class PublicationTests(unittest.TestCase):
             manifest['version'] = 1
             (folder/'manifest.json').write_text(json.dumps(manifest))
             with self.assertRaisesRegex(ValueError, 'Incompatible'): validate_product(folder)
-            manifest['version'] = 2
+            from sentinel_contract import PRODUCT_VERSION
+            manifest['version'] = PRODUCT_VERSION
             (folder/'manifest.json').write_text(json.dumps(manifest))
             with (folder/'raw_B03_10m.tif').open('ab') as stream: stream.write(b'changed')
             with self.assertRaisesRegex(ValueError, 'Original DN'): validate_product(folder)

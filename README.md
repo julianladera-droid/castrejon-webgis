@@ -590,3 +590,12 @@ Prueba manual de seguridad:
    `ovc.catastro.meh.es`.
 5. Si vuelve a aparecer el aviso, guardar captura del permiso y de la petición que
    coincide en ese instante; no conceder el permiso para diagnosticarla.
+
+## Estudio B11: ciclos 0–3
+
+Inventario, auditoría, comparación A–E y prueba reducida 40→20 m en [docs/b11-cycles/README.md](docs/b11-cycles/README.md). Investigación aislada del detector operativo, pendiente de revisión; no implica despliegue.
+
+
+## Aproximación de encharcamiento para visitas de campo
+
+La capa operativa conserva el agua estimada anterior y añade candidatos de mezcla en morado y señales dudosas en ámbar. Interpretación, límites y reproducción en [docs/water-field-guide.md](docs/water-field-guide.md). La comprobación en campo sigue siendo necesaria.
