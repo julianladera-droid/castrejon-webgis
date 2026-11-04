@@ -165,7 +165,7 @@ def main():
     require(OL_CSS in page.links, 'HTML: falta CSS OpenLayers previsto')
     require(len(page.scripts) >= 2 and page.scripts[0]['src'] == OL_JS,
             'HTML: OpenLayers debe preceder al código del visor')
-    require([s['src'] for s in page.scripts if s['src']] == [OL_JS, 'averias/shared.js', 'averias/map-layer.js'],
+    require([s['src'] for s in page.scripts if s['src']] == [OL_JS, 'averias/shared.js', 'averias/map-layer.js?v=20261104-1'],
             'HTML: script externo nuevo; incorporarlo expresamente al gate')
     require(all(not s['code'].strip() for s in page.scripts if s['src']),
             'HTML: código inline ignorado por un atributo src')
