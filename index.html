@@ -189,7 +189,7 @@
       <div class="panel-body" id="layerPanelBody">
         <section class="sentinel-controls" aria-label="Averías públicas">
           <label class="layer-choice" for="incidentToggle"><input id="incidentToggle" type="checkbox" checked><span>Averías</span></label>
-          <p><span class="incident-key pending"></span> Pendiente · <span class="incident-key repairing"></span> En reparación · <span class="incident-key resolved"></span> Resuelta</p>
+          <p><span id="incidentKey-pendiente" class="incident-key pending" aria-hidden="true"></span> Pendiente · <span id="incidentKey-en_reparacion" class="incident-key repairing" aria-hidden="true"></span> En reparación · <span id="incidentKey-resuelta" class="incident-key resolved" aria-hidden="true"></span> Resuelta</p>
           <label for="incidentFilter">Estado</label>
           <select id="incidentFilter"><option value="">Todos</option><option value="pendiente">Pendientes</option><option value="en_reparacion">En reparación</option><option value="resuelta">Resueltas</option></select>
           <p id="incidentStatus" role="status">Consultando averías…</p>

@@ -1,5 +1,5 @@
 # SKILL · Castrejón WebGIS — Contrato de arquitectura y evolución
-Version: 0.1.36
+Version: 0.1.37
 Fecha base: 2026-09-30
 Estado: ACTIVO · se actualiza tras cada ciclo de pruebas
 
@@ -791,3 +791,9 @@ Se considera regresión cualquier cambio que haga funcionar una capa localmente 
 - Conservar detecciones base y añadir candidatos H1 con B11 guiada por NDWI+NDVI, en clase separada 4. Señales guiadas restantes: ambiguas; inválidos siguen no evaluables. Sin promover automáticamente candidatos a agua confirmada.
 - Contrato v3: método versionado, nueva clase residual y migración reproducible de artefactos v2 desde DN originales, conservando fechas y SAFE. Reprocesar las adquisiciones publicadas antes del despliegue.
 - Regresiones: conservación de detecciones base, máscaras, fallback por falta de guías, áreas y colores de clase 4, cambio temporal sólo sobre clases 0/1, migración y compatibilidad frontend/datos. Verificación local, CI, navegador y publicación.
+
+### 0.1.37 — 2026-11-04 · Iconos de averías validados
+- Necesidad: sustituir círculos por triángulo de emergencia con pico y llave de grifa cruzados; diseño aprobado por el usuario.
+- Corrección: SVG transparente incorporado al módulo, 24 px, sin rótulos ni sombras; terracota pendiente, azul en reparación y verde resuelta, con rellenos pastel. Misma imagen en leyenda, sin nuevas peticiones ni dependencias.
+- Regresión: tres estados, tamaño, SVG sin contenido activo, selección y filtros existentes; gate cartográfico. No cambia API, coordenadas, datos ni permisos. Reversible restaurando el módulo y la leyenda.
+- Archivos: averias/map-layer.js, averias/map-layer.css, index.html y prueba de mapa.
