@@ -3,8 +3,24 @@
   window.CastrejonIncidentLayer={init({map,closeParcel,setPanelOpen,compact}){
     const A=window.CastrejonAverias, $=id=>document.getElementById(id);
     const base='https://comregantescastrejonmd.net/wp-json/castrejon/v1/';
-    const source=new ol.source.Vector(), colors={pendiente:'#ce562c',en_reparacion:'#246dae',resuelta:'#357c45'}, styles={};
-    for(const [status,color] of Object.entries(colors))styles[status]=new ol.style.Style({image:new ol.style.Circle({radius:9,fill:new ol.style.Fill({color}),stroke:new ol.style.Stroke({color:'#fff',width:3})})});
+    const source=new ol.source.Vector(), colors={pendiente:['#ce562c','#f2c7b7'],en_reparacion:['#246dae','#c7ddee'],resuelta:['#357c45','#cbe2ce']}, styles={};
+    // One small, cached vector icon per state; no external image requests.
+    const iconSvg=(edge,fill)=>`<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64">
+      <path d="M28.5 7.5Q32 1.5 35.5 7.5L60 51Q64 58 56 58H8Q0 58 4 51Z" fill="${fill}" stroke="white" stroke-width="5" stroke-linejoin="round"/>
+      <path d="M28.5 7.5Q32 1.5 35.5 7.5L60 51Q64 58 56 58H8Q0 58 4 51Z" fill="${fill}" stroke="${edge}" stroke-width="3" stroke-linejoin="round"/>
+      <g transform="translate(9.6 17) scale(.7)"><g fill="#344955" stroke="white" stroke-width="1.4" stroke-linejoin="round">
+        <path d="M18 28L22 24L47 49Q49 52 46 54Q44 55 42 53Z"/>
+        <path d="M12 40Q13 23 36 21Q27 25 23 31L19 33Q15 35 12 40Z"/>
+        <path d="M18 49L39 28L37 25L43 19Q47 16 51 20L54 23L51 29L48 27L49 24L46 23L43 26L46 29L43 34L40 33L24 54Q21 56 18 53Z"/>
+      </g>
+      <path d="M40 29L45 33M41 28L46 32" stroke="white" stroke-width="1"/></g>
+    </svg>`;
+    for(const [status,[edge,fill]] of Object.entries(colors)){
+      const src='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(iconSvg(edge,fill));
+      styles[status]=new ol.style.Style({image:new ol.style.Icon({src,width:24,height:24,anchor:[.5,.5]})});
+      const key=$('incidentKey-'+status);
+      if(key)key.style.backgroundImage=`url("${src}")`;
+    }
     const layer=new ol.layer.Vector({source,zIndex:40,style:feature=>styles[feature.get('status')]});map.addLayer(layer);
     let items=[],selected=null,loading=false,refreshId=0;
     const card=$('incidentCard');
