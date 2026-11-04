@@ -797,3 +797,5 @@ Se considera regresión cualquier cambio que haga funcionar una capa localmente 
 - Corrección: SVG transparente incorporado al módulo, 24 px, sin rótulos ni sombras; terracota pendiente, azul en reparación y verde resuelta, con rellenos pastel. Misma imagen en leyenda, sin nuevas peticiones ni dependencias.
 - Regresión: tres estados, tamaño, SVG sin contenido activo, selección y filtros existentes; gate cartográfico. No cambia API, coordenadas, datos ni permisos. Reversible restaurando el módulo y la leyenda.
 - Archivos: averias/map-layer.js, averias/map-layer.css, index.html y prueba de mapa.
+
+- Verificación remota: Pages conserva recursos JS/CSS anteriores en caché durante la actualización; añadir versión explícita a ambos enlaces y mantener el gate exacto.
