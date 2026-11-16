@@ -78,6 +78,23 @@ class RetentionTests(unittest.TestCase):
 
 
 class RecoveryTests(unittest.TestCase):
+    def test_historical_cdse_prefix_preserves_band_identity_without_signed_urls(self):
+        manifest = json.loads(fixture_files()['manifest.json'])
+        for band in manifest['raw_bands'].values():
+            band['asset_href'] = band['asset_href'].replace('/L2A/', '/L2A_N0500/')
+        sanitized = recovery.public_manifest(manifest)
+        self.assertEqual(sanitized['raw_bands'], manifest['raw_bands'])
+        self.assertEqual(sanitized['source_item']['assets']['B03_10m']['href'],
+                         manifest['raw_bands']['B03_10m']['asset_href'])
+        for invalid in ('s3://eodata/Sentinel-2/MSI/L2A_N0500/a.jp2?token=private',
+                        's3://user@eodata/Sentinel-2/MSI/L2A_N0500/a.jp2',
+                        's3://other/Sentinel-2/MSI/L2A_N0500/a.jp2',
+                        's3://eodata/unreviewed/a.jp2'):
+            with self.subTest(invalid=invalid):
+                manifest['raw_bands']['B03_10m']['asset_href'] = invalid
+                with self.assertRaisesRegex(ValueError, 'Unexpected public band source'):
+                    recovery.public_manifest(manifest)
+
     def test_real_collection_has_only_retained_dates_and_adjacent_comparisons(self):
         from test_sentinel_web import PublicationTests
         from test_parcel_ndvi import polygon
