@@ -106,7 +106,7 @@ def public_manifest(manifest):
     for name in RAW_BANDS:
         band = result['raw_bands'][name]
         # Public, unsigned CDSE object identifiers only; never signed URLs or headers.
-        if not re.fullmatch(r's3://eodata/Sentinel-2/MSI/L2A/[A-Za-z0-9_./-]+', band['asset_href']):
+        if not re.fullmatch(r's3://eodata/Sentinel-2/MSI/L2A(?:_N0500)?/[A-Za-z0-9_./-]+', band['asset_href']):
             raise ValueError('Unexpected public band source')
         assets[name] = {'href': band['asset_href'], 'raster:scale': band['scale'],
                         'raster:offset': band['offset'], 'nodata': band['nodata'],

@@ -1,5 +1,5 @@
 # SKILL · Castrejón WebGIS — Contrato de arquitectura y evolución
-Version: 0.1.39
+Version: 0.1.40
 Fecha base: 2026-09-30
 Estado: ACTIVO · se actualiza tras cada ciclo de pruebas
 
@@ -442,6 +442,12 @@ Formato de cada cambio:
 No borrar una regla por comodidad. Si una regla cambia, conservar el motivo en el historial.
 
 ## 12. Registro de cambios
+### 0.1.40 — 2026-11-16 · Recuperación de objetos históricos CDSE
+- El propietario autoriza fusionar PR #12 y verificar Pages y las cuatro adquisiciones actuales, manteniendo retención 8 y sin borrar artefactos ni cachés.
+- La verificación con metadatos reales detecta que agosto de 2023 usa `s3://eodata/Sentinel-2/MSI/L2A_N0500/`, mientras el filtro del paquete sólo admitía `L2A/`; el empaquetado se detiene antes de publicar.
+- Corrección mínima: admitir también ese prefijo histórico concreto, conservando host, protocolo, ausencia de credenciales y exclusión de URLs firmadas. No ampliar a rutas arbitrarias.
+- Regresión: manifiesto histórico con `L2A_N0500`, rechazo de query/usuario/host/ruta ajenos y restauración real desde Pages sin usar ni eliminar artefactos o cachés. Sin cambios de detector ni política de retención.
+
 ### 0.1.39 — 2026-11-16 · Retención acotada y recuperación del visor
 - Prioridad del propietario: continuidad del visor y consumo contenido; preparar PR sin fusionar, desplegar ni borrar datos existentes.
 - Fallos: la reconstrucción depende de artefactos caducables; la caché omite dos dependencias del detector; el colector resuelve duplicados diarios por orden de ejecución.
