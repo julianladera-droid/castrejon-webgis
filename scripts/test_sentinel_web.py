@@ -36,10 +36,10 @@ class PublicationTests(unittest.TestCase):
             with (folder/'raw_B03_10m.tif').open('ab') as stream: stream.write(b'changed')
             with self.assertRaisesRegex(ValueError, 'Original DN'): validate_product(folder)
 
-    def fixture(self, path):
+    def fixture(self, path, identity='TEST_20250101', observed='2025-01-01T11:00:00Z'):
         from sentinel_pipeline import process_rasters
         from sentinel_contract import RAW_BANDS
-        item = {'id': 'TEST_20250101', 'properties': {'datetime': '2025-01-01T11:00:00Z'}, 'assets': {}}
+        item = {'id': identity, 'properties': {'datetime': observed}, 'assets': {}}
         srs = osr.SpatialReference(); srs.ImportFromEPSG(25830)
         rasters = {}
         for name, resolution in RAW_BANDS.items():
@@ -48,7 +48,8 @@ class PublicationTests(unittest.TestCase):
             ds.SetProjection(srs.ExportToWkt()); ds.SetGeoTransform([380000, resolution, 0, 4400040, 0, -resolution])
             ds.GetRasterBand(1).SetNoDataValue(-9999)
             ds.GetRasterBand(1).WriteArray(np.full((size, size), 4 if name.startswith('SCL') else 7000 if name.startswith(('B08', 'B8A')) else 3000))
-            item['assets'][name] = {'href': 'fixture', 'raster:scale': .0001, 'raster:offset': -.1, 'nodata': 0}
+            item['assets'][name] = {'href': f's3://eodata/Sentinel-2/MSI/L2A/fixture/{name}.jp2',
+                                    'raster:scale': .0001, 'raster:offset': -.1, 'nodata': 0}
             rasters[name] = ds
         return process_rasters(rasters, item, {'crs': 'EPSG:25830', 'bounds': [380000, 4400000, 380040, 4400040]}, path, {'fixture': True})
 

@@ -261,7 +261,9 @@ def main():
             raise ValueError('Preserved DN identity mismatch')
     else:
         rasters = {key: crop(item['assets'][key], bounds, res) for key, res in BANDS.items()}
-    manifest = process_rasters(rasters, item, {**aoi['processing_aoi'], 'bounds': bounds}, args.output, query)
+    from sentinel_cache import provenance
+    manifest = process_rasters(rasters, item, {**aoi['processing_aoi'], 'bounds': bounds}, args.output, query,
+                               {'calculation': provenance(), 'code_sha': os.environ.get('GITHUB_SHA')})
     if manifest['status'] != 'quality_passed':
         raise ValueError('Local quality below 80%; preserved for diagnosis, not publication')
     print('Completed v3: NDVI/EVI2/NDWI/water 10 m; NDMI/MNDWI/SCL 20 m; EPSG:25830')

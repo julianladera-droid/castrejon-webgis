@@ -1,13 +1,15 @@
 """Fetch compatible observations; backfill execution order never defines recency."""
-import hashlib
-import io
 import json
 import os
 from pathlib import Path
 import re
+import shutil
+import tempfile
 from urllib.request import Request, HTTPRedirectHandler, build_opener
-import zipfile
 from sentinel_contract import compatible, upgradeable, PRODUCT_FILES
+from sentinel_products import open_product, product_record
+from sentinel_recovery import read_snapshot, restore
+from sentinel_retention import policy, select
 
 
 def github_get(path):
@@ -40,39 +42,62 @@ def github_items(path, key):
         page += 1
 
 
-def collect(output):
+def collect(output, config=None):
+    config = config or policy()
     repo = os.environ['GITHUB_REPOSITORY']
-
-    runs = github_items('/actions/workflows/sentinel.yml/runs?branch=main&status=success&per_page=100', 'workflow_runs')
-    seen = set()
-    for run in runs:
-        if run.get('head_repository', {}).get('full_name') != repo or run['event'] not in ('schedule', 'workflow_dispatch'):
-            continue
-        artifacts = json.loads(github_get(f"/actions/runs/{run['id']}/artifacts"))['artifacts']
-        artifact = next((a for a in artifacts if not a['expired'] and a['name'] == f"sentinel-{run['id']}"), None)
-        if artifact is None:
-            continue
-        payload = github_get(f"/actions/artifacts/{artifact['id']}/zip")
-        if len(payload) > 100_000_000 or artifact.get('digest') != 'sha256:' + hashlib.sha256(payload).hexdigest():
-            raise ValueError('Artifact size or checksum mismatch')
-        with zipfile.ZipFile(io.BytesIO(payload)) as archive:
-            manifest = json.loads(archive.read('manifest.json'))
-            if manifest.get('status') != 'quality_passed' or not (compatible(manifest) or upgradeable(manifest)):
+    if output.exists():
+        raise ValueError('Collection requires a fresh staging directory')
+    # Listing artifacts avoids the filtered workflow-runs API's 1,000-result ceiling.
+    # Daily empty runs therefore neither consume ZIP downloads nor hide old inputs.
+    snapshot = read_snapshot()
+    selected = select(snapshot, config['max_acquisitions'])
+    known = {e.get('artifact_id') for e in snapshot if not e.get('unavailable')}
+    artifacts = github_items('/actions/artifacts?per_page=100', 'artifacts')
+    with tempfile.TemporaryDirectory(prefix='sentinel-collect-') as tmp:
+        stage = Path(tmp)
+        for artifact in artifacts:
+            match = re.fullmatch(r'sentinel-(\d+)(?:-(\d+))?', artifact['name'])
+            if artifact['expired'] or not match or artifact['id'] in known:
                 continue
-            date = manifest['source_item']['properties']['datetime'][:10]
-            if date in seen:
+            run = json.loads(github_get(f'/actions/runs/{match[1]}'))
+            if not (run.get('head_repository', {}).get('full_name') == repo
+                    and run.get('head_branch') == 'main' and run.get('conclusion') == 'success'
+                    and run.get('path') == '.github/workflows/sentinel.yml'
+                    and run.get('event') in ('schedule', 'workflow_dispatch')):
                 continue
-            destination = output / str(run['id'])
-            destination.mkdir(parents=True, exist_ok=True)
-            for name in PRODUCT_FILES:
-                info = archive.getinfo(name)
-                if info.file_size > 100_000_000:
-                    raise ValueError('Unexpected product size')
-                (destination / name).write_bytes(archive.read(name))
-            seen.add(date)
-            print(f"Collected {date} from validated run {run['id']}")
-    if not seen:
-        raise ValueError('At least one compatible unexpired acquisition is required; preserve current deployment')
+            payload = github_get(f"/actions/artifacts/{artifact['id']}/zip")
+            with open_product(payload, artifact.get('digest'), allow_unsupported=True) as archive:
+                manifest = json.loads(archive.read('manifest.json'))
+                if manifest.get('status') != 'quality_passed' or not (compatible(manifest) or upgradeable(manifest)):
+                    continue
+                record = product_record(archive.read)
+                entry = {'product': record, 'product_version': manifest['version'],
+                         'processed_at': artifact['created_at'], 'run_id': run['id'],
+                         'artifact_id': artifact['id'], 'code_sha': run['head_sha'],
+                         'local_path': str(stage / record['fingerprint'])}
+                selected = select([*selected, entry], config['max_acquisitions'])
+                if entry in selected:
+                    destination = Path(entry['local_path'])
+                    destination.mkdir(exist_ok=True)
+                    for name in PRODUCT_FILES:
+                        (destination / name).write_bytes(archive.read(name))
+            # Only temporary, newly downloaded staging files are pruned, never remote data.
+            keep = {e.get('local_path') for e in selected}
+            for folder in stage.iterdir():
+                if str(folder) not in keep:
+                    shutil.rmtree(folder)
+        if not selected or any(e.get('unavailable') for e in selected):
+            raise ValueError('At least one compatible acquisition and all retained published dates are required; preserve current deployment')
+        output.mkdir(parents=True)
+        for entry in selected:
+            destination = output / entry['product']['fingerprint']
+            if entry.get('local_path'):
+                shutil.copytree(entry['local_path'], destination)
+            else:
+                restore(entry, destination)
+            origin = {k: entry[k] for k in ('processed_at', 'run_id', 'artifact_id', 'code_sha', 'calculation') if k in entry}
+            (destination / 'origin.json').write_text(json.dumps(origin), encoding='utf-8')
+        print(f'Collected {len(selected)} observations; retention limit {config["max_acquisitions"]}')
 
 
 if __name__ == '__main__':

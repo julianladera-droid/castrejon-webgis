@@ -62,28 +62,42 @@ jobs:
           args=()
           if [ -n "$OBSERVATION_DATE" ]; then args+=(--date "$OBSERVATION_DATE"); fi
           if [ -n "$OBSERVATION_ITEM" ]; then args+=(--item-id "$OBSERVATION_ITEM"); fi
-          /usr/bin/python3 scripts/sentinel_pipeline.py --catalogue-only "${args[@]}"
+          /usr/bin/python3 scripts/sentinel_pipeline.py --catalogue-only --output sentinel-selection "${args[@]}"
+      - name: Fingerprint calculation and installed runtime
+        id: calculation
+        run: /usr/bin/python3 scripts/sentinel_cache.py
       - name: Reuse already processed acquisition
         id: product-cache
-        uses: actions/cache@v4
+        uses: actions/cache/restore@v4
         with:
           path: sentinel-output/
-          key: sentinel-v2-${{ hashFiles('scripts/sentinel_pipeline.py', 'scripts/sentinel_contract.py', 'scripts/spectral_quality.py', 'scripts/water_detection.py', 'scripts/parcel_grid.py', 'data/sentinel-aoi.json') }}-${{ steps.selection.outputs.item }}
+          key: sentinel-v3-${{ steps.calculation.outputs.fingerprint }}-${{ steps.selection.outputs.item }}-${{ github.run_id }}-${{ github.run_attempt }}
+          restore-keys: |
+            sentinel-v3-${{ steps.calculation.outputs.fingerprint }}-${{ steps.selection.outputs.item }}-
+      - name: Validate restored cache identity, parameters and integrity
+        id: cached
+        run: /usr/bin/python3 scripts/sentinel_cache.py --check sentinel-output --selection sentinel-selection/selection.json
       - name: Download and calculate rectangular AOI
-        if: steps.product-cache.outputs.cache-hit != 'true'
+        if: steps.cached.outputs.usable != 'true'
         env:
           CDSE_S3_ACCESS_KEY: ${{ secrets.CDSE_S3_ACCESS_KEY }}
           CDSE_S3_SECRET_KEY: ${{ secrets.CDSE_S3_SECRET_KEY }}
-        run: /usr/bin/python3 scripts/sentinel_pipeline.py --catalogue-file sentinel-output/selection.json
+        run: /usr/bin/python3 scripts/sentinel_pipeline.py --catalogue-file sentinel-selection/selection.json
       - name: Verify cached or calculated product
         run: /usr/bin/python3 -c "import sys; from pathlib import Path; sys.path.insert(0, 'scripts'); from build_sentinel_web import validate_product; validate_product(Path('sentinel-output'))"
+      - name: Save newly validated calculation
+        if: steps.cached.outputs.usable != 'true'
+        uses: actions/cache/save@v4
+        with:
+          path: sentinel-output/
+          key: ${{ steps.product-cache.outputs.cache-primary-key }}
       - name: Save products and provenance
         uses: actions/upload-artifact@v4
         with:
-          name: sentinel-${{ github.run_id }}
+          name: sentinel-${{ github.run_id }}-${{ github.run_attempt }}
           path: sentinel-output/
           if-no-files-found: error
-          retention-days: 90
+          retention-days: 14
       - name: Save failed processing diagnostics separately
         if: failure()
         uses: actions/upload-artifact@v4

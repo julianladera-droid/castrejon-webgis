@@ -4,8 +4,6 @@ No GDAL, Copernicus requests, cache state or run-date heuristics are needed.
 The receipt travels with Pages itself, so a failed build/deploy cannot advance it.
 """
 import argparse
-import hashlib
-import io
 import json
 import os
 from pathlib import Path
@@ -14,53 +12,17 @@ import time
 from urllib.error import HTTPError
 from urllib.parse import urlencode
 from urllib.request import Request, urlopen
-import zipfile
 
 from collect_sentinel_products import github_get, github_items
-from sentinel_contract import compatible, upgradeable, PRODUCT_FILES
+from sentinel_products import product_record, open_product, observed_at
+from sentinel_retention import policy
 
 STATE_URL = 'https://julianladera-droid.github.io/castrejon-webgis/sentinel/publication.json'
 
 
-def product_record(read):
-    """Content identity independent of ZIP timestamps, queries and run/cache IDs."""
-    manifest = json.loads(read('manifest.json'))
-    if manifest.get('status') != 'quality_passed' or not (compatible(manifest) or upgradeable(manifest)):
-        raise ValueError('Product is not quality-passed and compatible/upgradeable')
-    item = manifest['source_item']
-    identity, observed = item['id'], item['properties']['datetime']
-    if not re.fullmatch(r'[A-Za-z0-9_-]{1,150}', identity):
-        raise ValueError('Invalid product identifier')
-    hashes = {}
-    for name in PRODUCT_FILES:
-        if name == 'manifest.json':
-            continue
-        key = name.removesuffix('.tif')
-        if key.startswith('raw_'):
-            expected = manifest['raw_bands'][key[4:]]['sha256']
-        elif key in manifest['indices']:
-            expected = manifest['indices'][key]['sha256']
-        else:
-            expected = manifest['water'][key.lower() + '_sha256']
-        hashes[name] = hashlib.sha256(read(name)).hexdigest()
-        if hashes[name] != expected:
-            raise ValueError('Product checksum mismatch')
-    metadata = {k: v for k, v in manifest.items() if k not in ('query', 'source_audit', 'source_item')}
-    payload = {'id': identity, 'datetime': observed, 'metadata': metadata, 'files': hashes}
-    digest = hashlib.sha256(json.dumps(payload, sort_keys=True, separators=(',', ':'),
-                                       allow_nan=False).encode()).hexdigest()
-    return {'id': identity, 'datetime': observed, 'fingerprint': digest}
-
-
 def artifact_record(artifact):
     payload = github_get(f"/actions/artifacts/{artifact['id']}/zip")
-    if len(payload) > 100_000_000 or artifact.get('digest') != 'sha256:' + hashlib.sha256(payload).hexdigest():
-        raise ValueError('Artifact size or checksum mismatch')
-    with zipfile.ZipFile(io.BytesIO(payload)) as archive:
-        # Read only allowlisted members; never extract or execute artifact content.
-        for name in PRODUCT_FILES:
-            if archive.namelist().count(name) != 1 or archive.getinfo(name).file_size > 100_000_000:
-                raise ValueError('Missing, duplicate or oversized product member')
+    with open_product(payload, artifact.get('digest')) as archive:
         return product_record(archive.read)
 
 
@@ -100,9 +62,12 @@ def decide(event_name, event, repository):
     sentinel = next((job for job in jobs if job['name'] == 'sentinel'), None)
     if sentinel is None or sentinel.get('conclusion') != 'success':
         return False, 'calendar-only-or-no-successful-processing'
-    artifacts = github_items(f'/actions/runs/{run_id}/artifacts?per_page=100', 'artifacts')
-    artifact = next((a for a in artifacts if a['name'] == f'sentinel-{run_id}' and not a['expired']), None)
+    artifacts = list(github_items(f'/actions/runs/{run_id}/artifacts?per_page=100', 'artifacts'))
+    exact_name = f"sentinel-{run_id}-{int(run.get('run_attempt', 1))}"
+    artifact = next((a for a in artifacts if a['name'] == exact_name), None)
     if artifact is None:
+        artifact = next((a for a in artifacts if a['name'] == f'sentinel-{run_id}'), None)
+    if artifact is None or artifact['expired']:
         return False, 'no-retained-product-artifact'
     candidate = artifact_record(artifact)
     state = published_state()
@@ -110,6 +75,10 @@ def decide(event_name, event, repository):
         return True, 'initialize-publication-receipt'
     if candidate in state['products']:
         return False, 'product-already-published'
+    limit = policy()['max_acquisitions']
+    days = sorted({observed_at(p['datetime']).date() for p in state['products']}, reverse=True)
+    if len(days) >= limit and observed_at(candidate['datetime']).date() < days[limit - 1]:
+        return False, 'product-outside-retention-window'
     return True, 'new-or-changed-product'
 
 

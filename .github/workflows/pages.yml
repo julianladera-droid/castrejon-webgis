@@ -165,6 +165,7 @@ jobs:
           /usr/bin/python3 scripts/upgrade_sentinel_products.py sentinel-products-v3 sentinel-products
           /usr/bin/python3 scripts/build_sentinel_web.py sentinel-products-v3 _site/sentinel --collection
           python3 scripts/sentinel_publication.py --record sentinel-products _site/sentinel/catalog.json
+          python3 scripts/sentinel_recovery.py sentinel-products _site/sentinel/catalog.json _site
       - name: Upload static site
         if: steps.current.outputs.proceed == 'true'
         uses: actions/upload-pages-artifact@v3
