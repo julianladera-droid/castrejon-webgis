@@ -1,13 +1,73 @@
 # Retención acotada de Sentinel y continuidad de Pages
 
-Propuesta sobre `main` **07ad34999da36e1b2b849b6fd909e40f2d55528f**,
-revisado el 16/11/2026. Preparar esta PR no ejecuta Sentinel, no publica Pages
-ni elimina artefactos, cachés, Releases o adquisiciones existentes.
+**Cierre verificado el 16/11/2026 de las PR #12 y #13.** El SHA desplegado es
+[`009105ddf226c38dddabb79c9109a7820c36f075`](https://github.com/julianladera-droid/castrejon-webgis/commit/009105ddf226c38dddabb79c9109a7820c36f075).
+La retención configurada sigue en **8**; hay **cuatro adquisiciones y tres
+comparaciones**. La propuesta original partió de `07ad34999da36e1b2b849b6fd909e40f2d55528f`.
+Este cierre sólo actualiza documentación y evidencia JSON: no cambia configuración,
+código ni workflows, no genera otro despliegue y no borra artefactos ni cachés.
+
+## Cierre de las PR y despliegue
+
+| Hito | Evidencia y resultado |
+| --- | --- |
+| [PR #12](https://github.com/julianladera-droid/castrejon-webgis/pull/12) | Fusionada el 16/11/2026 a las 20:23:43 UTC en `ee2700943fc83e584ef97555fe3c219eb7c6a659`. [CI correcta](https://github.com/julianladera-droid/castrejon-webgis/actions/runs/43946762025): 116 pruebas Python y controles WebGIS/WordPress; deploy omitido por ser PR. |
+| [Primer despliegue](https://github.com/julianladera-droid/castrejon-webgis/actions/runs/43949328931) | Falló **antes del upload** con `Unexpected public band source`: agosto de 2023 usa el prefijo histórico CDSE `L2A_N0500/`. El HTML, catálogo y registro publicados conservaron sus bytes. |
+| [PR #13](https://github.com/julianladera-droid/castrejon-webgis/pull/13) | Corrección mínima del prefijo histórico, manteniendo las restricciones de URL. Fusionada a las 20:30:53 UTC en `009105ddf226c38dddabb79c9109a7820c36f075`. [CI correcta](https://github.com/julianladera-droid/castrejon-webgis/actions/runs/43950164441): 117 pruebas Python, WebGIS y WordPress; deploy omitido. |
+| [Despliegue final de Pages](https://github.com/julianladera-droid/castrejon-webgis/actions/runs/43950559764) | Correcto sobre `009105ddf226c38dddabb79c9109a7820c36f075`: cuatro observaciones, tres comparaciones y retención `4/8`. Sitio de **142.802.154 / 400.000.000 bytes**. Artefacto Pages `14267602459`, de 140.979.842 bytes. |
+
+El [visor](https://julianladera-droid.github.io/castrejon-webgis/),
+[catálogo](https://julianladera-droid.github.io/castrejon-webgis/sentinel/catalog.json),
+[registro](https://julianladera-droid.github.io/castrejon-webgis/sentinel/publication.json)
+e [índice de recuperación](https://julianladera-droid.github.io/castrejon-webgis/sentinel/recovery.json)
+son URLs vivas y pueden cambiar en publicaciones futuras. La
+[evidencia versionada del cierre](sentinel-evidence/closure-20261116.json)
+fija los IDs, fechas UTC, versiones, tamaños, SHA-256, procedencia y resultados
+comprobados entonces, sin incluir ZIP, rásteres, credenciales ni rutas locales.
+
+## Recuperación comprobada de las cuatro adquisiciones
+
+| Observación UTC | Producto | Versión original → validada | ZIP de recuperación (bytes) |
+| --- | --- | --- | ---: |
+| 16/08/2023 | `S2A_MSIL2A_20230816T105631_N0510_R094_T30TUK_20241021T044404` | 2 → 3 | 17.507.379 |
+| 14/10/2026 | `S2A_MSIL2A_20261014T110941_N0513_R137_T30TUK_20261014T173008` | 2 → 3 | 18.119.802 |
+| 31/10/2026 | `S2A_MSIL2A_20261031T110121_N0513_R094_T30TUK_20261031T173605` | 2 → 3 | 17.999.349 |
+| 06/11/2026 | `S2B_MSIL2A_20261106T111149_N0513_R137_T30TUK_20261106T132030` | 3 → 3 | 17.987.696 |
+
+La restauración y validación local quedó registrada el **16/11/2026 a las 20:34:58 UTC**. El colector
+de producción restauró los cuatro paquetes desde Pages en un directorio aparte,
+simulando una lista de artefactos vacía. No se usó caché ni se consultó CDSE;
+no se borraron artefactos para simular caducidad. Se conservaron las huellas
+originales de los cuatro productos y se verificaron las **24 bandas DN**,
+su identidad, rejilla y CRS EPSG:25830.
+
+Los **20 índices originales recuperados** coinciden por SHA-256 con los del
+catálogo publicado. Los tres productos v2 se migraron localmente a v3:
+sus **15 índices recalculados** conservan exactamente los píxeles, rejillas y
+nodata; los cinco índices del producto v3 se conservaron. Las huellas binarias
+de los GeoTIFF regenerados difieren entre los entornos GDAL local **3.10.2**
+y Pages **3.12.2**. No se acredita reproducción binaria entre entornos ni se
+comprobó igualdad píxel a píxel de `WATER` regenerado frente al publicado.
+
+También se verificaron por SHA-256 **15 recursos públicos**: tres comparaciones
+y, para cada fecha, índices parcelarios, tabla de agua y geometrías de agua.
+En el navegador cargaron las cuatro fechas y la comparación NDVI
+16/08/2023 → 14/10/2026, sin errores de consola. La captura de pantalla agotó
+el tiempo disponible; no se conserva evidencia gráfica de esa comprobación.
+
+Los inventarios de la comprobación conservaron los **30 artefactos previos**
+con las mismas caducidades; pasaron a 34 por los controles y el nuevo paquete
+Pages. La caché siguió siendo `10554333159`, de **18.021.251 bytes**.
+Estas cifras son evidencia fechada del cierre, no una promesa sobre inventarios
+futuros sujetos a su caducidad normal. No se solicitó una nueva escena Sentinel:
+se reconstruyó desde los DN ya conservados.
 
 ## Política operativa
 
-`data/sentinel-retention.json` fija un **máximo de 8, 6 o 4 días de observación**.
-El valor inicial es 8; tener menos adquisiciones válidas no impide publicar.
+[`data/sentinel-retention.json`](../data/sentinel-retention.json) fija un **máximo
+de 8, 6 o 4 días de observación**. El valor **activo y mantenido en este cierre
+es 8**; no implica que deban existir ocho productos. Tener menos adquisiciones
+válidas no impide publicar.
 No hay vencimiento por antigüedad del último conjunto útil. La fecha de ejecución
 de un backfill no convierte una observación antigua en reciente.
 
@@ -22,9 +82,36 @@ La selección es independiente del orden de respuesta de la API.
 | Reducido | 6 | 5 | Menor almacenamiento o transferencia |
 | Mínimo | 4 | 3 | Priorizar continuidad con el menor histórico solicitado |
 
-El cambio es explícito y versionado: editar únicamente `max_acquisitions`, pasar
-CI y revisar la PR. No se infiere el plan de GitHub ni se cambia de modo por una
-consulta fallida a métricas. El límite de tamaño del sitio completo es
+### Cómo bajar a 6 o 4 en una operación futura
+
+La configuración actual, que **esta PR no modifica**, es:
+
+```json
+{
+  "version": 1,
+  "max_acquisitions": 8,
+  "max_site_bytes": 400000000
+}
+```
+
+1. En una rama nueva desde `main` actualizado, cambiar **sólo**
+   `max_acquisitions` a **6** o **4**. Mantener `version: 1` y
+   `max_site_bytes: 400000000`.
+2. Abrir una PR de configuración y superar las pruebas de retención/recuperación
+   y los controles habituales de CI. La transición 8→6→4 ya tiene regresiones
+   sintéticas; no simularla borrando datos de producción ni saltarse CI.
+3. **Fusionar sólo cuando se autorice su publicación.** El workflow actual de
+   Pages se activa con un `push` a `main`: construye, valida y, si todo pasa,
+   despliega automáticamente. Una PR sin fusionar no cambia el sitio ni el límite
+   activo. No hace falta ejecutar Sentinel ni crear una adquisición para cambiar
+   la política.
+4. Tras ese despliegue autorizado, comprobar que `recovery.json.retention`
+   coincide con el valor elegido, que catálogo, registro y paquetes contienen
+   las mismas fechas y que hay como máximo N observaciones y N−1 comparaciones.
+   Si falla cualquier validación o el presupuesto, conservar el sitio anterior.
+
+No se infiere el plan de GitHub ni se cambia de modo por una consulta fallida a
+métricas. El límite de tamaño del sitio completo es
 **400.000.000 bytes**; sobrepasarlo detiene la preparación antes de subir Pages.
 No se publica una colección parcialmente validada para ajustarse a ese límite.
 
@@ -33,6 +120,10 @@ esas fechas, sus comparaciones y sus paquetes de recuperación. Los excedentes
 dejarán de estar disponibles en el sitio tras ese despliegue. No se llama a
 ninguna API de borrado. Volver a 8 no recupera por sí solo fechas ya ausentes
 tanto del sitio como de Actions; requerirán una copia externa o Sentinel manual.
+Con las **cuatro fechas actuales**, pasar a 6 o 4 no retiraría ninguna de ellas;
+sí limitaría el crecimiento posterior. La retención por número de adquisiciones
+es distinta de los 14 días de los nuevos artefactos intermedios: cambiar una no
+reescribe la caducidad de los artefactos existentes ni elimina cachés.
 
 ## Flujo y garantías
 
@@ -114,14 +205,33 @@ En la auditoría del 16/11/2026 había cuatro productos recuperables v2/v3:
 5,95–6,37 MB de DN. El contenido del sitio observado rondaba 71,18 MB.
 La descarga/cálculo real del 15/11 duró 174 s en sus logs. No se repite aquí.
 
+Mediciones de la aceptación posterior, con **retención 8 y cuatro productos**:
+
+| Recurso | Medición y alcance |
+| --- | ---: |
+| Sitio completo en el runner | 142.802.154 bytes, frente al guard de 400.000.000 |
+| Cuatro ZIP descargados desde Pages | 71.614.226 bytes |
+| Descarga de restauración total, incluidos tres JSON | 71.644.668 bytes |
+| Restauración local | 9,186 s |
+| Restauración más validación/migración local | 13,694 s |
+| Pico de memoria del proceso local | 198.254.592 bytes |
+| Originales restaurados más productos v3 locales | 143.697.484 bytes de disco |
+
+Los tiempos, memoria y disco locales no son máximos del runner de Actions ni
+mediciones de todo el despliegue. No incluyen el navegador, sistema, checkout,
+dependencias ni empaquetado de Pages. La descarga total no incluye el tráfico
+de la comprobación independiente de tablas ni el de usuarios.
+
 | Modo | Sitio con paquetes, estimación | Recuperación desde Pages por construcción, estimación |
 | --- | ---: | ---: |
 | 8 | ≈286 MB | ≤144 MB |
 | 6 | ≈214 MB | ≤108 MB |
 | 4 | ≈143 MB | ≤72 MB |
 
-Son extrapolaciones de aquellos cuatro AOI, no mediciones de un despliegue de
-esta PR ni límites garantizados. El empaquetado depurado puede variar. Los ZIP
+Son extrapolaciones para **llenar cada ventana**, no mediciones de colecciones
+reales de seis u ocho productos ni límites garantizados. El valor medido de
+142,8 MB corresponde a cuatro productos con la configuración aún en 8; no se
+probó el modo 4 en producción. El empaquetado depurado puede variar. Los ZIP
 de recuperación no se cargan al abrir el visor; sólo se transfieren al solicitarlos
 o al reconstruir el sitio. Hay que sumar artefactos nuevos/no reconocidos,
 upload del sitio y tráfico de usuarios. Veinte reconstrucciones con ocho
@@ -130,8 +240,9 @@ paquetes supondrían alrededor de 2,9 GB de descarga de recuperación.
 El disco temporal contiene candidatos seleccionados, originales, copias migradas,
 sitio y empaquetado de Pages: orden de 1–2 GB para ocho AOI como los observados,
 sin contar sistema, dependencias y checkout. La memoria máxima y duración del
-nuevo empaquetado no se han perfilado con adquisiciones reales; las pruebas usan
-rásteres pequeños. No se presentan los tamaños de JP2 completos como transferencia
+empaquetado en Actions no se han perfilado; las cifras locales anteriores sólo
+cubren la restauración y validación de cuatro productos. No se presentan los
+tamaños de JP2 completos como transferencia
 S3 medida: las lecturas de recortes usan rangos y no se midió su tráfico real.
 
 GitHub documenta [1 GB por sitio, timeout de despliegue de 10 minutos y límite
@@ -155,13 +266,14 @@ sintética; sustituye sólo la tabla parcelaria completa, validada por otras pru
 También comprueba igualdad de catálogo/registro/paquetes, hashes de comparaciones
 y que el sitio anterior conserva sus bytes cuando falla la preparación.
 
-Se mantienen las pruebas de calendario y publicación de PR #10, las nueve suites
-Node, gate WebGIS, política de ubicación, integración WordPress y actionlint.
-CI de la PR valida código y fixtures; omite el despliegue. No acredita todavía
-un upload o recuperación real del nuevo formato en producción.
+Se mantuvieron las pruebas de calendario y publicación de PR #10, las nueve
+suites Node, gate WebGIS, política de ubicación, integración WordPress y
+actionlint. PR #12 aprobó 116 pruebas Python; la regresión del prefijo histórico
+en PR #13 elevó el total a 117. La CI de ambas PR omitió `deploy`; el despliegue
+autorizado y la recuperación real se verificaron después, según las evidencias
+de este cierre. No se confunden los fixtures sintéticos con esa aceptación real.
 
-Después de una eventual autorización para integrar/desplegar: verificar las
-cuatro fechas actuales, hashes del índice, tamaños, comparación entre fechas y
-descarga de un paquete. Probar restauración en un directorio aparte sin caché,
-registrando duración y pico de memoria/disco. No borrar los artefactos existentes
-para simular caducidad. Mantenerlos hasta comprobar el primer sitio con recuperación.
+Esta PR documental conserva los resultados de aquella comprobación; no repite
+el procesamiento, las descargas ni el despliegue. Para una aceptación futura,
+restaurar en un directorio aparte y verificar el índice antes de sustituir el
+sitio. No borrar artefactos ni cachés para simular su ausencia.

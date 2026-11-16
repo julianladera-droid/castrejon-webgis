@@ -601,5 +601,5 @@ Inventario, auditoría, comparación A–E y prueba reducida 40→20 m en [docs/
 La capa operativa conserva el agua estimada anterior y añade candidatos de mezcla en morado y señales dudosas en ámbar. Interpretación, límites y reproducción en [docs/water-field-guide.md](docs/water-field-guide.md). La comprobación en campo sigue siendo necesaria.
 
 Retención de 8, 6 o 4 adquisiciones, recuperación del AOI y presupuesto de Pages:
-[política operativa y pruebas](docs/sentinel-retention.md). La configuración limita
+[política operativa, cierre de PR #12/#13 y evidencias](docs/sentinel-retention.md). La configuración limita
 el próximo sitio validado; no ejecuta una limpieza de artefactos ni de cachés.

@@ -447,6 +447,9 @@ No borrar una regla por comodidad. Si una regla cambia, conservar el motivo en e
 - La verificación con metadatos reales detecta que agosto de 2023 usa `s3://eodata/Sentinel-2/MSI/L2A_N0500/`, mientras el filtro del paquete sólo admitía `L2A/`; el empaquetado se detiene antes de publicar.
 - Corrección mínima: admitir también ese prefijo histórico concreto, conservando host, protocolo, ausencia de credenciales y exclusión de URLs firmadas. No ampliar a rutas arbitrarias.
 - Regresión: manifiesto histórico con `L2A_N0500`, rechazo de query/usuario/host/ruta ajenos y restauración real desde Pages sin usar ni eliminar artefactos o cachés. Sin cambios de detector ni política de retención.
+- Cierre verificado: PR #12 fusionada en `ee2700943fc83e584ef97555fe3c219eb7c6a659`; PR #13 en `009105ddf226c38dddabb79c9109a7820c36f075`, SHA publicado por la ejecución Pages `43950559764`. El primer intento falló antes del upload y conservó el sitio anterior.
+- Aceptación: cuatro paquetes restaurados desde Pages, 24 bandas DN y huellas originales verificadas; 20 índices coinciden con los publicados. Retención activa 8, cuatro observaciones y tres comparaciones. Los 30 artefactos anteriores conservaron presencia y caducidades; la caché original siguió intacta. Evidencias y límites de reproducción en `docs/sentinel-retention.md` y `docs/sentinel-evidence/closure-20261116.json`.
+- El cierre documental no modifica código, workflows ni configuración, no autoriza otra publicación ni una limpieza. Una reducción a 6 o 4 requiere una PR de configuración y autorización de su posterior despliegue; se mantiene la versión operativa 0.1.40.
 
 ### 0.1.39 — 2026-11-16 · Retención acotada y recuperación del visor
 - Prioridad del propietario: continuidad del visor y consumo contenido; preparar PR sin fusionar, desplegar ni borrar datos existentes.
