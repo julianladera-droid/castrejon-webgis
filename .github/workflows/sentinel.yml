@@ -78,10 +78,17 @@ jobs:
       - name: Verify cached or calculated product
         run: /usr/bin/python3 -c "import sys; from pathlib import Path; sys.path.insert(0, 'scripts'); from build_sentinel_web import validate_product; validate_product(Path('sentinel-output'))"
       - name: Save products and provenance
-        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: sentinel-${{ github.run_id }}
           path: sentinel-output/
-          if-no-files-found: warn
+          if-no-files-found: error
           retention-days: 90
+      - name: Save failed processing diagnostics separately
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: sentinel-diagnostics-${{ github.run_id }}
+          path: sentinel-output/
+          if-no-files-found: warn
+          retention-days: 14

@@ -14,12 +14,29 @@ on:
 permissions:
   contents: read
 
-concurrency:
-  group: pages-${{ github.event_name == 'pull_request' && github.ref || 'production' }}
-  cancel-in-progress: false
-
 jobs:
+  publication:
+    name: Decide whether Sentinel changed published products
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+      actions: read
+    outputs:
+      proceed: ${{ steps.decision.outputs.proceed }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Check exact triggering run and published product fingerprints
+        id: decision
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: python3 scripts/sentinel_publication.py
+
   geospatial:
+    needs: publication
+    if: needs.publication.outputs.proceed == 'true'
     name: Geospatial regressions including PRs
     runs-on: ubuntu-24.04
     timeout-minutes: 10
@@ -32,7 +49,8 @@ jobs:
           sudo apt-get install -y python3-gdal python3-numpy
           /usr/bin/python3 -m unittest discover -s scripts -p 'test_*.py'
   gate:
-    if: github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success'
+    needs: publication
+    if: needs.publication.outputs.proceed == 'true'
     name: WebGIS offline gate
     runs-on: ubuntu-latest
     timeout-minutes: 5
@@ -65,6 +83,8 @@ jobs:
           node scripts/test-incidents-map.cjs
 
   wordpress:
+    needs: publication
+    if: needs.publication.outputs.proceed == 'true'
     name: WordPress incidents integration
     runs-on: ubuntu-latest
     timeout-minutes: 10
@@ -90,8 +110,12 @@ jobs:
           retention-days: 14
 
   deploy:
-    needs: [gate, wordpress, geospatial]
-    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+    needs: [publication, gate, wordpress, geospatial]
+    if: needs.publication.outputs.proceed == 'true' && github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+    # Empty calendar runs never enter (or replace a pending run in) this queue.
+    concurrency:
+      group: pages-production
+      cancel-in-progress: false
     permissions:
       contents: read
       actions: read
@@ -107,17 +131,26 @@ jobs:
         uses: actions/checkout@v4
         with:
           persist-credentials: false
+      - name: Recheck published products after waiting for deployment
+        id: current
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: python3 scripts/sentinel_publication.py
       - name: Setup Pages
+        if: steps.current.outputs.proceed == 'true'
         uses: actions/configure-pages@v5
       - name: Collect compatible Sentinel acquisitions by observation date
+        if: steps.current.outputs.proceed == 'true'
         env:
           GITHUB_TOKEN: ${{ github.token }}
         run: python3 scripts/collect_sentinel_products.py
       - name: Install geospatial runtime
+        if: steps.current.outputs.proceed == 'true'
         run: |
           sudo apt-get update -qq
           sudo apt-get install -y python3-gdal python3-numpy
       - name: Stage public files
+        if: steps.current.outputs.proceed == 'true'
         run: |
           mkdir _site
           cp index.html .nojekyll _site/
@@ -131,10 +164,13 @@ jobs:
           /usr/bin/python3 scripts/test_parcel_comparison.py
           /usr/bin/python3 scripts/upgrade_sentinel_products.py sentinel-products-v3 sentinel-products
           /usr/bin/python3 scripts/build_sentinel_web.py sentinel-products-v3 _site/sentinel --collection
+          python3 scripts/sentinel_publication.py --record sentinel-products _site/sentinel/catalog.json
       - name: Upload static site
+        if: steps.current.outputs.proceed == 'true'
         uses: actions/upload-pages-artifact@v3
         with:
           path: _site
       - name: Deploy to GitHub Pages
+        if: steps.current.outputs.proceed == 'true'
         id: deployment
         uses: actions/deploy-pages@v4

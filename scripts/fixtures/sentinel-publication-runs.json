@@ -1,0 +1,86 @@
+{
+  "description": "Reduced GitHub API responses observed 2026-11-16. Product ZIP bytes in tests are synthetic; run/job/artifact metadata and log excerpts below are real.",
+  "repository": "julianladera-droid/castrejon-webgis",
+  "cases": [
+    {
+      "run": {
+        "id": 43716160874,
+        "path": ".github/workflows/sentinel.yml",
+        "event": "schedule",
+        "conclusion": "success",
+        "head_branch": "main",
+        "head_sha": "b9c4d176fe1303377b4708e24a5da66b17b6c383",
+        "run_attempt": 1,
+        "created_at": "2026-11-15T12:53:47Z",
+        "head_repository": {
+          "full_name": "julianladera-droid/castrejon-webgis"
+        }
+      },
+      "jobs": [
+        {
+          "name": "calendar",
+          "conclusion": "success"
+        },
+        {
+          "name": "sentinel",
+          "conclusion": "success"
+        }
+      ],
+      "artifacts": [
+        {
+          "id": 14161964706,
+          "name": "sentinel-43716160874",
+          "size_in_bytes": 18002158,
+          "url": "https://api.github.com/repos/julianladera-droid/castrejon-webgis/actions/artifacts/14161964706",
+          "archive_download_url": "https://api.github.com/repos/julianladera-droid/castrejon-webgis/actions/artifacts/14161964706/zip",
+          "expired": false,
+          "created_at": "2026-11-15T12:57:21Z",
+          "expires_at": "2027-02-13T12:53:47Z",
+          "updated_at": "2026-11-15T12:57:21Z",
+          "digest": "sha256:fb3a08d7a08bba2e8e262fac71e84475b4e719810b4e776ab83b1a1c3c5b8f95",
+          "workflow_run": {
+            "id": 43716160874,
+            "repository_id": 1395024923,
+            "head_repository_id": 1395024923,
+            "head_branch": "main",
+            "head_sha": "b9c4d176fe1303377b4708e24a5da66b17b6c383"
+          }
+        }
+      ],
+      "calendar_log": null,
+      "selected_item": "S2B_MSIL2A_20261106T111149_N0513_R137_T30TUK_20261106T132030",
+      "pages_run_id": 43716464181,
+      "source": "https://github.com/julianladera-droid/castrejon-webgis/actions/runs/43716160874"
+    },
+    {
+      "run": {
+        "id": 43880178969,
+        "path": ".github/workflows/sentinel.yml",
+        "event": "schedule",
+        "conclusion": "success",
+        "head_branch": "main",
+        "head_sha": "b9c4d176fe1303377b4708e24a5da66b17b6c383",
+        "run_attempt": 1,
+        "created_at": "2026-11-16T13:53:38Z",
+        "head_repository": {
+          "full_name": "julianladera-droid/castrejon-webgis"
+        }
+      },
+      "jobs": [
+        {
+          "name": "calendar",
+          "conclusion": "success"
+        },
+        {
+          "name": "sentinel",
+          "conclusion": "skipped"
+        }
+      ],
+      "artifacts": [],
+      "calendar_log": "2026-11-16: run=false",
+      "selected_item": null,
+      "pages_run_id": 43880230274,
+      "source": "https://github.com/julianladera-droid/castrejon-webgis/actions/runs/43880178969"
+    }
+  ]
+}
