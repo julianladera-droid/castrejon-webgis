@@ -1,18 +1,23 @@
-# Revisión de Sentinel → GitHub Pages · 16/11/2026
+# Cierre de Sentinel → GitHub Pages · 16/11/2026
 
-Preparado sobre `b9c4d176fe1303377b4708e24a5da66b17b6c383`, en la rama local
-`codex/pages-sentinel-update-gate`. No se ha modificado `main`, enviado la rama,
-iniciado Actions ni desplegado. La integración y el despliegue requieren la
-aprobación expresa solicitada por el usuario.
+**Incidencia cerrada y verificada en producción el 16/11/2026.** Tras la
+aprobación expresa del usuario y superar todos los controles de CI, la
+[PR #10](https://github.com/julianladera-droid/castrejon-webgis/pull/10) se integró
+en `main` y se desplegó como el commit
+[`c024bb8bc8ed736dde49f2bde932d34210ed62b0`](https://github.com/julianladera-droid/castrejon-webgis/commit/c024bb8bc8ed736dde49f2bde932d34210ed62b0).
+La propuesta se preparó sobre `b9c4d176fe1303377b4708e24a5da66b17b6c383`, en
+`codex/pages-sentinel-update-gate`. La repetición posterior del calendario
+confirmó que una ejecución sin novedades no reconstruye ni publica Pages.
 
 ## Evidencia contrastada
 
 | Caso | Sentinel | Pages | Resultado observado |
 | --- | --- | --- | --- |
 | 15/11 | [43716160874](https://github.com/julianladera-droid/castrejon-webgis/actions/runs/43716160874) | [43716464181](https://github.com/julianladera-droid/castrejon-webgis/actions/runs/43716464181) | Procesamiento correcto, caché ausente, artefacto `14161964706` de 18.002.158 bytes; producto observado el 06/11. Pages publicó cuatro observaciones y tres comparaciones. |
-| 16/11 | [43880178969](https://github.com/julianladera-droid/castrejon-webgis/actions/runs/43880178969) | [43880230274](https://github.com/julianladera-droid/castrejon-webgis/actions/runs/43880230274) | `2026-11-16: run=false`; `sentinel` omitido; cero artefactos. Pages volvió a ejecutar geoespacial, gate, WordPress y despliegue; paquete de 69.342.532 bytes. |
+| 16/11, antes del arreglo | [43880178969, intento 1](https://github.com/julianladera-droid/castrejon-webgis/actions/runs/43880178969/attempts/1) | [43880230274](https://github.com/julianladera-droid/castrejon-webgis/actions/runs/43880230274) | `2026-11-16: run=false`; `sentinel` omitido; cero artefactos. Pages volvió a ejecutar geoespacial, gate, WordPress y despliegue; paquete de 69.342.532 bytes. |
 
-Ambos Pages usaron el mismo SHA indicado arriba. Los logs del 15 identifican
+Ambos Pages anteriores al arreglo usaron `b9c4d176fe1303377b4708e24a5da66b17b6c383`.
+Los logs del 15 identifican
 `S2B_MSIL2A_20261106T111149_N0513_R137_T30TUK_20261106T132030` y muestran que
 se conservaron también 16/08/2023, 14/10/2026 y 31/10/2026.
 El paquete Pages del 15, ya ausente en la lista de artefactos, consta en su log:
@@ -20,9 +25,11 @@ El paquete Pages del 15, ya ausente en la lista de artefactos, consta en su log:
 
 Los metadatos reducidos de la API están en
 `scripts/fixtures/sentinel-publication-runs.json`. Las pruebas de decisiones
-usan esos IDs, estados y nombres reales, con bytes de producto sintéticos:
-no se ha descargado ni vuelto a procesar el ZIP real del 15. Otra prueba separada
+usan esos IDs, estados y nombres reales, con bytes de producto sintéticos;
+no descargan ni vuelven a procesar el ZIP real del 15. Otra prueba separada
 ejecuta el pipeline GDAL, migración y construcción con rásteres de prueba.
+El despliegue de cierre sí recuperó los artefactos reales, incluido el del 15,
+y publicó cuatro observaciones y tres comparaciones.
 
 ## Dependencias y criterio
 
@@ -141,26 +148,44 @@ git diff --check
 | Histórico detrás de cien ejecuciones | Seguir paginando |
 | Ejecución vacía y cola de despliegue | No entrar en la cola; volver a comprobar antes de construir |
 
-No se ha vuelto a ejecutar la integración completa PHP/WordPress, que no cambia;
-su trabajo sigue siendo dependencia obligatoria de despliegue. Tampoco se ha
-ejecutado el YAML en GitHub ni publicado el sitio. La aceptación en Actions y
-la inspección del registro público quedan para después de la aprobación.
+## Cierre y verificación en producción
 
-## Aplicación y reversión
+| Comprobación | Ejecución verificada | Resultado |
+| --- | --- | --- |
+| CI de la PR #10 | [43922385620](https://github.com/julianladera-droid/castrejon-webgis/actions/runs/43922385620) | Éxito de decisión previa, geoespacial (96 pruebas Python, sin omisiones), gate WebGIS e integración completa PHP/WordPress. Despliegue omitido por ser PR. |
+| Despliegue por `push` a `main` | [43922703181](https://github.com/julianladera-droid/castrejon-webgis/actions/runs/43922703181) | Todos los controles y despliegue correctos sobre `c024bb8bc8ed736dde49f2bde932d34210ed62b0`; cuatro observaciones y tres comparaciones publicadas. |
+| Repetición del calendario programado del 16/11 | [43880178969, intento 2](https://github.com/julianladera-droid/castrejon-webgis/actions/runs/43880178969/attempts/2) | `2026-11-16: run=false`; `calendar` correcto, `sentinel` omitido y cero artefactos. Se repitió el trabajo original conservando el evento `schedule`. |
+| Pages activado por esa repetición | [43923224577](https://github.com/julianladera-droid/castrejon-webgis/actions/runs/43923224577) | Sólo ejecutó la decisión previa: `proceed=false: calendar-only-or-no-successful-processing`. Geoespacial, WebGIS, WordPress y `deploy` omitidos; cero artefactos, sin reconstrucción ni publicación. |
 
-Tras aprobación: integrar como **un solo commit**, pasar los controles de la PR
-y permitir el despliegue por `push` a `main`. Ese primer despliegue inicializa
-`sentinel/publication.json` con todas las adquisiciones realmente incluidas.
-Comprobar el JSON público y un posterior calendario `run=false`: sólo debe
-ejecutarse `publication`, con los demás trabajos omitidos.
+Se comprobó por HTTPS que el
+[registro publicado](https://julianladera-droid.github.io/castrejon-webgis/sentinel/publication.json)
+responde correctamente, tiene versión 1 y coincide por identificador y fecha
+con las cuatro adquisiciones del
+[catálogo](https://julianladera-droid.github.io/castrejon-webgis/sentinel/catalog.json):
+06/11/2026, 31/10/2026, 14/10/2026 y 16/08/2023. Todas las huellas tienen formato
+SHA-256 válido; se conserva tanto la adquisición reciente como el histórico.
 
-Antes de integrar, descartar esta rama/cambio local revierte toda la propuesta;
-no hay estado remoto que limpiar.
+Las lecturas públicas anteriores y posteriores a la repetición del calendario
+devolvieron exactamente los mismos bytes en los tres archivos comprobados:
 
-Después de integrar, preparar una PR que revierta el único commit del arreglo:
+| Archivo | SHA-256 idéntico antes y después |
+| --- | --- |
+| `sentinel/publication.json` | `25ab1d86e24aac5519e69313127d21a88491191b2a0d235536977f1179fc4bd9` |
+| `sentinel/catalog.json` | `b5d8307806b7c2d78724b67efd2b1f3d631555357ba1df33287590fb64260bcd` |
+| `index.html` | `74a4cd90b5e34d831213744f08afbf3c7e393fb9f7714fd34c40cda7df7c90cf` |
+
+La integración PHP/WordPress y la aceptación en Actions, pendientes al preparar
+la propuesta, quedaron completadas. La prueba en producción cubre el caso
+real de calendario vacío; los casos de producto repetido, modificado e histórico
+ausente están cubiertos por las regresiones descritas arriba.
+
+## Reversión
+
+Desde una rama de reversión basada en `main` actualizado, preparar una PR con
+el siguiente comando exacto, que revierte el único commit del arreglo:
 
 ```sh
-git revert <sha-del-commit-del-arreglo>
+git revert c024bb8bc8ed736dde49f2bde932d34210ed62b0
 ```
 
 Revisar y aprobar esa PR antes de incorporarla a `main`. Su `push` ejecutará
