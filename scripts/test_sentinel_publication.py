@@ -64,7 +64,7 @@ class PublicationDecisionTests(unittest.TestCase):
                 self.assertIn(f'/runs/{run_id}/', path)
                 return json.dumps({'artifacts': artifacts}).encode()
             if path.endswith('/zip'):
-                self.assertEqual(path, f"/actions/artifacts/{artifacts[0]['id']}/zip")
+                self.assertIn(path, [f"/actions/artifacts/{a['id']}/zip" for a in artifacts])
                 return payload
             self.fail(path)
 
@@ -94,6 +94,25 @@ class PublicationDecisionTests(unittest.TestCase):
     def test_reuploaded_or_cached_product_is_not_new(self):
         self.state['products'] = [publication.product_record(self.files.__getitem__)]
         self.assertEqual(self.decide(), (False, 'product-already-published'))
+
+    def test_historical_product_outside_full_retention_window_skips_build(self):
+        self.state['products'] = [publication.product_record(product_files(f'NEWER_{day}', f'2026-11-{day:02d}T00:00:00Z').__getitem__)
+                                  for day in range(7, 15)]
+        self.assertEqual(self.decide(), (False, 'product-outside-retention-window'))
+
+    def test_attempt_specific_artifact_is_accepted(self):
+        self.case['artifacts'][0]['name'] += '-1'
+        self.assertTrue(self.decide()[0])
+
+    def test_exact_attempt_precedes_legacy_artifact_independent_of_api_order(self):
+        legacy = self.case['artifacts'][0]
+        exact = {**legacy, 'id': legacy['id'] + 1, 'name': legacy['name'] + '-1'}
+        self.case['artifacts'].append(exact)
+        self.assertTrue(self.decide()[0])
+        self.assertIn(f"/actions/artifacts/{exact['id']}/zip", self.calls)
+        self.calls.clear()
+        exact['expired'] = True
+        self.assertEqual(self.decide(), (False, 'no-retained-product-artifact'))
 
     def test_historical_cache_recovery_not_in_site_can_publish(self):
         self.state['products'] = [publication.product_record(self.files.__getitem__)]
@@ -271,6 +290,19 @@ class ReceiptTests(unittest.TestCase):
 
 
 class WorkflowContractTests(unittest.TestCase):
+    def test_recovery_and_cache_guards_run_before_publication(self):
+        yaml = (ROOT / '.github/workflows/pages.yml').read_text()
+        self.assertLess(yaml.index('scripts/sentinel_recovery.py'), yaml.index('uses: actions/upload-pages-artifact@'))
+        self.assertNotIn('contents: write', yaml)
+        sentinel = (ROOT / '.github/workflows/sentinel.yml').read_text()
+        self.assertIn('--catalogue-only --output sentinel-selection', sentinel)
+        self.assertIn('--catalogue-file sentinel-selection/selection.json', sentinel)
+        self.assertIn('uses: actions/cache/restore@v4', sentinel)
+        self.assertIn('uses: actions/cache/save@v4', sentinel)
+        self.assertIn("if: steps.cached.outputs.usable != 'true'", sentinel)
+        self.assertNotIn('retention-days: 90', sentinel)
+        self.assertIn('name: sentinel-${{ github.run_id }}-${{ github.run_attempt }}', sentinel)
+
     def test_noop_runs_cannot_displace_deployment_and_queued_runs_recheck(self):
         yaml = (ROOT / '.github/workflows/pages.yml').read_text()
         before, deploy = yaml.split('  deploy:')

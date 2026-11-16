@@ -1,0 +1,5 @@
+{
+  "version": 1,
+  "max_acquisitions": 8,
+  "max_site_bytes": 400000000
+}

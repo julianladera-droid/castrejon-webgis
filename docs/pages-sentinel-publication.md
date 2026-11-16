@@ -1,5 +1,10 @@
 # Cierre de Sentinel → GitHub Pages · 16/11/2026
 
+Este documento registra el cierre de PR #10 y sus resultados históricos.
+La [propuesta de retención acotada](sentinel-retention.md) posterior modifica
+la conservación, recuperación, caché y nombres por intento; los 90 días y la
+dependencia de artefactos descritos aquí corresponden al estado anterior.
+
 **Incidencia cerrada y verificada en producción el 16/11/2026.** Tras la
 aprobación expresa del usuario y superar todos los controles de CI, la
 [PR #10](https://github.com/julianladera-droid/castrejon-webgis/pull/10) se integró

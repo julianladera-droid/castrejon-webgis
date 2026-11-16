@@ -1,5 +1,5 @@
 # SKILL · Castrejón WebGIS — Contrato de arquitectura y evolución
-Version: 0.1.38
+Version: 0.1.39
 Fecha base: 2026-09-30
 Estado: ACTIVO · se actualiza tras cada ciclo de pruebas
 
@@ -442,6 +442,17 @@ Formato de cada cambio:
 No borrar una regla por comodidad. Si una regla cambia, conservar el motivo en el historial.
 
 ## 12. Registro de cambios
+### 0.1.39 — 2026-11-16 · Retención acotada y recuperación del visor
+- Prioridad del propietario: continuidad del visor y consumo contenido; preparar PR sin fusionar, desplegar ni borrar datos existentes.
+- Fallos: la reconstrucción depende de artefactos caducables; la caché omite dos dependencias del detector; el colector resuelve duplicados diarios por orden de ejecución.
+- Corrección: límite configurable de 8, 6 o 4 observaciones distintas, siempre por fecha de observación. Desempate explícito por baseline, versión y producto; fecha de procesamiento sólo para revisiones del mismo producto.
+- Recuperación: incluir exclusivamente los paquetes AOI seleccionados y un índice con hashes en el mismo despliegue atómico de Pages. Restaurar desde ese índice si faltan artefactos de Actions; no interpretar errores de red o integridad como una colección vacía. No conservar SAFE completos ni históricos ilimitados.
+- Excepción consciente a la procedencia pública mínima: los paquetes de recuperación contienen DN del AOI y metadatos técnicos depurados necesarios para recalcular; no contienen consulta, auditoría privada, catálogo completo del proveedor ni credenciales. Sus huellas conservan la identidad del producto original anterior a la migración.
+- Retención: configuración versionada; ninguna llamada de borrado a GitHub. Reducir el límite sólo excluye excedentes del próximo sitio validado. Un fallo de preparación no modifica el sitio actual. Mantener el último conjunto útil aunque sea antiguo. Nuevos artefactos intermedios: 14 días; los existentes mantienen su caducidad.
+- Caché: huella de dependencias de cálculo, AOI y entorno; validar identidad, parámetros e integridad antes de reutilizar. Una entrada inválida provoca recálculo, nunca borrado remoto ni publicación del contenido inválido.
+- Pruebas: caducidad total/parcial, recuperación sin caché, dependencia/parametrización modificada, duplicados y baselines, 8→6→4, corrupción, fallos antes de publicar y coherencia catálogo/registro/paquetes. Sólo datos sintéticos durante esta PR.
+- Archivos: workflows Sentinel/Pages, colector, publicación, paquetes/retención/caché, pruebas y documentación. Se conserva calendario, detector, interfaz, controles de calidad y publicación exclusiva desde main.
+
 ### 0.1.38 — 2026-11-16 · Pages sólo ante productos Sentinel no publicados
 - Fallo: Sentinel 43880178969 terminó con `run=false`, sin producto, y activó Pages 43880230274 sobre el mismo commit que el día 15.
 - Causa: `workflow_run` exitoso no acredita adquisición ni novedad. Un acierto de caché tampoco acredita publicación previa.
