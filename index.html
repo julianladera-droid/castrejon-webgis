@@ -755,6 +755,7 @@
   const satelliteStatus = document.getElementById('sentinelStatus');
   const satelliteDetails = document.getElementById('sentinelDetails');
   let acquisitions = [];
+  let experimentalSelection = false;
   let selectionVersion = 0;
   const formatDate = value => new Date(value).toLocaleDateString('es-ES', {timeZone:'UTC'});
   const productPath = (path, id, name, extension) => {
@@ -785,7 +786,7 @@
           !Array.isArray(spec.colors) || !spec.colors.every(c => /^#[0-9a-f]{6}$/i.test(c))) throw new Error('Producto inválido');
       const date = formatDate(acquisition.datetime);
       const age = Math.max(0, Math.floor((Date.now()-Date.parse(acquisition.datetime))/86400000));
-      const caption = `${name} · ${date} · ${age} días de antigüedad`;
+      const caption = `${experimentalSelection ? 'Selección experimental · ' : ''}${name} · ${date} · ${age} días de antigüedad`;
       document.getElementById('sentinelLegendTitle').textContent = `${name} · ${date}`;
       document.getElementById('sentinelMin').textContent = spec.range[0];
       document.getElementById('sentinelMax').textContent = spec.range[1];
@@ -836,10 +837,11 @@
         Number.isFinite(Date.parse(item.datetime)) && Date.parse(item.datetime) <= Date.now() && item.indices)
         .sort((a, b) => Date.parse(b.datetime)-Date.parse(a.datetime));
       if (!acquisitions.length) throw new Error('Catálogo vacío');
+      experimentalSelection = catalog.selection?.experimental === true;
       dateSelect.replaceChildren(...acquisitions.map(item => {
         const option = document.createElement('option');
         option.value = item.id;
-        option.textContent = formatDate(item.datetime);
+        option.textContent = `${experimentalSelection ? 'Experimento · ' : ''}${formatDate(item.datetime)}`;
         return option;
       }));
       dateSelect.value = acquisitions[0].id;

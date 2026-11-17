@@ -14,6 +14,7 @@ import zipfile
 from sentinel_contract import PRODUCT_FILES, RAW_BANDS
 from sentinel_products import MAX_ARCHIVE_BYTES, open_product, product_record
 from sentinel_retention import policy, select
+from sentinel_resources import disk_guard, tree_bytes
 
 BASE_URL = 'https://julianladera-droid.github.io/castrejon-webgis/sentinel/'
 SHA = r'[0-9a-f]{64}'
@@ -80,6 +81,7 @@ def read_snapshot():
 
 
 def restore(entry, destination):
+    disk_guard(destination, entry['size_bytes'] + 200_000_000)
     payload = public_get(entry['path'], entry['size_bytes'])
     if len(payload) != entry['size_bytes']:
         raise ValueError('Recovery package size mismatch')
@@ -136,6 +138,7 @@ def calculation_record(value):
 
 def write_recovery(source, catalog_path, site_root, config=None):
     config = config or policy()
+    disk_guard(site_root, config.get('max_site_bytes', 0), config)
     catalog = json.loads(catalog_path.read_text(encoding='utf-8'))
     state_path = catalog_path.with_name('publication.json')
     state = json.loads(state_path.read_text(encoding='utf-8'))
@@ -174,18 +177,39 @@ def write_recovery(source, catalog_path, site_root, config=None):
         # Origin is produced by the collector, and contains no provider responses.
         entry = {'product': record, 'product_version': manifest['version'], 'path': relative,
                  'sha256': digest, 'size_bytes': len(payload),
+                 'public_bytes': tree_bytes(output / record['id']) + len(payload) + 1_000_000,
                  'calculation': calculation_record((manifest.get('source_audit') or {}).get('calculation', origin.get('calculation'))),
                  **{k: origin[k] for k in ('processed_at', 'run_id', 'artifact_id', 'code_sha') if k in origin}}
         entries.append(entry)
     if select(entries, config['max_acquisitions']) != entries:
         raise ValueError('Recovery selection is not canonical')
-    index = {'version': 1, 'retention': config['max_acquisitions'], 'entries': entries,
+    previous = []
+    previous_path = source / 'previous.json'
+    if config.get('previous_generation') and previous_path.exists():
+        old = json.loads(previous_path.read_text(encoding='utf-8'))
+        retained = {e['product']['fingerprint'] for e in entries}
+        old = [e for e in old if e['product']['fingerprint'] not in retained and not e.get('unavailable')]
+        # One whole preceding generation, or none. Never sacrifice selected DN.
+        cost = sum(e['size_bytes'] for e in old)
+        limit = config['max_site_bytes'] * config.get('target_fraction', 1)
+        transfer = sum(e['size_bytes'] for e in entries) + cost
+        if tree_bytes(site_root) + cost + 100_000 <= limit and transfer <= config.get('max_transfer_bytes', float('inf')):
+            for entry in old:
+                disk_guard(site_root, entry['size_bytes'], config)
+                payload = public_get(entry['path'], entry['size_bytes'])
+                with open_product(payload, 'sha256:' + entry['sha256']) as archive:
+                    if product_record(archive.read) != entry['product']:
+                        raise ValueError('Previous generation identity mismatch')
+                (output / entry['path']).write_bytes(payload)
+                previous.append(entry)
+    index = {'version': 1, 'retention': config['max_acquisitions'], 'entries': entries, 'previous': previous,
              'catalog_sha256': hashlib.sha256(catalog_path.read_bytes()).hexdigest(),
              'publication_sha256': hashlib.sha256(state_path.read_bytes()).hexdigest()}
     (output / 'recovery.json').write_text(json.dumps(index, indent=2) + '\n', encoding='utf-8')
     total = sum(p.stat().st_size for p in site_root.rglob('*') if p.is_file())
     if total > config['max_site_bytes']:
         raise ValueError(f'Site size {total} exceeds budget; preserve current deployment')
+    disk_guard(site_root, total * 2, config)  # tar + upload staging, before upload-pages-artifact
     print(f'Retention: {len(entries)}/{config["max_acquisitions"]}; site bytes: {total}/{config["max_site_bytes"]}')
     return index
 

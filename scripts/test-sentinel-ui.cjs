@@ -52,5 +52,12 @@ function setup(response) {
   const invalid = setup({ok:true,json:async()=>bad}); await flush();
   invalid.elements.sentinelIndex.value='NDVI'; invalid.elements.sentinelIndex.events.change();
   assert.equal(invalid.sentinel.visible,false);
+  const historical = setup({ok:true,json:async()=>({...fixture,selection:{experimental:true}})});
+  await flush();
+  assert.match(historical.elements.sentinelDate.children[0].textContent,/Experimento/);
+  historical.elements.sentinelIndex.value='NDVI'; historical.elements.sentinelIndex.events.change();
+  historical.sentinel.source.events.imageloadend();
+  assert.match(historical.elements.sentinelStatus.textContent,/Selección experimental/);
+  assert.match(historical.elements.sentinelStatus.textContent,/días de antigüedad/);
   console.log('PASS: Sentinel UI selection, dates, opacity, stale responses, failures and same-origin paths');
 })().catch(e=>{console.error(e);process.exitCode=1;});

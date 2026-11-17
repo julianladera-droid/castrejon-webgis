@@ -114,7 +114,7 @@ jobs:
     if: needs.publication.outputs.proceed == 'true' && github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
     # Empty calendar runs never enter (or replace a pending run in) this queue.
     concurrency:
-      group: pages-production
+      group: sentinel-resources
       cancel-in-progress: false
     permissions:
       contents: read
@@ -143,7 +143,7 @@ jobs:
         if: steps.current.outputs.proceed == 'true'
         env:
           GITHUB_TOKEN: ${{ github.token }}
-        run: python3 scripts/collect_sentinel_products.py
+        run: python3 scripts/sentinel_resources.py collect python3 scripts/collect_sentinel_products.py
       - name: Install geospatial runtime
         if: steps.current.outputs.proceed == 'true'
         run: |
@@ -162,10 +162,16 @@ jobs:
           /usr/bin/python3 scripts/test_parcel_ndvi.py
           /usr/bin/python3 scripts/test_parcel_water.py
           /usr/bin/python3 scripts/test_parcel_comparison.py
-          /usr/bin/python3 scripts/upgrade_sentinel_products.py sentinel-products-v3 sentinel-products
-          /usr/bin/python3 scripts/build_sentinel_web.py sentinel-products-v3 _site/sentinel --collection
+          /usr/bin/python3 scripts/sentinel_resources.py upgrade /usr/bin/python3 scripts/upgrade_sentinel_products.py sentinel-products-v3 sentinel-products
+          /usr/bin/python3 scripts/sentinel_resources.py build /usr/bin/python3 scripts/build_sentinel_web.py sentinel-products-v3 _site/sentinel --collection
           python3 scripts/sentinel_publication.py --record sentinel-products _site/sentinel/catalog.json
-          python3 scripts/sentinel_recovery.py sentinel-products _site/sentinel/catalog.json _site
+          python3 scripts/sentinel_resources.py recovery python3 scripts/sentinel_recovery.py sentinel-products _site/sentinel/catalog.json _site
+          python3 scripts/sentinel_stage.py
+      - name: Admit independent Actions upload budget
+        if: steps.current.outputs.proceed == 'true'
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: python3 scripts/sentinel_remote_budget.py _site
       - name: Upload static site
         if: steps.current.outputs.proceed == 'true'
         uses: actions/upload-pages-artifact@v3
@@ -175,3 +181,11 @@ jobs:
         if: steps.current.outputs.proceed == 'true'
         id: deployment
         uses: actions/deploy-pages@v4
+      - name: Resource measurements
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: sentinel-pages-metrics-${{ github.run_id }}-${{ github.run_attempt }}
+          path: sentinel-metrics.jsonl
+          if-no-files-found: ignore
+          retention-days: 7

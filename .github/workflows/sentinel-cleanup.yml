@@ -1,0 +1,76 @@
+name: Sentinel explicit resource cleanup
+
+on:
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: 'Plan first; execution requires the reviewed plan SHA256'
+        type: choice
+        options: [plan, execute]
+        default: plan
+      plan_run:
+        description: 'Successful plan run ID (execution only)'
+        type: string
+      plan_sha256:
+        description: 'Exact approved plan SHA256 (execution only)'
+        type: string
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  plan:
+    if: inputs.mode == 'plan' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    concurrency:
+      group: sentinel-resources
+      cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - run: python3 scripts/sentinel_cleanup.py
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+      - uses: actions/upload-artifact@v4
+        with:
+          name: sentinel-cleanup-plan
+          path: sentinel-cleanup-plan.json
+          retention-days: 7
+          if-no-files-found: error
+
+  execute:
+    if: inputs.mode == 'execute' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    concurrency:
+      group: sentinel-resources
+      cancel-in-progress: false
+    permissions:
+      contents: write
+      actions: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Require plan from this exact workflow and current code
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          PLAN_RUN: ${{ inputs.plan_run }}
+          PLAN_SHA256: ${{ inputs.plan_sha256 }}
+        run: python3 scripts/sentinel_cleanup_input.py
+      - uses: actions/download-artifact@v4
+        with:
+          name: sentinel-cleanup-plan
+          run-id: ${{ inputs.plan_run }}
+          github-token: ${{ github.token }}
+      - run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y python3-gdal python3-numpy
+      - name: Revalidate and execute approved plan
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          PLAN_SHA256: ${{ inputs.plan_sha256 }}
+        run: /usr/bin/python3 scripts/sentinel_resources.py cleanup /usr/bin/python3 scripts/sentinel_cleanup.py --execute "$PLAN_SHA256"

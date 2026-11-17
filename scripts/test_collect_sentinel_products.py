@@ -27,6 +27,7 @@ class CollectionTests(unittest.TestCase):
         repo = 'example/visor'
         replies = {}
         artifacts = [{'id': 1000+i, 'name': 'diagnostic', 'expired': False} for i in range(decoys)]
+        metadata = []
         for number, date in enumerate(dates, 1):
             files = product_files('PRODUCT_' + date.replace('-', ''), date + 'T11:00:00Z')
             if legacy and number == 1:
@@ -42,17 +43,24 @@ class CollectionTests(unittest.TestCase):
                 'head_repository': {'full_name': repo}, 'head_branch': 'main', 'conclusion': 'success',
                 'path': '.github/workflows/sentinel.yml', 'head_sha': 'a'*40}).encode()
             replies[f'/actions/artifacts/{number}/zip'] = payload
+            if not (legacy and number == 1):
+                metadata.append({'artifact_id': number, 'product': product_record(files.__getitem__),
+                                 'product_version': 3, 'size_bytes': len(payload),
+                                 'digest': artifacts[-1]['digest']})
         for offset in range(0, len(artifacts) + 1, 100):
             page = offset // 100 + 1
             suffix = '' if page == 1 else f'&page={page}'
             replies['/actions/artifacts?per_page=100' + suffix] = json.dumps({'artifacts': artifacts[offset:offset+100]}).encode()
         with tempfile.TemporaryDirectory() as tmp, patch.dict('os.environ', {'GITHUB_REPOSITORY': repo}), \
-                patch('collect_sentinel_products.github_get', side_effect=replies.__getitem__) as get, \
+                patch('collect_sentinel_products.github_get', side_effect=lambda path, **kw: replies[path]) as get, \
+                patch('collect_sentinel_products.read_state', return_value=({'tombstones': []}, None)), \
+                patch('collect_sentinel_products.discover', return_value=metadata), \
                 patch('collect_sentinel_products.read_snapshot', return_value=snapshot or []):
             root = Path(tmp)
             collect(root / 'products', {'max_acquisitions': limit})
             self.assertFalse((root / 'unexpected.txt').exists())
             self.assertFalse(any('workflow_runs' in call.args[0] for call in get.call_args_list))
+            self.assertLessEqual(sum(c.args[0].endswith('/zip') for c in get.call_args_list), limit)
             return sorted(json.loads(p.read_text())['source_item']['properties']['datetime'][:10]
                           for p in (root / 'products').glob('*/manifest.json'))
 

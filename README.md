@@ -600,6 +600,8 @@ Inventario, auditoría, comparación A–E y prueba reducida 40→20 m en [docs/
 
 La capa operativa conserva el agua estimada anterior y añade candidatos de mezcla en morado y señales dudosas en ámbar. Interpretación, límites y reproducción en [docs/water-field-guide.md](docs/water-field-guide.md). La comprobación en campo sigue siendo necesaria.
 
-Retención de 8, 6 o 4 adquisiciones, recuperación del AOI y presupuesto de Pages:
-[política operativa y pruebas](docs/sentinel-retention.md). La configuración limita
-el próximo sitio validado; no ejecuta una limpieza de artefactos ni de cachés.
+Control de recursos Sentinel: cuatro observaciones por defecto, ampliables a seis
+u ocho, presupuestos independientes y limpieza explícita con simulación previa.
+[Política, inventario, activación y recuperación](docs/sentinel-resources.md).
+El sitio desplegado conserva todavía su configuración de retención en ocho;
+esta propuesta no modifica la producción. [Antecedente PR #12](docs/sentinel-retention.md).
