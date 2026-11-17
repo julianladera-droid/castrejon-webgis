@@ -1,7 +1,22 @@
 # SKILL · Castrejón WebGIS — Contrato de arquitectura y evolución
-Version: 0.1.40
+Version: 0.1.41
 Fecha base: 2026-09-30
 Estado: ACTIVO · se actualiza tras cada ciclo de pruebas
+
+## Cambio 0.1.41 · presupuestos y bajas Sentinel (2026-11-17)
+
+Causa: limitar sólo las fechas visibles no limita las descargas ni libera Actions.
+La propuesta usa cuatro observaciones por defecto (ampliables a seis u ocho),
+selección previa por metadatos, presupuestos separados y fallo antes de publicar
+si las copias recuperables no caben. Hasta cuatro productos pueden fijarse para
+un experimento; el visor identifica esa selección como histórica/experimental.
+Se mantienen DN, calibración, resolución, umbrales y comparaciones adyacentes.
+Las bajas requieren plan exacto, confirmación de su hash, publicación verificada,
+integridad de los retenidos y registro persistente en la rama `sentinel-state`.
+Procesamiento, publicación y limpieza comparten exclusión mutua. Una generación
+anterior de paquetes puede acompañar al sitio si cabe; no es archivo perpetuo.
+Las pruebas cubren presión, disco, selección, fallos y bajas con transporte falso.
+Esta PR no activa despliegues ni ejecuta bajas; véase `docs/sentinel-resources.md`.
 
 ## 0. Propósito
 Este archivo es el contrato operativo del WebGIS de la Comunidad de Regantes del Canal de Castrejón Margen Derecha.

@@ -1,5 +1,18 @@
 {
-  "version": 1,
-  "max_acquisitions": 8,
-  "max_site_bytes": 400000000
+  "version": 2,
+  "max_acquisitions": 4,
+  "pinned_products": [],
+  "max_site_bytes": 400000000,
+  "target_fraction": 0.8,
+  "site_fixed_bytes": 30000000,
+  "estimated_public_bytes": 40000000,
+  "max_artifact_bytes": 450000000,
+  "max_cache_bytes": 200000000,
+  "max_release_bytes": 200000000,
+  "max_transfer_bytes": 300000000,
+  "min_free_disk_bytes": 1000000000,
+  "max_work_bytes": 2000000000,
+  "max_rss_bytes": 1500000000,
+  "max_step_seconds": 420,
+  "previous_generation": true
 }

@@ -43,6 +43,14 @@ jobs:
     if: needs.calendar.outputs.run == 'true'
     runs-on: ubuntu-24.04
     timeout-minutes: 30
+    concurrency:
+      group: sentinel-resources
+      cancel-in-progress: false
+    permissions:
+      contents: read
+      actions: read
+    env:
+      GITHUB_TOKEN: ${{ github.token }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -66,7 +74,10 @@ jobs:
       - name: Fingerprint calculation and installed runtime
         id: calculation
         run: /usr/bin/python3 scripts/sentinel_cache.py
+      - name: Reserve work disk before cache download
+        run: python3 scripts/sentinel_resources.py preflight
       - name: Reuse already processed acquisition
+        # Preflight runs before actions/cache can download or expand a package.
         id: product-cache
         uses: actions/cache/restore@v4
         with:
@@ -82,11 +93,15 @@ jobs:
         env:
           CDSE_S3_ACCESS_KEY: ${{ secrets.CDSE_S3_ACCESS_KEY }}
           CDSE_S3_SECRET_KEY: ${{ secrets.CDSE_S3_SECRET_KEY }}
-        run: /usr/bin/python3 scripts/sentinel_pipeline.py --catalogue-file sentinel-selection/selection.json
+        run: /usr/bin/python3 scripts/sentinel_resources.py calculate /usr/bin/python3 scripts/sentinel_pipeline.py --catalogue-file sentinel-selection/selection.json
       - name: Verify cached or calculated product
         run: /usr/bin/python3 -c "import sys; from pathlib import Path; sys.path.insert(0, 'scripts'); from build_sentinel_web import validate_product; validate_product(Path('sentinel-output'))"
+      - name: Admit bounded artifact and cache storage
+        id: budget
+        run: python3 scripts/sentinel_remote_budget.py sentinel-output --cache
       - name: Save newly validated calculation
-        if: steps.cached.outputs.usable != 'true'
+        # A cache is only an accelerator; admission precedes both uploads.
+        if: steps.cached.outputs.usable != 'true' && steps.budget.outputs.cache_allowed == 'true'
         uses: actions/cache/save@v4
         with:
           path: sentinel-output/
@@ -98,11 +113,28 @@ jobs:
           path: sentinel-output/
           if-no-files-found: error
           retention-days: 14
+      - name: Write verified product metadata for selection before download
+        run: /usr/bin/python3 scripts/sentinel_metadata.py
+      - name: Save small selection metadata
+        uses: actions/upload-artifact@v4
+        with:
+          name: sentinel-index-${{ github.run_id }}-${{ github.run_attempt }}
+          path: sentinel-index/product.json
+          if-no-files-found: error
+          retention-days: 14
+      - name: Resource measurements
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: sentinel-metrics-${{ github.run_id }}-${{ github.run_attempt }}
+          path: sentinel-metrics.jsonl
+          if-no-files-found: ignore
+          retention-days: 7
       - name: Save failed processing diagnostics separately
         if: failure()
         uses: actions/upload-artifact@v4
         with:
           name: sentinel-diagnostics-${{ github.run_id }}
-          path: sentinel-output/
+          path: sentinel-output/manifest.json
           if-no-files-found: warn
           retention-days: 14

@@ -1,0 +1,77 @@
+[
+  {
+    "repository": "julianladera-droid/castrejon-webgis",
+    "artifact_id": 14161964706,
+    "digest": "sha256:fb3a08d7a08bba2e8e262fac71e84475b4e719810b4e776ab83b1a1c3c5b8f95",
+    "product": {
+      "id": "S2B_MSIL2A_20261106T111149_N0513_R137_T30TUK_20261106T132030",
+      "datetime": "2026-11-06T11:11:49.024000Z",
+      "fingerprint": "4bebd068ff2ccf32cdd9b3dbc90ec0987d93a50f5028a40ffd278c0e522468d8"
+    },
+    "product_version": 3,
+    "size_bytes": 18002158,
+    "raw_bytes": 6258202,
+    "expanded_bytes": 18227564,
+    "evidence": "Local previously downloaded ZIP SHA256 equals current API digest; no raster download in this audit"
+  },
+  {
+    "repository": "julianladera-droid/castrejon-webgis",
+    "artifact_id": 13091902423,
+    "digest": "sha256:2690099b906e276b364eea36c4677c9281b5438104f8bc8cbf415ccb61ec2b55",
+    "product": {
+      "id": "S2A_MSIL2A_20261031T110121_N0513_R094_T30TUK_20261031T173605",
+      "datetime": "2026-10-31T11:01:21.024000Z",
+      "fingerprint": "47c5e374a00104698b2e656fe173409f8bad0b3b6e3f583ed10e7d8232336e38"
+    },
+    "product_version": 2,
+    "size_bytes": 18013574,
+    "raw_bytes": 6257884,
+    "expanded_bytes": 18239197,
+    "evidence": "Local previously downloaded ZIP SHA256 equals current API digest; no raster download in this audit"
+  },
+  {
+    "repository": "julianladera-droid/castrejon-webgis",
+    "artifact_id": 13091783958,
+    "digest": "sha256:846c1dc70834cfc18a1c8e1266703aca89c9b89ce2513ba3d8b1d15b2a244055",
+    "product": {
+      "id": "S2A_MSIL2A_20230816T105631_N0510_R094_T30TUK_20241021T044404",
+      "datetime": "2023-08-16T10:56:31.024000Z",
+      "fingerprint": "a1bd29d9ef86333bee7728ca4e873778c9dce93da28a5efbb38101717ab21d58"
+    },
+    "product_version": 2,
+    "size_bytes": 17521763,
+    "raw_bytes": 5950633,
+    "expanded_bytes": 17750046,
+    "evidence": "Local previously downloaded ZIP SHA256 equals current API digest; no raster download in this audit"
+  },
+  {
+    "repository": "julianladera-droid/castrejon-webgis",
+    "artifact_id": 13091469469,
+    "digest": "sha256:e318823521382ceefa41fa6a069b5a48aa92870976cc58df7d500a410b744778",
+    "product": {
+      "id": "S2A_MSIL2A_20261014T110941_N0513_R137_T30TUK_20261014T173008",
+      "datetime": "2026-10-14T11:09:41.024000Z",
+      "fingerprint": "5b69bc01895796bdc73e8c8315202e120b1d0f072fa680f805db90bd7fa0f809"
+    },
+    "product_version": 2,
+    "size_bytes": 18134025,
+    "raw_bytes": 6371358,
+    "expanded_bytes": 18359384,
+    "evidence": "Local previously downloaded ZIP SHA256 equals current API digest; no raster download in this audit"
+  },
+  {
+    "repository": "julianladera-droid/castrejon-webgis",
+    "artifact_id": 13081044459,
+    "digest": "sha256:6035f0382ecb92e385f2a0a3b1907db64f23e0592dc16b6fff48316f988363f3",
+    "product": {
+      "id": "S2A_MSIL2A_20261031T110121_N0513_R094_T30TUK_20261031T173605",
+      "datetime": "2026-10-31T11:01:21.024000Z",
+      "fingerprint": "6035f0382ecb92e385f2a0a3b1907db64f23e0592dc16b6fff48316f988363f3"
+    },
+    "product_version": 1,
+    "size_bytes": 7620037,
+    "raw_bytes": 0,
+    "expanded_bytes": 7790144,
+    "evidence": "Local previously downloaded ZIP SHA256 equals current API digest; no raster download in this audit"
+  }
+]

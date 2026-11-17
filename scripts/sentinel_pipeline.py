@@ -228,6 +228,9 @@ def main():
     if args.item_id:
         features = [f for f in features if f['id'] == args.item_id]
     item = select_scene(features, aoi['catalog_bbox']['bounds'])
+    if os.environ.get('GITHUB_ACTIONS') == 'true':
+        from sentinel_state import prohibit_retired
+        prohibit_retired(item)
     if not re.fullmatch(r'[A-Za-z0-9_-]+', item['id']):
         raise ValueError('Invalid item identifier')
     args.output.mkdir(parents=True, exist_ok=True)
@@ -243,6 +246,8 @@ def main():
             with open(os.environ['GITHUB_OUTPUT'], 'a', encoding='utf-8') as stream:
                 stream.write(f"item={item['id']}\n")
         return
+    from sentinel_resources import disk_guard
+    disk_guard(args.output, 400_000_000)
     for source, target in ([] if args.raw_input else [('CDSE_S3_ACCESS_KEY', 'AWS_ACCESS_KEY_ID'), ('CDSE_S3_SECRET_KEY', 'AWS_SECRET_ACCESS_KEY')]):
         value = os.environ.get(source)
         if not value:
@@ -250,8 +255,8 @@ def main():
         gdal.SetConfigOption(target, value)
     for key, value in {'AWS_S3_ENDPOINT': 'eodata.dataspace.copernicus.eu', 'AWS_REGION': 'default',
                        'AWS_VIRTUAL_HOSTING': 'FALSE', 'GDAL_DISABLE_READDIR_ON_OPEN': 'EMPTY_DIR',
-                       'GDAL_HTTP_MAX_RETRY': '3', 'GDAL_HTTP_RETRY_DELAY': '30',
-                       'GDAL_HTTP_TIMEOUT': '120'}.items():
+                       'GDAL_HTTP_MAX_RETRY': '2', 'GDAL_HTTP_RETRY_DELAY': '5',
+                       'GDAL_HTTP_TIMEOUT': '60', 'GDAL_CACHEMAX': '128'}.items():
         gdal.SetConfigOption(key, value)
     # A common 20m-aligned extent gives exact 2x2 nesting even at AOI boundaries.
     bounds = aligned_bounds(aoi['processing_aoi']['bounds'], 20)

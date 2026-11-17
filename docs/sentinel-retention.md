@@ -1,5 +1,10 @@
 # Retención acotada de Sentinel y continuidad de Pages
 
+**Documento histórico de la PR #12.** La propuesta posterior de control de recursos,
+cuatro adquisiciones por defecto, presupuestos y limpieza explícita está en
+[sentinel-resources.md](sentinel-resources.md). Las referencias siguientes a ocho
+como valor inicial y a ausencia de APIs de borrado describen aquella implementación.
+
 Propuesta sobre `main` **07ad34999da36e1b2b849b6fd909e40f2d55528f**,
 revisado el 16/11/2026. Preparar esta PR no ejecuta Sentinel, no publica Pages
 ni elimina artefactos, cachés, Releases o adquisiciones existentes.

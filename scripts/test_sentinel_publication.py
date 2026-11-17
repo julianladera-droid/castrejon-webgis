@@ -55,7 +55,7 @@ class PublicationDecisionTests(unittest.TestCase):
             artifact['digest'] = 'sha256:' + hashlib.sha256(payload).hexdigest()
         run_id = self.case['run']['id']
 
-        def get(path):
+        def get(path, **kwargs):
             self.calls.append(path)
             if '/jobs?' in path:
                 self.assertIn(f'/runs/{run_id}/attempts/1/', path)
@@ -307,7 +307,7 @@ class WorkflowContractTests(unittest.TestCase):
         yaml = (ROOT / '.github/workflows/pages.yml').read_text()
         before, deploy = yaml.split('  deploy:')
         self.assertNotIn('concurrency:', before)
-        self.assertIn('group: pages-production', deploy)
+        self.assertIn('group: sentinel-resources', deploy)
         self.assertIn('id: current', deploy)
         self.assertIn('run: python3 scripts/sentinel_publication.py', deploy)
         for name in ('Setup Pages', 'Collect compatible Sentinel acquisitions by observation date',
@@ -335,7 +335,7 @@ class WorkflowContractTests(unittest.TestCase):
         for value in ('workflow_dispatch:', '      date:', '      item_id:'):
             self.assertIn(value, yaml)
         upload = yaml.split('- name: Save products and provenance')[1].split('- name: Save failed')[0]
-        self.assertNotIn('always()', upload)
+        self.assertNotIn('always()', upload.split('      - name:')[0])
         self.assertIn('if-no-files-found: error', upload)
         self.assertIn('name: sentinel-diagnostics-${{ github.run_id }}', yaml)
 

@@ -1,0 +1,350 @@
+{
+  "version": 1,
+  "repository": "julianladera-droid/castrejon-webgis",
+  "state_revision": null,
+  "published_generation": "dca12146ef5e846fdeb795d398ed9dfa1e90ee6af0be842a78d7328271ed69d1",
+  "selected": [
+    {
+      "id": "S2B_MSIL2A_20261106T111149_N0513_R137_T30TUK_20261106T132030",
+      "datetime": "2026-11-06T11:11:49.024000Z",
+      "fingerprint": "4bebd068ff2ccf32cdd9b3dbc90ec0987d93a50f5028a40ffd278c0e522468d8"
+    },
+    {
+      "id": "S2A_MSIL2A_20261031T110121_N0513_R094_T30TUK_20261031T173605",
+      "datetime": "2026-10-31T11:01:21.024000Z",
+      "fingerprint": "47c5e374a00104698b2e656fe173409f8bad0b3b6e3f583ed10e7d8232336e38"
+    },
+    {
+      "id": "S2A_MSIL2A_20261014T110941_N0513_R137_T30TUK_20261014T173008",
+      "datetime": "2026-10-14T11:09:41.024000Z",
+      "fingerprint": "5b69bc01895796bdc73e8c8315202e120b1d0f072fa680f805db90bd7fa0f809"
+    },
+    {
+      "id": "S2A_MSIL2A_20230816T105631_N0510_R094_T30TUK_20241021T044404",
+      "datetime": "2023-08-16T10:56:31.024000Z",
+      "fingerprint": "a1bd29d9ef86333bee7728ca4e873778c9dce93da28a5efbb38101717ab21d58"
+    }
+  ],
+  "objects": [
+    {
+      "service": "artifacts",
+      "id": 14267886847,
+      "name": "castrejon-averias-1.1.0",
+      "bytes": 270096,
+      "digest": "sha256:248437577f925bf070bf9034425589ffa881922b692d6892df454618ea56950b",
+      "action": "keep",
+      "reason": "foreign or unverified; protected"
+    },
+    {
+      "service": "artifacts",
+      "id": 14267602459,
+      "name": "github-pages",
+      "bytes": 140979842,
+      "digest": "sha256:c4a2988d2520736be9de72b4a50e939e2dbe3770782ed147f44940bec0c1f56e",
+      "action": "keep",
+      "reason": "foreign or unverified; protected"
+    },
+    {
+      "service": "artifacts",
+      "id": 14267081712,
+      "name": "castrejon-averias-1.1.0",
+      "bytes": 270108,
+      "digest": "sha256:90ab44ddd1208dac73fdd22703415f8073d90846216557608761ea3ecd9f3e66",
+      "action": "keep",
+      "reason": "foreign or unverified; protected"
+    },
+    {
+      "service": "artifacts",
+      "id": 14266172299,
+      "name": "castrejon-averias-1.1.0",
+      "bytes": 270096,
+      "digest": "sha256:c9fcb4a41d0586f8aa75660590fcc2ab51ef3529f9b4df1ecc38945fc419bd42",
+      "action": "keep",
+      "reason": "foreign or unverified; protected"
+    },
+    {
+      "service": "artifacts",
+      "id": 14264064160,
+      "name": "castrejon-averias-1.1.0",
+      "bytes": 270096,
+      "digest": "sha256:993ec303a34dc0f8534bc39ccd61570b190eff2a69579dcb0c6d50f2db1f168c",
+      "action": "keep",
+      "reason": "foreign or unverified; protected"
+    },
+    {
+      "service": "artifacts",
+      "id": 14255375715,
+      "name": "castrejon-averias-1.1.0",
+      "bytes": 270096,
+      "digest": "sha256:30d555b0a884a81f475e0156f201631fd1179970d0394c5b351bce81e3a43908",
+      "action": "keep",
+      "reason": "foreign or unverified; protected"
+    },
+    {
+      "service": "artifacts",
+      "id": 14255000961,
+      "name": "castrejon-averias-1.1.0",
+      "bytes": 270096,
+      "digest": "sha256:686f398a006be756879a49f040bcdd0f030197a3bad5fa3beab4035e72fdc996",
+      "action": "keep",
+      "reason": "foreign or unverified; protected"
+    },
+    {
+      "service": "artifacts",
+      "id": 14232590574,
+      "name": "castrejon-averias-1.1.0",
+      "bytes": 270096,
+      "digest": "sha256:d0cdf40919e6631156d83cbf12dd70ab176e0b2173357a6254cff6869497a364",
+      "action": "keep",
+      "reason": "foreign or unverified; protected"
+    },
+    {
+      "service": "artifacts",
+      "id": 14162671922,
+      "name": "castrejon-averias-1.1.0",
+      "bytes": 270098,
+      "digest": "sha256:47d48106f7500a92fc61114e907b6c0155d25825635bb2f3d837df9d84294211",
+      "action": "keep",
+      "reason": "foreign or unverified; protected"
+    },
+    {
+      "service": "artifacts",
+      "id": 14161964706,
+      "name": "sentinel-43716160874",
+      "bytes": 18002158,
+      "digest": "sha256:fb3a08d7a08bba2e8e262fac71e84475b4e719810b4e776ab83b1a1c3c5b8f95",
+      "action": "keep",
+      "reason": "selected acquisition: one independent artifact backup",
+      "product": {
+        "id": "S2B_MSIL2A_20261106T111149_N0513_R137_T30TUK_20261106T132030",
+        "datetime": "2026-11-06T11:11:49.024000Z",
+        "fingerprint": "4bebd068ff2ccf32cdd9b3dbc90ec0987d93a50f5028a40ffd278c0e522468d8"
+      },
+      "scope": "revision"
+    },
+    {
+      "service": "artifacts",
+      "id": 14114085262,
+      "name": "castrejon-averias-1.1.0",
+      "bytes": 270096,
+      "digest": "sha256:bbbdd3c86bcc022edd12b58852e85f52d880799a62085d9324b7e6d12e7c8893",
+      "action": "keep",
+      "reason": "foreign or unverified; protected"
+    },
+    {
+      "service": "artifacts",
+      "id": 14039829409,
+      "name": "castrejon-averias-1.1.0",
+      "bytes": 270109,
+      "digest": "sha256:0d3ac1d8030662ba3183403c2e94f8ca9ac560724e13360ec93918864ac91823",
+      "action": "keep",
+      "reason": "foreign or unverified; protected"
+    },
+    {
+      "service": "artifacts",
+      "id": 13949354855,
+      "name": "castrejon-averias-1.1.0",
+      "bytes": 270096,
+      "digest": "sha256:e0a5a1300fd93923f257ebe30472a7885f2f8a562d8ac5bacf23328ab05b8e25",
+      "action": "keep",
+      "reason": "foreign or unverified; protected"
+    },
+    {
+      "service": "artifacts",
+      "id": 13856980819,
+      "name": "castrejon-averias-1.1.0",
+      "bytes": 270096,
+      "digest": "sha256:c49754b27e689be22cfa283c3d552374f17ae6d52a4d528eb310d0c15a603530",
+      "action": "keep",
+      "reason": "foreign or unverified; protected"
+    },
+    {
+      "service": "artifacts",
+      "id": 13770087781,
+      "name": "castrejon-averias-1.1.0",
+      "bytes": 270096,
+      "digest": "sha256:5f9c957260c3a0f748d658b0cd83b808f81b56959c3d4d9a150c9b170dbddf0d",
+      "action": "keep",
+      "reason": "foreign or unverified; protected"
+    },
+    {
+      "service": "artifacts",
+      "id": 13682180889,
+      "name": "castrejon-averias-1.1.0",
+      "bytes": 270096,
+      "digest": "sha256:8d75d95b3c0f295668c9588890cd872e77243321ec87431f8ed2010cfaecf25a",
+      "action": "keep",
+      "reason": "foreign or unverified; protected"
+    },
+    {
+      "service": "artifacts",
+      "id": 13615979798,
+      "name": "castrejon-averias-1.1.0",
+      "bytes": 270096,
+      "digest": "sha256:86c6f386e91ffe413201537410b574426c7a4e77d15eda1a19c7ab62ca86c131",
+      "action": "keep",
+      "reason": "foreign or unverified; protected"
+    },
+    {
+      "service": "artifacts",
+      "id": 13572693590,
+      "name": "castrejon-averias-1.1.0",
+      "bytes": 270096,
+      "digest": "sha256:f818ddd7db316f16422524abd494c28421a431993ff2d7db51cab8fe09b95bf5",
+      "action": "keep",
+      "reason": "foreign or unverified; protected"
+    },
+    {
+      "service": "artifacts",
+      "id": 13503708348,
+      "name": "castrejon-averias-1.1.0",
+      "bytes": 270097,
+      "digest": "sha256:c43b8931297173ae533ee28d22031d8f88356512c33661161a4185819ed7a173",
+      "action": "keep",
+      "reason": "foreign or unverified; protected"
+    },
+    {
+      "service": "artifacts",
+      "id": 13417703711,
+      "name": "castrejon-averias-1.1.0",
+      "bytes": 270096,
+      "digest": "sha256:f352271b061eec7c7671e67e400ae0a61c1ac3d84dc96c2a1f167af0a7642dba",
+      "action": "keep",
+      "reason": "foreign or unverified; protected"
+    },
+    {
+      "service": "artifacts",
+      "id": 13345552002,
+      "name": "castrejon-averias-1.1.0",
+      "bytes": 270096,
+      "digest": "sha256:c053430e6558adfab3f2a44c4f116168ec430467c07efc99b4efe981da1b536a",
+      "action": "keep",
+      "reason": "foreign or unverified; protected"
+    },
+    {
+      "service": "artifacts",
+      "id": 13344539425,
+      "name": "castrejon-averias-1.1.0",
+      "bytes": 270096,
+      "digest": "sha256:b042fce35fc03b0c381ea1d76cf7285b18054404d3f8ec24f967b64480d8a37f",
+      "action": "keep",
+      "reason": "foreign or unverified; protected"
+    },
+    {
+      "service": "artifacts",
+      "id": 13344129242,
+      "name": "castrejon-averias-1.1.0",
+      "bytes": 270096,
+      "digest": "sha256:c25c1a2cb8d2a8aadfd516f7f0cbf7052aa73156586ffbc5505a220a6b2a2922",
+      "action": "keep",
+      "reason": "foreign or unverified; protected"
+    },
+    {
+      "service": "artifacts",
+      "id": 13342919383,
+      "name": "castrejon-averias-1.1.0",
+      "bytes": 270096,
+      "digest": "sha256:73de7f4b1a22e1662be8aedb5d19f2bbf7d05383f9ede4e6a33f99a58defc946",
+      "action": "keep",
+      "reason": "foreign or unverified; protected"
+    },
+    {
+      "service": "artifacts",
+      "id": 13324499230,
+      "name": "castrejon-averias-1.1.0",
+      "bytes": 270096,
+      "digest": "sha256:a87be1445e4af0cf6cfb124516f5fcbe421c0222816062c5d474cf38557abdb3",
+      "action": "keep",
+      "reason": "foreign or unverified; protected"
+    },
+    {
+      "service": "artifacts",
+      "id": 13091902423,
+      "name": "sentinel-41327319680",
+      "bytes": 18013574,
+      "digest": "sha256:2690099b906e276b364eea36c4677c9281b5438104f8bc8cbf415ccb61ec2b55",
+      "action": "keep",
+      "reason": "selected acquisition: one independent artifact backup",
+      "product": {
+        "id": "S2A_MSIL2A_20261031T110121_N0513_R094_T30TUK_20261031T173605",
+        "datetime": "2026-10-31T11:01:21.024000Z",
+        "fingerprint": "47c5e374a00104698b2e656fe173409f8bad0b3b6e3f583ed10e7d8232336e38"
+      },
+      "scope": "revision"
+    },
+    {
+      "service": "artifacts",
+      "id": 13091783958,
+      "name": "sentinel-41327640780",
+      "bytes": 17521763,
+      "digest": "sha256:846c1dc70834cfc18a1c8e1266703aca89c9b89ce2513ba3d8b1d15b2a244055",
+      "action": "keep",
+      "reason": "selected acquisition: one independent artifact backup",
+      "product": {
+        "id": "S2A_MSIL2A_20230816T105631_N0510_R094_T30TUK_20241021T044404",
+        "datetime": "2023-08-16T10:56:31.024000Z",
+        "fingerprint": "a1bd29d9ef86333bee7728ca4e873778c9dce93da28a5efbb38101717ab21d58"
+      },
+      "scope": "revision"
+    },
+    {
+      "service": "artifacts",
+      "id": 13091469469,
+      "name": "sentinel-41327418946",
+      "bytes": 18134025,
+      "digest": "sha256:e318823521382ceefa41fa6a069b5a48aa92870976cc58df7d500a410b744778",
+      "action": "keep",
+      "reason": "selected acquisition: one independent artifact backup",
+      "product": {
+        "id": "S2A_MSIL2A_20261014T110941_N0513_R137_T30TUK_20261014T173008",
+        "datetime": "2026-10-14T11:09:41.024000Z",
+        "fingerprint": "5b69bc01895796bdc73e8c8315202e120b1d0f072fa680f805db90bd7fa0f809"
+      },
+      "scope": "revision"
+    },
+    {
+      "service": "artifacts",
+      "id": 13081044459,
+      "name": "sentinel-41301408957",
+      "bytes": 7620037,
+      "digest": "sha256:6035f0382ecb92e385f2a0a3b1907db64f23e0592dc16b6fff48316f988363f3",
+      "action": "delete",
+      "reason": "duplicate revision",
+      "product": {
+        "id": "S2A_MSIL2A_20261031T110121_N0513_R094_T30TUK_20261031T173605",
+        "datetime": "2026-10-31T11:01:21.024000Z",
+        "fingerprint": "6035f0382ecb92e385f2a0a3b1907db64f23e0592dc16b6fff48316f988363f3"
+      },
+      "scope": "revision"
+    },
+    {
+      "service": "caches",
+      "id": 10554333159,
+      "name": "sentinel-v2-c593a8dee840031699f24f67f34186f98092d0289ed4fcdb8d72097187bd9022-S2B_MSIL2A_20261106T111149_N0513_R137_T30TUK_20261106T132030",
+      "ref": "refs/heads/main",
+      "bytes": 18021251,
+      "version": "3f4f16088fe1cdf342764749eacf79550b46bd3a38c19ebba779a4442836c27e",
+      "action": "delete",
+      "reason": "obsolete, duplicate or over-budget accelerator; DN protected on Pages"
+    }
+  ],
+  "totals": {
+    "artifacts": {
+      "before": 226483635,
+      "reclaimable": 7620037
+    },
+    "caches": {
+      "before": 18021251,
+      "reclaimable": 18021251
+    },
+    "releases": {
+      "before": 0,
+      "reclaimable": 0
+    },
+    "pages": {
+      "reclaimable": 0,
+      "reason": "published generation protected; only a future atomic deployment can replace Pages files"
+    }
+  },
+  "sha256": "ec37d0c001f7124b168f2f669ca35bdf4e6727789a3ae423f582a249c3d5da1e"
+}

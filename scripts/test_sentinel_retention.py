@@ -48,7 +48,7 @@ def stage_collection(root, count=8):
     catalog.parent.mkdir(parents=True)
     catalog.write_text(json.dumps({'acquisitions': records}))
     write_state(source, catalog)
-    index = recovery.write_recovery(source, catalog, site)
+    index = recovery.write_recovery(source, catalog, site, {'max_acquisitions': 8, 'max_site_bytes': 400_000_000})
     return source, site, index
 
 
@@ -78,6 +78,10 @@ class RetentionTests(unittest.TestCase):
 
 
 class RecoveryTests(unittest.TestCase):
+    def setUp(self):
+        mocked = patch('collect_sentinel_products.read_state', return_value=({'tombstones': []}, None))
+        mocked.start()
+        self.addCleanup(mocked.stop)
     def test_historical_cdse_prefix_preserves_band_identity_without_signed_urls(self):
         manifest = json.loads(fixture_files()['manifest.json'])
         for band in manifest['raw_bands'].values():
@@ -175,13 +179,17 @@ class RecoveryTests(unittest.TestCase):
             _, site, _ = stage_collection(root, 2)
             payload = zipped(fixture_files(3))
             artifact = {'id': 3, 'name': 'sentinel-3-2', 'expired': False, 'created_at': '2026-11-15T00:00:00Z',
+                        'size_in_bytes': len(payload),
                         'digest': 'sha256:' + hashlib.sha256(payload).hexdigest()}
             run = {'id': 3, 'head_repository': {'full_name': 'example/visor'}, 'head_branch': 'main',
                    'conclusion': 'success', 'path': '.github/workflows/sentinel.yml', 'event': 'schedule', 'head_sha': 'b'*40}
             replies = {'/actions/artifacts?per_page=100': json.dumps({'artifacts': [artifact, {**artifact, 'id': 1, 'expired': True}]}).encode(),
                        '/actions/runs/3': json.dumps(run).encode(), '/actions/artifacts/3/zip': payload}
             with patch.object(recovery, 'public_get', side_effect=lambda path, *args: (site / 'sentinel' / path).read_bytes()), \
-                    patch('collect_sentinel_products.github_get', side_effect=replies.__getitem__), \
+                    patch('collect_sentinel_products.github_get', side_effect=lambda path, **kw: replies[path]), \
+                    patch('collect_sentinel_products.discover', return_value=[{
+                        'artifact_id': 3, 'product': product_record(fixture_files(3).__getitem__),
+                        'product_version': 3, 'size_bytes': len(payload), 'digest': artifact['digest']}]), \
                     patch.dict('os.environ', {'GITHUB_REPOSITORY': 'example/visor'}):
                 collect(root / 'restored')
             self.assertEqual(len(list((root / 'restored').glob('*/manifest.json'))), 3)

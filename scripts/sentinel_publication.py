@@ -16,6 +16,7 @@ from urllib.request import Request, urlopen
 from collect_sentinel_products import github_get, github_items
 from sentinel_products import product_record, open_product, observed_at
 from sentinel_retention import policy
+from sentinel_metadata import sidecar
 
 STATE_URL = 'https://julianladera-droid.github.io/castrejon-webgis/sentinel/publication.json'
 
@@ -69,7 +70,8 @@ def decide(event_name, event, repository):
         artifact = next((a for a in artifacts if a['name'] == f'sentinel-{run_id}'), None)
     if artifact is None or artifact['expired']:
         return False, 'no-retained-product-artifact'
-    candidate = artifact_record(artifact)
+    metadata = next((a for a in artifacts if a['name'] == 'sentinel-index-' + artifact['name'][9:] and not a['expired']), None)
+    candidate = sidecar(metadata, github_get)['product'] if metadata else artifact_record(artifact)
     state = published_state()
     if state is None:
         return True, 'initialize-publication-receipt'
@@ -85,6 +87,10 @@ def decide(event_name, event, repository):
 def write_state(source, catalog_path):
     """Record original inputs of the built catalogue, including v2 -> v3 inputs."""
     catalog = json.loads(catalog_path.read_text(encoding='utf-8'))
+    selection_path = source / 'selection.json'
+    if selection_path.exists():
+        catalog['selection'] = json.loads(selection_path.read_text(encoding='utf-8'))
+        catalog_path.write_text(json.dumps(catalog, indent=2) + '\n', encoding='utf-8')
     records = {}
     for path in sorted(source.glob('*/manifest.json')):
         record = product_record(lambda name, folder=path.parent: (folder / name).read_bytes())
