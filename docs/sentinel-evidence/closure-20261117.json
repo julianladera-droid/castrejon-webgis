@@ -1,0 +1,735 @@
+{
+  "version": 1,
+  "scope": "Dated documentation evidence, not a pipeline input or cleanup authorization.",
+  "checked_at_utc": "2026-11-17T21:23:38.983929+00:00",
+  "deployed_sha": "196ff99757a37a17260d4c62c05317b6ab89a149",
+  "retention": 4,
+  "configuration_version": 2,
+  "pinned_products": [],
+  "comparisons": 3,
+  "pull_request": {
+    "number": 15,
+    "url": "https://github.com/julianladera-droid/castrejon-webgis/pull/15",
+    "merged_at_utc": "2026-11-17T21:17:07Z",
+    "merged_sha": "196ff99757a37a17260d4c62c05317b6ab89a149",
+    "ci_run_id": 44171789503,
+    "python_tests_passed": 136
+  },
+  "deployment": {
+    "run_id": 44178192078,
+    "url": "https://github.com/julianladera-droid/castrejon-webgis/actions/runs/44178192078",
+    "first_attempt": {
+      "conclusion": "failure",
+      "job_id": 134375528878,
+      "cause": "TimeoutError reading first Pages package after 60 seconds",
+      "failed_before_upload": true,
+      "prior_recovery_index_byte_identical": true
+    },
+    "final_attempt": 2,
+    "conclusion": "success",
+    "job_id": 134376865522,
+    "site_bytes": 142802734,
+    "site_budget_bytes": 400000000,
+    "step_metrics": [
+      {
+        "label": "collect",
+        "seconds": 6.576,
+        "sampled_peak_rss_bytes": 60092416,
+        "sampled_peak_work_bytes": 54291602,
+        "exit_code": 0,
+        "stopped": null
+      },
+      {
+        "label": "upgrade",
+        "seconds": 2.554,
+        "sampled_peak_rss_bytes": 198344704,
+        "sampled_peak_work_bytes": 144621119,
+        "exit_code": 0,
+        "stopped": null
+      },
+      {
+        "label": "build",
+        "seconds": 33.499,
+        "sampled_peak_rss_bytes": 260374528,
+        "sampled_peak_work_bytes": 214784951,
+        "exit_code": 0,
+        "stopped": null
+      },
+      {
+        "label": "recovery",
+        "seconds": 2.537,
+        "sampled_peak_rss_bytes": 74162176,
+        "sampled_peak_work_bytes": 269033902,
+        "exit_code": 0,
+        "stopped": null
+      }
+    ]
+  },
+  "recovery_index": {
+    "url": "https://julianladera-droid.github.io/castrejon-webgis/sentinel/recovery.json",
+    "size_bytes": 3158,
+    "sha256": "cefe208bd467c57d65f4e25a0c4d2fa1532cca2d3568f0eec972caa704c274e0",
+    "catalog_sha256": "8fc24eb38f2b8e782aa891ccee87dcb527c990c4f197534d4a3ae503cb06ca3d",
+    "publication_sha256": "25ab1d86e24aac5519e69313127d21a88491191b2a0d235536977f1179fc4bd9"
+  },
+  "products": [
+    {
+      "product": {
+        "id": "S2B_MSIL2A_20261106T111149_N0513_R137_T30TUK_20261106T132030",
+        "datetime": "2026-11-06T11:11:49.024000Z",
+        "fingerprint": "4bebd068ff2ccf32cdd9b3dbc90ec0987d93a50f5028a40ffd278c0e522468d8"
+      },
+      "product_version": 3,
+      "path": "recovery/a36386e659e27f925042556264e5fc0ec5a1f224aa2bba8e6910dd54669a2fa1.zip",
+      "sha256": "a36386e659e27f925042556264e5fc0ec5a1f224aa2bba8e6910dd54669a2fa1",
+      "size_bytes": 17987696,
+      "public_bytes": 36461880,
+      "calculation": null,
+      "processed_at": "2026-11-15T12:57:21Z",
+      "run_id": 43716160874,
+      "artifact_id": 14161964706,
+      "code_sha": "b9c4d176fe1303377b4708e24a5da66b17b6c383",
+      "validation": {
+        "original_index_hashes_equal_published": {
+          "NDVI": true,
+          "EVI2": true,
+          "NDMI": true,
+          "NDWI": true,
+          "MNDWI": true
+        },
+        "rebuilt_index_pixels_equal_original": {
+          "EVI2": true,
+          "MNDWI": true,
+          "NDMI": true,
+          "NDVI": true,
+          "NDWI": true
+        },
+        "id": "S2B_MSIL2A_20261106T111149_N0513_R137_T30TUK_20261106T132030",
+        "datetime": "2026-11-06T11:11:49.024000Z",
+        "original_version": 3,
+        "restored_fingerprint_matches": true,
+        "validated_version": 3,
+        "raw_bands": [
+          {
+            "name": "B03_10m",
+            "width": 1488,
+            "height": 642,
+            "sha256": "8954ca41ef9a90e59e40441412d7e9ea09624b540160391a7a9636f82f235785"
+          },
+          {
+            "name": "B04_10m",
+            "width": 1488,
+            "height": 642,
+            "sha256": "124c27312698e41fed8f2957d0068f645ec4f4784df5de02c8c78bdce63cc5f6"
+          },
+          {
+            "name": "B08_10m",
+            "width": 1488,
+            "height": 642,
+            "sha256": "6cbceba15d23ae04e0a18742ffb54c86ca9b309bcfb6f30ec9e952e4310420c0"
+          },
+          {
+            "name": "B8A_20m",
+            "width": 744,
+            "height": 321,
+            "sha256": "6d7d3e181fe99018f4401222dd863c5250ab821670f8376eb95fbaa44e4d324d"
+          },
+          {
+            "name": "B11_20m",
+            "width": 744,
+            "height": 321,
+            "sha256": "14ba51d045cbc64c2f6a46d1fc69e3f3b569e5ee42b6cf294831c5361082fca7"
+          },
+          {
+            "name": "SCL_20m",
+            "width": 744,
+            "height": 321,
+            "sha256": "6074bb3d6fde19bedabcfb586ab70de4501ef5debc78dbe4ac2491f2fb2194d0"
+          }
+        ],
+        "index_hashes_equal_published": {
+          "EVI2": true,
+          "MNDWI": true,
+          "NDMI": true,
+          "NDVI": true,
+          "NDWI": true
+        },
+        "water_hash_equal_published": true,
+        "validation_seconds": 0.49
+      },
+      "published_index_sha256": {
+        "NDVI": "1b4769dbca1b8b8735bf1b78d1c9d9c702cd4b2e0b1d07657bc6e87effebb63e",
+        "EVI2": "ec382539f948f01876c7c1d1ec2a6644be5db5b09ed3c4b59c15365c3079e4ce",
+        "NDMI": "c32824e1d821d057c5cfda9bd47e2e0c35cb733f1c646d7408eaa67ec777f383",
+        "NDWI": "41810406afdd3cb161501a08afa788461369320cd5748bc0ba910e82455dd9b8",
+        "MNDWI": "392ecea087462da275eacc672801dc3f84ef38a860a3cc1b641004b846a2956b"
+      },
+      "artifact_at_acceptance": {
+        "id": 14161964706,
+        "name": "sentinel-43716160874",
+        "size_in_bytes": 18002158,
+        "expires_at": "2027-02-13T12:53:47Z",
+        "digest": "sha256:fb3a08d7a08bba2e8e262fac71e84475b4e719810b4e776ab83b1a1c3c5b8f95"
+      }
+    },
+    {
+      "product": {
+        "id": "S2A_MSIL2A_20261031T110121_N0513_R094_T30TUK_20261031T173605",
+        "datetime": "2026-10-31T11:01:21.024000Z",
+        "fingerprint": "47c5e374a00104698b2e656fe173409f8bad0b3b6e3f583ed10e7d8232336e38"
+      },
+      "product_version": 2,
+      "path": "recovery/2c2a5bb1b6d8a1b391578acc860a835c259c9366734448ac6387f60aa551437a.zip",
+      "sha256": "2c2a5bb1b6d8a1b391578acc860a835c259c9366734448ac6387f60aa551437a",
+      "size_bytes": 17999349,
+      "public_bytes": 36491101,
+      "calculation": null,
+      "processed_at": "2026-11-01T16:40:32Z",
+      "run_id": 41327319680,
+      "artifact_id": 13091902423,
+      "code_sha": "bb863cc82990de6d85a07994609de16b2ef10ec5",
+      "validation": {
+        "original_index_hashes_equal_published": {
+          "NDVI": true,
+          "EVI2": true,
+          "NDMI": true,
+          "NDWI": true,
+          "MNDWI": true
+        },
+        "rebuilt_index_pixels_equal_original": {
+          "NDVI": true,
+          "EVI2": true,
+          "NDMI": true,
+          "NDWI": true,
+          "MNDWI": true
+        },
+        "id": "S2A_MSIL2A_20261031T110121_N0513_R094_T30TUK_20261031T173605",
+        "datetime": "2026-10-31T11:01:21.024000Z",
+        "original_version": 2,
+        "restored_fingerprint_matches": true,
+        "validated_version": 3,
+        "raw_bands": [
+          {
+            "name": "B03_10m",
+            "width": 1488,
+            "height": 642,
+            "sha256": "47e314d93257d5c587ff6bb5aa2474556b7e5b08db21494510453b3e257b215f"
+          },
+          {
+            "name": "B04_10m",
+            "width": 1488,
+            "height": 642,
+            "sha256": "24c8204c1415e10145463ef248715673fad3aaec56bbb1edeb8f56cc05b69311"
+          },
+          {
+            "name": "B08_10m",
+            "width": 1488,
+            "height": 642,
+            "sha256": "f6467a202fb7824a1f7a547daad4f85fd0c0121cfec2c074eedb0c24e8b5c2d5"
+          },
+          {
+            "name": "B8A_20m",
+            "width": 744,
+            "height": 321,
+            "sha256": "6b1d63eef4debe795cdf464bc97117c82fbdb994f38fa791d66666712d06cefe"
+          },
+          {
+            "name": "B11_20m",
+            "width": 744,
+            "height": 321,
+            "sha256": "99361346be658db24b9c09b20883f548dae6ffdd25d225ebd9057924708862a2"
+          },
+          {
+            "name": "SCL_20m",
+            "width": 744,
+            "height": 321,
+            "sha256": "29d3bd23129b88f5611011bbfb463ad735c09a5b599ffbb6fa3b1db62d84dd5f"
+          }
+        ],
+        "index_hashes_equal_published": {
+          "NDVI": false,
+          "EVI2": false,
+          "NDMI": false,
+          "NDWI": false,
+          "MNDWI": false
+        },
+        "water_hash_equal_published": false,
+        "validation_seconds": 1.561
+      },
+      "published_index_sha256": {
+        "NDVI": "6fba13c4b1ec2544abbe3cfa0b893208413fdcefb5ba97119b2e43bcda07a472",
+        "EVI2": "4d65e43a51f3a06838f524e296321e47f9efc52721d703059b40324c626aeed5",
+        "NDMI": "b1cc91d8506acd40a022000d1100eaa7220dc7c9b8600f6c0346d5d29936520a",
+        "NDWI": "8530fb43443febc6037a1c4be9c1ba42d9140e84c3b15e38d1532b14c6a1d434",
+        "MNDWI": "a8ac858d1e02f111dcb054a81c5a4e764bb1dd522bd9cac14e215c541000b5d6"
+      },
+      "artifact_at_acceptance": {
+        "id": 13091902423,
+        "name": "sentinel-41327319680",
+        "size_in_bytes": 18013574,
+        "expires_at": "2027-01-30T16:37:56Z",
+        "digest": "sha256:2690099b906e276b364eea36c4677c9281b5438104f8bc8cbf415ccb61ec2b55"
+      }
+    },
+    {
+      "product": {
+        "id": "S2A_MSIL2A_20261014T110941_N0513_R137_T30TUK_20261014T173008",
+        "datetime": "2026-10-14T11:09:41.024000Z",
+        "fingerprint": "5b69bc01895796bdc73e8c8315202e120b1d0f072fa680f805db90bd7fa0f809"
+      },
+      "product_version": 2,
+      "path": "recovery/ae3b679d111378c80b28cf1e0dcbd2ac40e4eb7d853504d98657e798825e202d.zip",
+      "sha256": "ae3b679d111378c80b28cf1e0dcbd2ac40e4eb7d853504d98657e798825e202d",
+      "size_bytes": 18119802,
+      "public_bytes": 36821799,
+      "calculation": null,
+      "processed_at": "2026-11-01T16:44:14Z",
+      "run_id": 41327418946,
+      "artifact_id": 13091469469,
+      "code_sha": "bb863cc82990de6d85a07994609de16b2ef10ec5",
+      "validation": {
+        "original_index_hashes_equal_published": {
+          "NDVI": true,
+          "EVI2": true,
+          "NDMI": true,
+          "NDWI": true,
+          "MNDWI": true
+        },
+        "rebuilt_index_pixels_equal_original": {
+          "NDVI": true,
+          "EVI2": true,
+          "NDMI": true,
+          "NDWI": true,
+          "MNDWI": true
+        },
+        "id": "S2A_MSIL2A_20261014T110941_N0513_R137_T30TUK_20261014T173008",
+        "datetime": "2026-10-14T11:09:41.024000Z",
+        "original_version": 2,
+        "restored_fingerprint_matches": true,
+        "validated_version": 3,
+        "raw_bands": [
+          {
+            "name": "B03_10m",
+            "width": 1488,
+            "height": 642,
+            "sha256": "edde02061d6cfae264cb36b6b40e26898ed4e5fe5b9d6f167c48ec029538975a"
+          },
+          {
+            "name": "B04_10m",
+            "width": 1488,
+            "height": 642,
+            "sha256": "6a73d421916b275028dd6bd59cf6ec14a4eb942833383a98119618d22467408f"
+          },
+          {
+            "name": "B08_10m",
+            "width": 1488,
+            "height": 642,
+            "sha256": "f35e7a2511eab7e9e98b7ce42f50d7fc89c3f149882df1cca6a012b6544acc6d"
+          },
+          {
+            "name": "B8A_20m",
+            "width": 744,
+            "height": 321,
+            "sha256": "a1636a407151c0151e30c64e6f78231a4bcbe12bcdc0840f6646edfae0dbe332"
+          },
+          {
+            "name": "B11_20m",
+            "width": 744,
+            "height": 321,
+            "sha256": "f61ed4c8b8c86e732904c83e9c4d32d5bbc257607209071365b0d48d648d6f62"
+          },
+          {
+            "name": "SCL_20m",
+            "width": 744,
+            "height": 321,
+            "sha256": "2bfa3d6360d7b4159bc1d92624a54b2407162fc49d11c9920ae5cff2023697c1"
+          }
+        ],
+        "index_hashes_equal_published": {
+          "NDVI": false,
+          "EVI2": false,
+          "NDMI": false,
+          "NDWI": false,
+          "MNDWI": false
+        },
+        "water_hash_equal_published": false,
+        "validation_seconds": 1.482
+      },
+      "published_index_sha256": {
+        "NDVI": "8723d7cbf2d62a62a74fcacaa18a247a1f8343844196a02a0ae016b7fe9456c4",
+        "EVI2": "64bb91f38715f1aa036e9a54d501c9c56f0616255e1946b961e8d966d58c72f7",
+        "NDMI": "61649fceb624af95e37f38de5cc351c23c1a87f6ca070bbe8cf3e5ac0d38cf4b",
+        "NDWI": "27f564895fdb66df8cd5d75aaf84044ec845a69bac465f7d269a6152fcfbd612",
+        "MNDWI": "91d62630e096cae1d3aac3a10d944ac3936854ed0a4c9e660d78609359c497ab"
+      },
+      "artifact_at_acceptance": {
+        "id": 13091469469,
+        "name": "sentinel-41327418946",
+        "size_in_bytes": 18134025,
+        "expires_at": "2027-01-30T16:39:09Z",
+        "digest": "sha256:e318823521382ceefa41fa6a069b5a48aa92870976cc58df7d500a410b744778"
+      }
+    },
+    {
+      "product": {
+        "id": "S2A_MSIL2A_20230816T105631_N0510_R094_T30TUK_20241021T044404",
+        "datetime": "2023-08-16T10:56:31.024000Z",
+        "fingerprint": "a1bd29d9ef86333bee7728ca4e873778c9dce93da28a5efbb38101717ab21d58"
+      },
+      "product_version": 2,
+      "path": "recovery/9a1e848bc63548e97ec4b593e7396a1b103d09071e4fc79f196fdb58fd559a12.zip",
+      "sha256": "9a1e848bc63548e97ec4b593e7396a1b103d09071e4fc79f196fdb58fd559a12",
+      "size_bytes": 17507379,
+      "public_bytes": 35711033,
+      "calculation": null,
+      "processed_at": "2026-11-01T16:46:22Z",
+      "run_id": 41327640780,
+      "artifact_id": 13091783958,
+      "code_sha": "bb863cc82990de6d85a07994609de16b2ef10ec5",
+      "validation": {
+        "original_index_hashes_equal_published": {
+          "NDVI": true,
+          "EVI2": true,
+          "NDMI": true,
+          "NDWI": true,
+          "MNDWI": true
+        },
+        "rebuilt_index_pixels_equal_original": {
+          "NDVI": true,
+          "EVI2": true,
+          "NDMI": true,
+          "NDWI": true,
+          "MNDWI": true
+        },
+        "id": "S2A_MSIL2A_20230816T105631_N0510_R094_T30TUK_20241021T044404",
+        "datetime": "2023-08-16T10:56:31.024000Z",
+        "original_version": 2,
+        "restored_fingerprint_matches": true,
+        "validated_version": 3,
+        "raw_bands": [
+          {
+            "name": "B03_10m",
+            "width": 1488,
+            "height": 642,
+            "sha256": "5a4167473a83c08b235d10f4e0d3afac627f3dc2792fcc04c962c18fb50d4046"
+          },
+          {
+            "name": "B04_10m",
+            "width": 1488,
+            "height": 642,
+            "sha256": "24f5bd30bde9abfbf743f41a507452f6aa48b24566af602342fa084fb29ad95b"
+          },
+          {
+            "name": "B08_10m",
+            "width": 1488,
+            "height": 642,
+            "sha256": "fb043854637232de0c44c451857ca199b22fe80d89169c6c4529f66d5bf97c1a"
+          },
+          {
+            "name": "B8A_20m",
+            "width": 744,
+            "height": 321,
+            "sha256": "f54ba97bd2ba272b01b1b448ccf97259a09b983daed8b9290d5be9a10db4cda0"
+          },
+          {
+            "name": "B11_20m",
+            "width": 744,
+            "height": 321,
+            "sha256": "0f5c1660d7466a4a20953b4bafc2de70435c4ec28f7118fa18bf85fe6bb8727e"
+          },
+          {
+            "name": "SCL_20m",
+            "width": 744,
+            "height": 321,
+            "sha256": "d31660e023eb8fb23243a1303ceef7dc912f2261db6c5afa10f8ece9ce8c252c"
+          }
+        ],
+        "index_hashes_equal_published": {
+          "NDVI": false,
+          "EVI2": false,
+          "NDMI": false,
+          "NDWI": false,
+          "MNDWI": false
+        },
+        "water_hash_equal_published": false,
+        "validation_seconds": 1.476
+      },
+      "published_index_sha256": {
+        "NDVI": "934812cfe9172ca4cc7c539811b876d1a69561302ff857a0c8175fdf077f2440",
+        "EVI2": "25b44cbda69d797ec50c9ec9568a1608c5073c8135a25969a658bd5b55b3011b",
+        "NDMI": "ada1308ab64aadc22eefb421b4f44cd8257ecf9e27e8c5c06bd85d14ea491035",
+        "NDWI": "9e6f92ee515b18eebf8631bed81c08a6c904cb862bd7a16e1b0cf45742eb5bf4",
+        "MNDWI": "14ccee62d068aaa4a8ac3049f356d5503361933385febf1668a980a5e71c9f82"
+      },
+      "artifact_at_acceptance": {
+        "id": 13091783958,
+        "name": "sentinel-41327640780",
+        "size_in_bytes": 17521763,
+        "expires_at": "2027-01-30T16:41:49Z",
+        "digest": "sha256:846c1dc70834cfc18a1c8e1266703aca89c9b89ce2513ba3d8b1d15b2a244055"
+      }
+    }
+  ],
+  "recovery_measurements": {
+    "checked_at_utc": "2026-11-17T21:23:01.685666+00:00",
+    "artifacts_api_simulated_empty": true,
+    "cache_used": false,
+    "cdse_used": false,
+    "cleanup_ledger_absent": true,
+    "restore_seconds": 10.38,
+    "total_seconds": 15.606,
+    "download_bytes": 71645026,
+    "peak_working_set_bytes": 196423680,
+    "scratch_bytes": 143700127
+  },
+  "public_resources": [
+    {
+      "path": "sentinel/comparison-5163c4ec034fc20833cb6aae/parcel-comparison.json",
+      "bytes": 120985,
+      "sha256_matches": true
+    },
+    {
+      "path": "sentinel/comparison-6a425e627f732f4202fa5502/parcel-comparison.json",
+      "bytes": 120063,
+      "sha256_matches": true
+    },
+    {
+      "path": "sentinel/comparison-766e329811e8d12a80102822/parcel-comparison.json",
+      "bytes": 120782,
+      "sha256_matches": true
+    },
+    {
+      "path": "sentinel/S2B_MSIL2A_20261106T111149_N0513_R137_T30TUK_20261106T132030/parcel-indices.json",
+      "bytes": 80453,
+      "sha256_matches": true
+    },
+    {
+      "path": "sentinel/S2B_MSIL2A_20261106T111149_N0513_R137_T30TUK_20261106T132030/parcel-water.json",
+      "bytes": 69913,
+      "sha256_matches": true
+    },
+    {
+      "path": "sentinel/S2B_MSIL2A_20261106T111149_N0513_R137_T30TUK_20261106T132030/water-zones.geojson",
+      "bytes": 130858,
+      "sha256_matches": true
+    },
+    {
+      "path": "sentinel/S2A_MSIL2A_20261031T110121_N0513_R094_T30TUK_20261031T173605/parcel-indices.json",
+      "bytes": 80397,
+      "sha256_matches": true
+    },
+    {
+      "path": "sentinel/S2A_MSIL2A_20261031T110121_N0513_R094_T30TUK_20261031T173605/parcel-water.json",
+      "bytes": 69900,
+      "sha256_matches": true
+    },
+    {
+      "path": "sentinel/S2A_MSIL2A_20261031T110121_N0513_R094_T30TUK_20261031T173605/water-zones.geojson",
+      "bytes": 119879,
+      "sha256_matches": true
+    },
+    {
+      "path": "sentinel/S2A_MSIL2A_20261014T110941_N0513_R137_T30TUK_20261014T173008/parcel-indices.json",
+      "bytes": 80455,
+      "sha256_matches": true
+    },
+    {
+      "path": "sentinel/S2A_MSIL2A_20261014T110941_N0513_R137_T30TUK_20261014T173008/parcel-water.json",
+      "bytes": 69944,
+      "sha256_matches": true
+    },
+    {
+      "path": "sentinel/S2A_MSIL2A_20261014T110941_N0513_R137_T30TUK_20261014T173008/water-zones.geojson",
+      "bytes": 129923,
+      "sha256_matches": true
+    },
+    {
+      "path": "sentinel/S2A_MSIL2A_20230816T105631_N0510_R094_T30TUK_20241021T044404/parcel-indices.json",
+      "bytes": 80295,
+      "sha256_matches": true
+    },
+    {
+      "path": "sentinel/S2A_MSIL2A_20230816T105631_N0510_R094_T30TUK_20241021T044404/parcel-water.json",
+      "bytes": 68530,
+      "sha256_matches": true
+    },
+    {
+      "path": "sentinel/S2A_MSIL2A_20230816T105631_N0510_R094_T30TUK_20241021T044404/water-zones.geojson",
+      "bytes": 115376,
+      "sha256_matches": true
+    }
+  ],
+  "browser": {
+    "four_dates_visible": true,
+    "current_ndvi_loaded": true,
+    "historical_comparison": {
+      "a": "2023-08-16",
+      "b": "2026-10-14",
+      "index": "NDVI",
+      "loaded": true
+    },
+    "console_errors": []
+  },
+  "preservation": {
+    "before_checked_at_utc": "2026-11-17T21:16:48.129587+00:00",
+    "after_checked_at_utc": "2026-11-17T21:22:16.853265+00:00",
+    "before_inventories": {
+      "artifacts": {
+        "count": 29,
+        "ids": [
+          14368212005,
+          14267886847,
+          14267081712,
+          14266172299,
+          14264064160,
+          14255375715,
+          14255000961,
+          14232590574,
+          14162671922,
+          14161964706,
+          14114085262,
+          14039829409,
+          13949354855,
+          13856980819,
+          13770087781,
+          13682180889,
+          13615979798,
+          13572693590,
+          13503708348,
+          13417703711,
+          13345552002,
+          13344539425,
+          13344129242,
+          13342919383,
+          13324499230,
+          13091902423,
+          13091783958,
+          13091469469,
+          13081044459
+        ],
+        "bytes": 85773889
+      },
+      "caches": {
+        "count": 1,
+        "ids": [
+          10554333159
+        ],
+        "bytes": 18021251
+      }
+    },
+    "after_inventories": {
+      "artifacts": {
+        "count": 33,
+        "ids": [
+          14371525335,
+          14371406193,
+          14371291037,
+          14370937729,
+          14368212005,
+          14267886847,
+          14267081712,
+          14266172299,
+          14264064160,
+          14255375715,
+          14255000961,
+          14232590574,
+          14162671922,
+          14161964706,
+          14114085262,
+          14039829409,
+          13949354855,
+          13856980819,
+          13770087781,
+          13682180889,
+          13615979798,
+          13572693590,
+          13503708348,
+          13417703711,
+          13345552002,
+          13344539425,
+          13344129242,
+          13342919383,
+          13324499230,
+          13091902423,
+          13091783958,
+          13091469469,
+          13081044459
+        ],
+        "bytes": 227024529
+      },
+      "caches": {
+        "count": 1,
+        "ids": [
+          10554333159
+        ],
+        "bytes": 18021251
+      }
+    },
+    "missing_prior_artifact_ids": [],
+    "prior_artifact_expiries_unchanged": true,
+    "cache_identity_version_size_unchanged": true,
+    "cache": {
+      "id": 10554333159,
+      "key": "sentinel-v2-c593a8dee840031699f24f67f34186f98092d0289ed4fcdb8d72097187bd9022-S2B_MSIL2A_20261106T111149_N0513_R137_T30TUK_20261106T132030",
+      "version": "3f4f16088fe1cdf342764749eacf79550b46bd3a38c19ebba779a4442836c27e",
+      "size_in_bytes": 18021251
+    },
+    "cleanup_workflow_run_count_at_acceptance": 0
+  },
+  "documentation_recheck": {
+    "checked_at_utc": "2026-11-18T20:11:59.603533+00:00",
+    "files": {
+      "sentinel/catalog.json": {
+        "sha256": "8fc24eb38f2b8e782aa891ccee87dcb527c990c4f197534d4a3ae503cb06ca3d",
+        "size_bytes": 26699,
+        "unchanged_since_acceptance": true
+      },
+      "sentinel/publication.json": {
+        "sha256": "25ab1d86e24aac5519e69313127d21a88491191b2a0d235536977f1179fc4bd9",
+        "size_bytes": 943,
+        "unchanged_since_acceptance": true
+      },
+      "sentinel/recovery.json": {
+        "sha256": "cefe208bd467c57d65f4e25a0c4d2fa1532cca2d3568f0eec972caa704c274e0",
+        "size_bytes": 3158,
+        "unchanged_since_acceptance": true
+      }
+    },
+    "retention": 4,
+    "cleanup_workflow_run_count": 0,
+    "scheduled_run": {
+      "id": 44324222136,
+      "url": "https://github.com/julianladera-droid/castrejon-webgis/actions/runs/44324222136",
+      "created_at_utc": "2026-11-18T14:26:12Z",
+      "conclusion": "success",
+      "calendar_job_id": 134871024636,
+      "calendar": "success",
+      "sentinel_job_id": 134871177271,
+      "sentinel": "skipped"
+    },
+    "derived_pages_run": {
+      "id": 44324279328,
+      "url": "https://github.com/julianladera-droid/castrejon-webgis/actions/runs/44324279328",
+      "created_at_utc": "2026-11-18T14:26:30Z",
+      "conclusion": "success",
+      "decision_job_id": 134871224219,
+      "decision": "success",
+      "deploy_job_id": 134871295108,
+      "deploy": "skipped"
+    }
+  },
+  "historical_evidence_from_pr14": {
+    "path": "closure-20261116.json",
+    "source_commit": "eb1c30c97d82bc7f5a1645bfedb91f8313bec336",
+    "sha256": "89ed7ee747d935035d18fde786ab913dd1f69b1ace37518bbd2e6689c35ca54d",
+    "retention_at_that_time": 8
+  },
+  "limits": [
+    "The real recovery was performed on 2026-11-17; documentation recheck downloads only three small JSON files.",
+    "Three v2 products were recalculated from DN; the v3 product was copied and validated. Twenty index arrays/grids/nodata matched originals; fifteen were recalculated.",
+    "Regenerated GeoTIFF hashes differ between local GDAL 3.10.2 and deployed GDAL 3.12.2; pixel equality of regenerated WATER was not checked.",
+    "Packages preserve AOI crops and calibration, not full SAFE archives.",
+    "Artifact inventories and measured usage are dated; no guarantee of future availability or account quotas.",
+    "No new acquisition has yet exercised the full automatic processing path in this acceptance. Cleanup execution is not authorized by this document."
+  ]
+}

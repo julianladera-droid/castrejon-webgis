@@ -1,0 +1,511 @@
+{
+  "version": 1,
+  "scope": "Dated acceptance evidence for documentation; this file is not an input to the pipeline.",
+  "checked_at_utc": "2026-11-16T20:34:58.311026+00:00",
+  "deployed_sha": "009105ddf226c38dddabb79c9109a7820c36f075",
+  "retention": 8,
+  "site_budget_bytes": 400000000,
+  "pull_requests": [
+    {
+      "number": 12,
+      "url": "https://github.com/julianladera-droid/castrejon-webgis/pull/12",
+      "merged_sha": "ee2700943fc83e584ef97555fe3c219eb7c6a659",
+      "merged_at_utc": "2026-11-16T20:23:43Z",
+      "ci_run_id": 43946762025,
+      "python_tests_passed": 116
+    },
+    {
+      "number": 13,
+      "url": "https://github.com/julianladera-droid/castrejon-webgis/pull/13",
+      "merged_sha": "009105ddf226c38dddabb79c9109a7820c36f075",
+      "merged_at_utc": "2026-11-16T20:30:53Z",
+      "ci_run_id": 43950164441,
+      "python_tests_passed": 117
+    }
+  ],
+  "initial_deployment": {
+    "run_id": 43949328931,
+    "url": "https://github.com/julianladera-droid/castrejon-webgis/actions/runs/43949328931",
+    "conclusion": "failure",
+    "error": "Unexpected public band source",
+    "cause": "Historical August 2023 CDSE prefix L2A_N0500 was not allowed.",
+    "failed_before_upload": true,
+    "previous_site_preserved": true
+  },
+  "final_deployment": {
+    "run_id": 43950559764,
+    "url": "https://github.com/julianladera-droid/castrejon-webgis/actions/runs/43950559764",
+    "conclusion": "success",
+    "site_bytes": 142802154,
+    "pages_artifact_id": 14267602459,
+    "pages_artifact_bytes": 140979842,
+    "gdal": "3.12.2"
+  },
+  "recovery_index": {
+    "url": "https://julianladera-droid.github.io/castrejon-webgis/sentinel/recovery.json",
+    "sha256": "7ca0a0dda3cb3ccc58faf14f90b1d6ff1b92967922afa12c6779e09cc7c8889b",
+    "catalog_sha256": "b5d8307806b7c2d78724b67efd2b1f3d631555357ba1df33287590fb64260bcd",
+    "publication_sha256": "25ab1d86e24aac5519e69313127d21a88491191b2a0d235536977f1179fc4bd9"
+  },
+  "products": [
+    {
+      "product": {
+        "id": "S2B_MSIL2A_20261106T111149_N0513_R137_T30TUK_20261106T132030",
+        "datetime": "2026-11-06T11:11:49.024000Z",
+        "fingerprint": "4bebd068ff2ccf32cdd9b3dbc90ec0987d93a50f5028a40ffd278c0e522468d8"
+      },
+      "product_version": 3,
+      "path": "recovery/a36386e659e27f925042556264e5fc0ec5a1f224aa2bba8e6910dd54669a2fa1.zip",
+      "sha256": "a36386e659e27f925042556264e5fc0ec5a1f224aa2bba8e6910dd54669a2fa1",
+      "size_bytes": 17987696,
+      "calculation": null,
+      "processed_at": "2026-11-15T12:57:21Z",
+      "run_id": 43716160874,
+      "artifact_id": 14161964706,
+      "code_sha": "b9c4d176fe1303377b4708e24a5da66b17b6c383",
+      "package_url": "https://julianladera-droid.github.io/castrejon-webgis/sentinel/recovery/a36386e659e27f925042556264e5fc0ec5a1f224aa2bba8e6910dd54669a2fa1.zip",
+      "validated_version": 3,
+      "original_fingerprint_verified": true,
+      "raw_bands": [
+        {
+          "name": "B03_10m",
+          "width": 1488,
+          "height": 642,
+          "sha256": "8954ca41ef9a90e59e40441412d7e9ea09624b540160391a7a9636f82f235785"
+        },
+        {
+          "name": "B04_10m",
+          "width": 1488,
+          "height": 642,
+          "sha256": "124c27312698e41fed8f2957d0068f645ec4f4784df5de02c8c78bdce63cc5f6"
+        },
+        {
+          "name": "B08_10m",
+          "width": 1488,
+          "height": 642,
+          "sha256": "6cbceba15d23ae04e0a18742ffb54c86ca9b309bcfb6f30ec9e952e4310420c0"
+        },
+        {
+          "name": "B8A_20m",
+          "width": 744,
+          "height": 321,
+          "sha256": "6d7d3e181fe99018f4401222dd863c5250ab821670f8376eb95fbaa44e4d324d"
+        },
+        {
+          "name": "B11_20m",
+          "width": 744,
+          "height": 321,
+          "sha256": "14ba51d045cbc64c2f6a46d1fc69e3f3b569e5ee42b6cf294831c5361082fca7"
+        },
+        {
+          "name": "SCL_20m",
+          "width": 744,
+          "height": 321,
+          "sha256": "6074bb3d6fde19bedabcfb586ab70de4501ef5debc78dbe4ac2491f2fb2194d0"
+        }
+      ],
+      "original_index_files_match_published": true,
+      "local_index_pixels_grids_nodata_equal": true,
+      "local_index_file_hashes_match_published": {
+        "EVI2": true,
+        "MNDWI": true,
+        "NDMI": true,
+        "NDVI": true,
+        "NDWI": true
+      },
+      "local_water_file_hash_matches_published": true
+    },
+    {
+      "product": {
+        "id": "S2A_MSIL2A_20261031T110121_N0513_R094_T30TUK_20261031T173605",
+        "datetime": "2026-10-31T11:01:21.024000Z",
+        "fingerprint": "47c5e374a00104698b2e656fe173409f8bad0b3b6e3f583ed10e7d8232336e38"
+      },
+      "product_version": 2,
+      "path": "recovery/2c2a5bb1b6d8a1b391578acc860a835c259c9366734448ac6387f60aa551437a.zip",
+      "sha256": "2c2a5bb1b6d8a1b391578acc860a835c259c9366734448ac6387f60aa551437a",
+      "size_bytes": 17999349,
+      "calculation": null,
+      "processed_at": "2026-11-01T16:40:32Z",
+      "run_id": 41327319680,
+      "artifact_id": 13091902423,
+      "code_sha": "bb863cc82990de6d85a07994609de16b2ef10ec5",
+      "package_url": "https://julianladera-droid.github.io/castrejon-webgis/sentinel/recovery/2c2a5bb1b6d8a1b391578acc860a835c259c9366734448ac6387f60aa551437a.zip",
+      "validated_version": 3,
+      "original_fingerprint_verified": true,
+      "raw_bands": [
+        {
+          "name": "B03_10m",
+          "width": 1488,
+          "height": 642,
+          "sha256": "47e314d93257d5c587ff6bb5aa2474556b7e5b08db21494510453b3e257b215f"
+        },
+        {
+          "name": "B04_10m",
+          "width": 1488,
+          "height": 642,
+          "sha256": "24c8204c1415e10145463ef248715673fad3aaec56bbb1edeb8f56cc05b69311"
+        },
+        {
+          "name": "B08_10m",
+          "width": 1488,
+          "height": 642,
+          "sha256": "f6467a202fb7824a1f7a547daad4f85fd0c0121cfec2c074eedb0c24e8b5c2d5"
+        },
+        {
+          "name": "B8A_20m",
+          "width": 744,
+          "height": 321,
+          "sha256": "6b1d63eef4debe795cdf464bc97117c82fbdb994f38fa791d66666712d06cefe"
+        },
+        {
+          "name": "B11_20m",
+          "width": 744,
+          "height": 321,
+          "sha256": "99361346be658db24b9c09b20883f548dae6ffdd25d225ebd9057924708862a2"
+        },
+        {
+          "name": "SCL_20m",
+          "width": 744,
+          "height": 321,
+          "sha256": "29d3bd23129b88f5611011bbfb463ad735c09a5b599ffbb6fa3b1db62d84dd5f"
+        }
+      ],
+      "original_index_files_match_published": true,
+      "local_index_pixels_grids_nodata_equal": true,
+      "local_index_file_hashes_match_published": {
+        "NDVI": false,
+        "EVI2": false,
+        "NDMI": false,
+        "NDWI": false,
+        "MNDWI": false
+      },
+      "local_water_file_hash_matches_published": false
+    },
+    {
+      "product": {
+        "id": "S2A_MSIL2A_20261014T110941_N0513_R137_T30TUK_20261014T173008",
+        "datetime": "2026-10-14T11:09:41.024000Z",
+        "fingerprint": "5b69bc01895796bdc73e8c8315202e120b1d0f072fa680f805db90bd7fa0f809"
+      },
+      "product_version": 2,
+      "path": "recovery/ae3b679d111378c80b28cf1e0dcbd2ac40e4eb7d853504d98657e798825e202d.zip",
+      "sha256": "ae3b679d111378c80b28cf1e0dcbd2ac40e4eb7d853504d98657e798825e202d",
+      "size_bytes": 18119802,
+      "calculation": null,
+      "processed_at": "2026-11-01T16:44:14Z",
+      "run_id": 41327418946,
+      "artifact_id": 13091469469,
+      "code_sha": "bb863cc82990de6d85a07994609de16b2ef10ec5",
+      "package_url": "https://julianladera-droid.github.io/castrejon-webgis/sentinel/recovery/ae3b679d111378c80b28cf1e0dcbd2ac40e4eb7d853504d98657e798825e202d.zip",
+      "validated_version": 3,
+      "original_fingerprint_verified": true,
+      "raw_bands": [
+        {
+          "name": "B03_10m",
+          "width": 1488,
+          "height": 642,
+          "sha256": "edde02061d6cfae264cb36b6b40e26898ed4e5fe5b9d6f167c48ec029538975a"
+        },
+        {
+          "name": "B04_10m",
+          "width": 1488,
+          "height": 642,
+          "sha256": "6a73d421916b275028dd6bd59cf6ec14a4eb942833383a98119618d22467408f"
+        },
+        {
+          "name": "B08_10m",
+          "width": 1488,
+          "height": 642,
+          "sha256": "f35e7a2511eab7e9e98b7ce42f50d7fc89c3f149882df1cca6a012b6544acc6d"
+        },
+        {
+          "name": "B8A_20m",
+          "width": 744,
+          "height": 321,
+          "sha256": "a1636a407151c0151e30c64e6f78231a4bcbe12bcdc0840f6646edfae0dbe332"
+        },
+        {
+          "name": "B11_20m",
+          "width": 744,
+          "height": 321,
+          "sha256": "f61ed4c8b8c86e732904c83e9c4d32d5bbc257607209071365b0d48d648d6f62"
+        },
+        {
+          "name": "SCL_20m",
+          "width": 744,
+          "height": 321,
+          "sha256": "2bfa3d6360d7b4159bc1d92624a54b2407162fc49d11c9920ae5cff2023697c1"
+        }
+      ],
+      "original_index_files_match_published": true,
+      "local_index_pixels_grids_nodata_equal": true,
+      "local_index_file_hashes_match_published": {
+        "NDVI": false,
+        "EVI2": false,
+        "NDMI": false,
+        "NDWI": false,
+        "MNDWI": false
+      },
+      "local_water_file_hash_matches_published": false
+    },
+    {
+      "product": {
+        "id": "S2A_MSIL2A_20230816T105631_N0510_R094_T30TUK_20241021T044404",
+        "datetime": "2023-08-16T10:56:31.024000Z",
+        "fingerprint": "a1bd29d9ef86333bee7728ca4e873778c9dce93da28a5efbb38101717ab21d58"
+      },
+      "product_version": 2,
+      "path": "recovery/9a1e848bc63548e97ec4b593e7396a1b103d09071e4fc79f196fdb58fd559a12.zip",
+      "sha256": "9a1e848bc63548e97ec4b593e7396a1b103d09071e4fc79f196fdb58fd559a12",
+      "size_bytes": 17507379,
+      "calculation": null,
+      "processed_at": "2026-11-01T16:46:22Z",
+      "run_id": 41327640780,
+      "artifact_id": 13091783958,
+      "code_sha": "bb863cc82990de6d85a07994609de16b2ef10ec5",
+      "package_url": "https://julianladera-droid.github.io/castrejon-webgis/sentinel/recovery/9a1e848bc63548e97ec4b593e7396a1b103d09071e4fc79f196fdb58fd559a12.zip",
+      "validated_version": 3,
+      "original_fingerprint_verified": true,
+      "raw_bands": [
+        {
+          "name": "B03_10m",
+          "width": 1488,
+          "height": 642,
+          "sha256": "5a4167473a83c08b235d10f4e0d3afac627f3dc2792fcc04c962c18fb50d4046"
+        },
+        {
+          "name": "B04_10m",
+          "width": 1488,
+          "height": 642,
+          "sha256": "24f5bd30bde9abfbf743f41a507452f6aa48b24566af602342fa084fb29ad95b"
+        },
+        {
+          "name": "B08_10m",
+          "width": 1488,
+          "height": 642,
+          "sha256": "fb043854637232de0c44c451857ca199b22fe80d89169c6c4529f66d5bf97c1a"
+        },
+        {
+          "name": "B8A_20m",
+          "width": 744,
+          "height": 321,
+          "sha256": "f54ba97bd2ba272b01b1b448ccf97259a09b983daed8b9290d5be9a10db4cda0"
+        },
+        {
+          "name": "B11_20m",
+          "width": 744,
+          "height": 321,
+          "sha256": "0f5c1660d7466a4a20953b4bafc2de70435c4ec28f7118fa18bf85fe6bb8727e"
+        },
+        {
+          "name": "SCL_20m",
+          "width": 744,
+          "height": 321,
+          "sha256": "d31660e023eb8fb23243a1303ceef7dc912f2261db6c5afa10f8ece9ce8c252c"
+        }
+      ],
+      "original_index_files_match_published": true,
+      "local_index_pixels_grids_nodata_equal": true,
+      "local_index_file_hashes_match_published": {
+        "NDVI": false,
+        "EVI2": false,
+        "NDMI": false,
+        "NDWI": false,
+        "MNDWI": false
+      },
+      "local_water_file_hash_matches_published": false
+    }
+  ],
+  "restore_method": {
+    "artifacts_listing_simulated_empty": true,
+    "actual_artifacts_deleted": false,
+    "cache_used": false,
+    "cdse_used": false,
+    "source": "Published Pages packages",
+    "local_gdal": "3.10.2",
+    "raw_bands_verified": 24,
+    "original_indices_verified": 20,
+    "v2_indices_recalculated": 15,
+    "v3_indices_preserved": 5,
+    "comparisons": 3
+  },
+  "measurements": {
+    "scope": "Local restoration and validation/migration only; not total Actions resources or deployment duration.",
+    "package_bytes": 71614226,
+    "download_bytes_including_three_json": 71644668,
+    "restore_seconds": 9.186,
+    "restore_and_validate_seconds": 13.694,
+    "local_peak_working_set_bytes": 198254592,
+    "local_product_disk_bytes": 143697484
+  },
+  "public_resources": [
+    {
+      "path": "sentinel/comparison-5163c4ec034fc20833cb6aae/parcel-comparison.json",
+      "bytes": 120985,
+      "sha256_matches": true,
+      "sha256": "ac6338ec38de69a69a940166a515785385fa62d40b54a002e4511cc08ca6be50"
+    },
+    {
+      "path": "sentinel/comparison-6a425e627f732f4202fa5502/parcel-comparison.json",
+      "bytes": 120063,
+      "sha256_matches": true,
+      "sha256": "fb2c3f51d7ede18bca69d0816fa6c06d0cf0c392ff8f8829c1bf954d82febcb7"
+    },
+    {
+      "path": "sentinel/comparison-766e329811e8d12a80102822/parcel-comparison.json",
+      "bytes": 120782,
+      "sha256_matches": true,
+      "sha256": "f22c9305421d32197a8770bf460bcfaa98060acdd4fd7ddc301f921480619b9a"
+    },
+    {
+      "path": "sentinel/S2B_MSIL2A_20261106T111149_N0513_R137_T30TUK_20261106T132030/parcel-indices.json",
+      "bytes": 80453,
+      "sha256_matches": true,
+      "sha256": "07320dae004af3fd30051bc0ac25c246c6dd662d20f223e59966617cc7d12583"
+    },
+    {
+      "path": "sentinel/S2B_MSIL2A_20261106T111149_N0513_R137_T30TUK_20261106T132030/parcel-water.json",
+      "bytes": 69913,
+      "sha256_matches": true,
+      "sha256": "28cedb0acfbda39a88b7a7a8737f67d3a280912a450ef59cd553ab2a4a694846"
+    },
+    {
+      "path": "sentinel/S2B_MSIL2A_20261106T111149_N0513_R137_T30TUK_20261106T132030/water-zones.geojson",
+      "bytes": 130858,
+      "sha256_matches": true,
+      "sha256": "67feafc790dc119a84c7ce56b672af63269bed9990635f6faa6cb357cdb7fc28"
+    },
+    {
+      "path": "sentinel/S2A_MSIL2A_20261031T110121_N0513_R094_T30TUK_20261031T173605/parcel-indices.json",
+      "bytes": 80397,
+      "sha256_matches": true,
+      "sha256": "782b19ef3557b03c2764ec9dd0dd36bbd1a228b8f68946a12841a05930cde158"
+    },
+    {
+      "path": "sentinel/S2A_MSIL2A_20261031T110121_N0513_R094_T30TUK_20261031T173605/parcel-water.json",
+      "bytes": 69900,
+      "sha256_matches": true,
+      "sha256": "d0635a3928c7e314d914b0a72a062a828b70325882a1575aa76ea71aeedfa115"
+    },
+    {
+      "path": "sentinel/S2A_MSIL2A_20261031T110121_N0513_R094_T30TUK_20261031T173605/water-zones.geojson",
+      "bytes": 119879,
+      "sha256_matches": true,
+      "sha256": "1e908e41faee1d08259fedaa5b1d03efe50c03569af7abb7b2f393c5e3cb55c7"
+    },
+    {
+      "path": "sentinel/S2A_MSIL2A_20261014T110941_N0513_R137_T30TUK_20261014T173008/parcel-indices.json",
+      "bytes": 80455,
+      "sha256_matches": true,
+      "sha256": "5ab9bed5d05d317d46ff53d32ca9242a30b20e6a1e239a5e819ca98c89b54ba2"
+    },
+    {
+      "path": "sentinel/S2A_MSIL2A_20261014T110941_N0513_R137_T30TUK_20261014T173008/parcel-water.json",
+      "bytes": 69944,
+      "sha256_matches": true,
+      "sha256": "ebb888285a90ebb4b652ecccd6d33f15b77b27c0b50a7e1919914fda4c8e6924"
+    },
+    {
+      "path": "sentinel/S2A_MSIL2A_20261014T110941_N0513_R137_T30TUK_20261014T173008/water-zones.geojson",
+      "bytes": 129923,
+      "sha256_matches": true,
+      "sha256": "970730ce855eadd1042f6f43593ade175dab02b263d2987ba6eb056edd00db5f"
+    },
+    {
+      "path": "sentinel/S2A_MSIL2A_20230816T105631_N0510_R094_T30TUK_20241021T044404/parcel-indices.json",
+      "bytes": 80295,
+      "sha256_matches": true,
+      "sha256": "c629c3f28fceb3184b1429a12216fd4458223d2f687f045d475363849bd3e42a"
+    },
+    {
+      "path": "sentinel/S2A_MSIL2A_20230816T105631_N0510_R094_T30TUK_20241021T044404/parcel-water.json",
+      "bytes": 68530,
+      "sha256_matches": true,
+      "sha256": "c0933c72514ad341c241e90b97599333937652bf503ed78fe42ce7b0a5a34b71"
+    },
+    {
+      "path": "sentinel/S2A_MSIL2A_20230816T105631_N0510_R094_T30TUK_20241021T044404/water-zones.geojson",
+      "bytes": 115376,
+      "sha256_matches": true,
+      "sha256": "906c6cd43643ab4319be39d3cd06a5bcab5573965f05a66e91dd1904845a3014"
+    }
+  ],
+  "preservation": {
+    "before_checked_at_utc": "2026-11-16T20:23:23.897296+00:00",
+    "after_checked_at_utc": "2026-11-16T20:34:45.475141+00:00",
+    "original_artifact_ids": [
+      14264064160,
+      14255375715,
+      14255000961,
+      14254796844,
+      14232995169,
+      14232590574,
+      14162671922,
+      14161964706,
+      14114085262,
+      14039829409,
+      13949354855,
+      13856980819,
+      13770087781,
+      13682180889,
+      13615979798,
+      13572693590,
+      13503708348,
+      13417703711,
+      13345552002,
+      13344539425,
+      13344129242,
+      13342919383,
+      13324499230,
+      13232421619,
+      13179960241,
+      13179015951,
+      13091902423,
+      13091783958,
+      13091469469,
+      13081044459
+    ],
+    "missing_original_artifact_ids": [],
+    "artifact_count_before": 30,
+    "artifact_count_after": 34,
+    "original_artifact_expiries_unchanged": true,
+    "cache_ids_before": [
+      10554333159
+    ],
+    "cache_ids_after": [
+      10554333159
+    ],
+    "cache_bytes": 18021251,
+    "public_files": {
+      "index.html": {
+        "size_bytes": 103391,
+        "sha256": "74a4cd90b5e34d831213744f08afbf3c7e393fb9f7714fd34c40cda7df7c90cf",
+        "unchanged_from_before": true
+      },
+      "sentinel/catalog.json": {
+        "size_bytes": 26487,
+        "sha256": "b5d8307806b7c2d78724b67efd2b1f3d631555357ba1df33287590fb64260bcd",
+        "unchanged_from_before": true
+      },
+      "sentinel/publication.json": {
+        "size_bytes": 943,
+        "sha256": "25ab1d86e24aac5519e69313127d21a88491191b2a0d235536977f1179fc4bd9",
+        "unchanged_from_before": true
+      }
+    }
+  },
+  "browser": {
+    "four_dates_available": true,
+    "comparison": "NDVI 2023-08-16 to 2026-10-14 loaded",
+    "console_errors": 0,
+    "screenshot": "Capture timed out; no screenshot evidence retained."
+  },
+  "limits": [
+    "The packages preserve AOI crops, not complete SAFE products or an independent backup of Pages.",
+    "Measurements and inventories are dated observations, not current quotas, plan entitlements or guaranteed future availability.",
+    "Original product fingerprints and index file hashes were verified. Regenerated GeoTIFF hashes differ between local GDAL 3.10.2 and Pages GDAL 3.12.2 despite identical index pixels, grids and nodata.",
+    "Pixel-level equality of regenerated WATER versus published WATER was not tested.",
+    "The current production configuration is 8 with four products. Modes 6 and 4 were tested only with synthetic fixtures, not deployed."
+  ]
+}
