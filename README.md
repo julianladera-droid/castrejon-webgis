@@ -602,6 +602,7 @@ La capa operativa conserva el agua estimada anterior y añade candidatos de mezc
 
 Control de recursos Sentinel: cuatro observaciones por defecto, ampliables a seis
 u ocho, presupuestos independientes y limpieza explícita con simulación previa.
-[Política, inventario, activación y recuperación](docs/sentinel-resources.md).
-El sitio desplegado conserva todavía su configuración de retención en ocho;
-esta propuesta no modifica la producción. [Antecedente PR #12](docs/sentinel-retention.md).
+[Política vigente, cierre de PR #15 y recuperación verificada](docs/sentinel-resources.md).
+Retención activa **4**, cuatro adquisiciones y tres comparaciones; SHA desplegado
+`196ff99757a37a17260d4c62c05317b6ab89a149`. Limpieza pendiente, sin bajas ejecutadas.
+[Cierres históricos #12/#13 y reconciliación de #14](docs/sentinel-retention.md).

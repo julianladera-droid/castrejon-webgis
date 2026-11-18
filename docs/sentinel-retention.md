@@ -1,9 +1,41 @@
 # Retención acotada de Sentinel y continuidad de Pages
 
-**Documento histórico de la PR #12.** La propuesta posterior de control de recursos,
+**Documento histórico de las PR #12/#13, con evidencia recuperada de #14.** El control vigente de recursos,
 cuatro adquisiciones por defecto, presupuestos y limpieza explícita está en
 [sentinel-resources.md](sentinel-resources.md). Las referencias siguientes a ocho
 como valor inicial y a ausencia de APIs de borrado describen aquella implementación.
+
+## Cierre histórico y reconciliación de #14
+
+La retención activa pasó a **4** con #15, desplegada en
+`196ff99757a37a17260d4c62c05317b6ab89a149`. Para el estado y procedimiento actuales,
+usar [sentinel-resources.md](sentinel-resources.md), no las instrucciones históricas
+de esta página. Esta PR documental sustituye a
+[#14](https://github.com/julianladera-droid/castrejon-webgis/pull/14), que se cierra
+sin fusionar ni borrar su rama. Se preserva íntegro su
+[JSON de aceptación del 16/11](sentinel-evidence/closure-20261116.json), procedente
+del commit `eb1c30c97d82bc7f5a1645bfedb91f8313bec336`.
+
+| Hito del 16/11/2026 | Resultado histórico |
+| --- | --- |
+| [PR #12](https://github.com/julianladera-droid/castrejon-webgis/pull/12) | Fusión `ee2700943fc83e584ef97555fe3c219eb7c6a659`, 20:23:43 UTC. [CI](https://github.com/julianladera-droid/castrejon-webgis/actions/runs/43946762025): 116 pruebas Python y controles WebGIS/WordPress. |
+| [Primer despliegue](https://github.com/julianladera-droid/castrejon-webgis/actions/runs/43949328931) | Falló antes del upload porque no admitía el prefijo histórico CDSE `L2A_N0500/`; conservó el sitio previo. |
+| [PR #13](https://github.com/julianladera-droid/castrejon-webgis/pull/13) | Corrigió ese prefijo. Fusión `009105ddf226c38dddabb79c9109a7820c36f075`, 20:30:53 UTC. [CI](https://github.com/julianladera-droid/castrejon-webgis/actions/runs/43950164441): 117 pruebas Python y controles WebGIS/WordPress. |
+| [Pages](https://github.com/julianladera-droid/castrejon-webgis/actions/runs/43950559764) | Publicó el SHA de #13, entonces con retención 8, cuatro adquisiciones y tres comparaciones; 142.802.154 bytes. |
+
+La aceptación del 16/11 restauró cuatro paquetes desde Pages, sin caché ni
+artefactos, y verificó 24 DN y 20 índices originales. Los 15 índices de los tres
+productos v2 recalculados coincidieron en píxeles, rejillas y nodata; se preservó
+el producto v3. No se comprobó igualdad píxel a píxel de WATER regenerado.
+Los 30 artefactos previos mantuvieron presencia y caducidades y la caché quedó
+intacta. Estas cifras y retención 8 pertenecen al 16/11: no describen #15.
+
+De #14 se integran la cronología de #12/#13, evidencias, métricas y límites de
+reproducción. Se sustituyen sus instrucciones de retención activa en 8 y de
+configuración v1 por la política v2 ya desplegada con máximo 4. No se aplica su
+parche de forma automática ni se rebaja la versión del contrato.
+
+## Diseño original de #12 (referencia histórica)
 
 Propuesta sobre `main` **07ad34999da36e1b2b849b6fd909e40f2d55528f**,
 revisado el 16/11/2026. Preparar esta PR no ejecuta Sentinel, no publica Pages

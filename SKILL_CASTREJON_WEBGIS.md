@@ -3,10 +3,25 @@ Version: 0.1.41
 Fecha base: 2026-09-30
 Estado: ACTIVO · se actualiza tras cada ciclo de pruebas
 
+## Cierre documental de #15 y reconciliación de #14 · 2026-11-18
+
+Se conserva la versión operativa 0.1.41: este cierre no cambia código ni política.
+PR #15 fusionada en `196ff99757a37a17260d4c62c05317b6ab89a149`; Pages
+`44178192078`, intento 2, publicó retención **4** con cuatro observaciones y tres
+comparaciones. El intento 1 agotó la espera de descarga antes del upload y dejó
+intacto el índice anterior. Aceptación del 17/11: cuatro paquetes recuperados de
+Pages sin Actions/caché/CDSE, 24 DN y 20 índices verificados; 29 artefactos previos
+con las mismas caducidades y caché sin cambios. No se ejecutó la limpieza.
+Se integra la evidencia histórica de #14 (cierres #12/#13 con retención 8 el
+16/11) y se sustituye su descripción de la configuración activa. La retención
+vigente es 4; 6 y 8 son máximos opcionales que requieren otro cambio autorizado.
+Evidencias, límites de reproducción y seguimiento pendiente del siguiente
+producto nuevo: `docs/sentinel-resources.md` y `docs/sentinel-evidence/closure-20261117.json`.
+
 ## Cambio 0.1.41 · presupuestos y bajas Sentinel (2026-11-17)
 
 Causa: limitar sólo las fechas visibles no limita las descargas ni libera Actions.
-La propuesta usa cuatro observaciones por defecto (ampliables a seis u ocho),
+La implementación fusionada usa cuatro observaciones por defecto (ampliables a seis u ocho),
 selección previa por metadatos, presupuestos separados y fallo antes de publicar
 si las copias recuperables no caben. Hasta cuatro productos pueden fijarse para
 un experimento; el visor identifica esa selección como histórica/experimental.
@@ -16,7 +31,8 @@ integridad de los retenidos y registro persistente en la rama `sentinel-state`.
 Procesamiento, publicación y limpieza comparten exclusión mutua. Una generación
 anterior de paquetes puede acompañar al sitio si cabe; no es archivo perpetuo.
 Las pruebas cubren presión, disco, selección, fallos y bajas con transporte falso.
-Esta PR no activa despliegues ni ejecuta bajas; véase `docs/sentinel-resources.md`.
+Su despliegue autorizado se verificó el 17/11; este cierre documental no activa
+otro despliegue ni ejecuta bajas. Véase `docs/sentinel-resources.md`.
 
 ## 0. Propósito
 Este archivo es el contrato operativo del WebGIS de la Comunidad de Regantes del Canal de Castrejón Margen Derecha.
